@@ -5,8 +5,12 @@ import { EmailReducer, PasswordReducer } from "../Authentication/Reducers/Authen
 import { NameReducer } from "./Reducers/RegisterUserReducer";
 
 export const UseRegisterUserViewModel = () => {
+
+
     const [loading, setLoading] = useState(false);
     const [ErroRequest, SetErroRequest] = useState(null);
+    const [MessageSuccesState,SetMessageSuccess] = useState('');
+
     const [EmailState, EmailDispatch] = useReducer(EmailReducer, { email: "", error: null });
     const [PasswordState, PasswordDispatch] = useReducer(PasswordReducer, { password: "", error: null });
     const [NameState, NameDispatch] = useReducer(NameReducer, { name: "", error: "" })
@@ -28,6 +32,7 @@ export const UseRegisterUserViewModel = () => {
         setLoading,
 
         errorResponse: ErroRequest,
+        messageSuccess: MessageSuccesState,
 
         register: async () => {
             const response = await RegisterUserModel.CreateSystem({
@@ -40,7 +45,7 @@ export const UseRegisterUserViewModel = () => {
                 SetErroRequest(get(response,'detail',null));
                 return;
             }
-
+            SetMessageSuccess('Cadastrado com sucesso.')
             return response
         }
     }

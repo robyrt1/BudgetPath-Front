@@ -26,7 +26,6 @@ const UseAuthenticationViewModel = (): IAuthenticationState => {
             const {status,detail, ...response} = await AuthenticationModel.LoginUser({ email: EmailState.email, password: PasswordState.password })
 
             if(!status) {
-                console.log('response error >>>>>',detail)
             }
 
             setLoading(false)
