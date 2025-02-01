@@ -8,6 +8,7 @@ const LoginView = () => {
   const [showRegister, setShowRegister] = useState(false);
 
   const {
+    loading,
     email,
     emailError,
     setEmail,
@@ -15,10 +16,13 @@ const LoginView = () => {
     passwordError,
     setPassword,
     signUp,
+    errorSign,
   } = UseAuthenticationViewModel();
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg px-6 py-8 ring shadow-xl ring-gray-900/5 flex flex-col items-center justify-center min-h-[300px]">
-      <label className="text-2xl text-gray-900 dark:text-white pb-2">Faça Login</label>
+      <label className="text-2xl text-gray-900 dark:text-white pb-2">
+        Faça Login
+      </label>
       <div className="w-full max-w-sm min-w-[200px]">
         <div className="relative">
           <input
@@ -59,6 +63,9 @@ const LoginView = () => {
       {passwordError && (
         <span className="text-red-600 text-sm">{passwordError}</span>
       )}
+      {errorSign && (
+        <span className="text-red-600 text-sm">{errorSign}</span>
+      )}
       <div className="flex flex-col items-center justify-center">
         {
           <label
@@ -69,13 +76,18 @@ const LoginView = () => {
           </label>
         }
       </div>
-      <button
-        disabled={!!emailError || !!passwordError}
-        className="mt-4 p-2 bg-blue-500 text-white rounded-md"
-        onClick={signUp}
-      >
-        Entrar
-      </button>
+
+      {loading ? (
+        <div className="loader"></div>
+      ) : (
+        <button
+          disabled={!!emailError || !!passwordError}
+          className="mt-4 p-2 bg-blue-500 text-white rounded-md"
+          onClick={signUp}
+        >
+          Entrar
+        </button>
+      )}
     </div>
   );
 };

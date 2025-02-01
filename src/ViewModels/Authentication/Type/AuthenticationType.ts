@@ -10,6 +10,7 @@ export interface IAuthenticationState {
     setPassword: (password: string) => void;
 
     signUp(): Promise<ResponseAuthentication>
+    errorSign: string| null
   
     loading: boolean;
     setLoading: (loading: boolean) => void;
