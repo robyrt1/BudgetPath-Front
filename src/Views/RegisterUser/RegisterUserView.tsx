@@ -20,17 +20,21 @@ const RegisterUserView = () => {
   } = UseRegisterUserViewModel();
 
   const router = useRouter();
-  const handleGoToSignUp = () => router.replace('/SignUp');
+  const handleGoToSignUp = () => router.replace("/SignUp");
 
   const handleRegister = async () => {
-      const response = await register();
-      if (response) {
-        handleGoToSignUp()
-      }
+    const response = await register();
+    if (response) {
+      handleGoToSignUp();
+    }
   };
+
+
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg px-6 py-8 ring shadow-xl ring-gray-900/5 flex flex-col items-center justify-center min-h-[300px]">
-      <label className="text-2xl text-gray-900 dark:text-white pb-2">Cadastrar Conta</label>
+      <label className="text-2xl text-gray-900 dark:text-white pb-2">
+        Cadastrar Conta
+      </label>
       <div className="w-full max-w-sm min-w-[200px]">
         <div className="relative">
           <input

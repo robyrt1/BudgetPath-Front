@@ -1,6 +1,6 @@
-// src/app/layout.tsx
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Providers from "../Redux/Providers"; // Importe os Providers
 import "./globals.css";
 
 const geistSans = Geist({
@@ -25,10 +25,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className="h-full">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased h-full`}
-      >
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-full`}>
+        <Providers>{children}</Providers> {/* Redux Provider */}
       </body>
     </html>
   );

@@ -1,12 +1,9 @@
 "use client";
 import UseAuthenticationViewModel from "@/ViewModels/Authentication/AuthenticationViewModel";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 const LoginView = () => {
   const router = useRouter();
-  const [showRegister, setShowRegister] = useState(false);
-
   const {
     loading,
     email,
@@ -18,6 +15,15 @@ const LoginView = () => {
     signUp,
     errorSign,
   } = UseAuthenticationViewModel();
+  
+  const handleGoToHome = () => router.replace('/Home');
+  const handleLogin = async () => {
+    const response = await signUp();
+    if (response) {
+      handleGoToHome
+    }
+};
+
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg px-6 py-8 ring shadow-xl ring-gray-900/5 flex flex-col items-center justify-center min-h-[300px]">
       <label className="text-2xl text-gray-900 dark:text-white pb-2">
@@ -83,7 +89,7 @@ const LoginView = () => {
         <button
           disabled={!!emailError || !!passwordError}
           className="mt-4 p-2 bg-blue-500 text-white rounded-md"
-          onClick={signUp}
+          onClick={handleLogin}
         >
           Entrar
         </button>

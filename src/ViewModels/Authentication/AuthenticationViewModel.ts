@@ -3,10 +3,13 @@
 import AuthenticationModel from "@/Models/Authentication/AuthenticationModel";
 import { get, stubTrue } from "lodash";
 import { useReducer, useState } from "react";
+import { useDispatch } from "react-redux";
+import { login, setError } from "./../../Redux/Slices/AutheticationSlice";
 import { EmailReducer, PasswordReducer } from "./Reducers/AuthenticationReducer";
 import { IAuthenticationState } from "./Type/AuthenticationType";
 
 const UseAuthenticationViewModel = (): IAuthenticationState => {
+    const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const [errorSign , SetErrorSign] = useState(null);
 
@@ -24,16 +27,18 @@ const UseAuthenticationViewModel = (): IAuthenticationState => {
 
         errorSign: errorSign,
         signUp: async () => {
+            SetErrorSign(null);
             setLoading(true)
 
             const response = await AuthenticationModel.LoginUser({ email: EmailState.email, password: PasswordState.password })
-
             setLoading(false)
             if(!get(response,'status',stubTrue())){
                 const message = get(response,'detail',null)
+                dispatch(setError(message));
                 SetErrorSign(message);
             }
 
+            dispatch(login(get(response,'token','')));
             return response;
         },
 

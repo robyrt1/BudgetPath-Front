@@ -1,5 +1,6 @@
 export type ResponseAuthentication  = {
-
+    token: string,
+    name: string;
 }
 
 export type ErrorAuthentication  = {

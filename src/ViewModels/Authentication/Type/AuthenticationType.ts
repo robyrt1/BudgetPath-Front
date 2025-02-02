@@ -1,4 +1,4 @@
-import { ResponseAuthentication } from "@/Models/Authentication/Responses/ResponseAuthentication";
+import { ErrorAuthentication, ResponseAuthentication } from "@/Models/Authentication/Responses/ResponseAuthentication";
 
 export interface IAuthenticationState {
     email: string;
@@ -9,7 +9,7 @@ export interface IAuthenticationState {
     passwordError: string | null;
     setPassword: (password: string) => void;
 
-    signUp(): Promise<ResponseAuthentication>
+    signUp(): Promise<ResponseAuthentication | ErrorAuthentication>
     errorSign: string| null
   
     loading: boolean;
