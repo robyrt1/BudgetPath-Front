@@ -1,5 +1,5 @@
 "use client";
-import LoginView from "@/Views/Login/LoginView";
+import LoginView from "@/Views/auth/Login/LoginView";
 
 export default function SignUpPage() {
   return (

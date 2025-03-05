@@ -1,5 +1,5 @@
 "use client";
-import RegisterUserView from "@/Views/RegisterUser/RegisterUserView";
+import RegisterUserView from "@/Views/auth/RegisterUser/RegisterUserView";
 
 export default function RegisterUserPage() {
   return (
