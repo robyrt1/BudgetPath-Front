@@ -11,7 +11,7 @@ import { IAuthenticationState } from "./Type/AuthenticationType";
 const UseAuthenticationViewModel = (): IAuthenticationState => {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
-    const [errorSign , SetErrorSign] = useState(null);
+    const [errorSign, SetErrorSign] = useState(null);
 
     const [EmailState, EmailDispatch] = useReducer(EmailReducer, { email: "", error: null });
     const [PasswordState, PasswordDispatch] = useReducer(PasswordReducer, { password: "", error: null });
@@ -32,14 +32,15 @@ const UseAuthenticationViewModel = (): IAuthenticationState => {
 
             const response = await AuthenticationModel.LoginUser({ email: EmailState.email, password: PasswordState.password })
             setLoading(false)
-            if(!get(response,'status',stubTrue())){
-                const message = get(response,'detail',null)
+            if (!get(response, 'status', stubTrue())) {
+                const message = get(response, 'details', null)
                 dispatch(setError(message));
                 SetErrorSign(message);
             }
 
-            dispatch(login(get(response,'token','')));
+            dispatch(login(response.details));
             return response;
+
         },
 
         loading,

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Providers from "../Redux/Providers"; // Importe os Providers
+import Providers from "../Redux/Providers";
 import "../styles/globals.css";
-import Header from "./Shared/components/Header";
+import LayoutWrapper from "./Shared/components/LayoutWrapper"; // Importamos o wrapper
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,20 +21,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="pt-BR" className="h-full">
       <head>
         <title>BudgetPath</title>
-        <meta name="Description" content="Aplicação criada com Next"></meta>
+        <meta name="description" content="width=device-width, initial-scale=1.0" />
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased h-full`}
-      >
-        <Header />
-        <Providers>{children}</Providers> {/* Redux Provider */}
+      <body className={`${geistSans.variable} ${geistMono.variable} h-full`}>
+        <Providers>
+          <LayoutWrapper>{children}</LayoutWrapper>
+        </Providers>
       </body>
     </html>
   );

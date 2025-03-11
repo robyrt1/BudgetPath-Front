@@ -1,16 +1,24 @@
-import { useRouter } from 'next/router';
-import { FC, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+"use client";
 
-const WithAuthentication = (WrappedComponent: FC) => {
-  const AuthComponent: FC = (props) => {
+import { useRouter } from "next/navigation";
+import { FC, ReactNode, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+
+interface WithAuthProps {
+  children?: ReactNode;
+}
+
+const WithAuthentication = <P extends object>(WrappedComponent: FC<P>) => {
+  const AuthComponent: FC<P & WithAuthProps> = (props) => {
     const router = useRouter();
     const token = useSelector((state: any) => state.auth.token);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+      if (token === undefined) return;
+
       if (!token) {
-        router.push('/SignUp');
+        router.replace("/SignUp");
       } else {
         setLoading(false);
       }

@@ -1,0 +1,45 @@
+.transactions-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 1rem;
+    margin-left: 15rem;
+
+    @media (max-width: 1024px) {
+        margin-left: 8rem;
+        flex-direction: column;
+        width: 100%;
+        padding: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
+.transactions-grid {
+    width: 80rem;
+    max-width: 1200;
+    height: auto;
+    overflow: hidden;
+
+    /* Responsividade para telas de 1024px */
+    @media (max-width: 1024px) {
+        width: 43rem;
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    @media (max-width: 970px) {
+        width: 40rem;
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    /* Para telas pequenas */
+    @media (max-width: 768px) {
+        width: 100%;
+        padding: 1rem;
+    }
+}

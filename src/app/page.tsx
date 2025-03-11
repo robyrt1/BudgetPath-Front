@@ -8,9 +8,13 @@ export default function Home() {
 
   useEffect(() => {
     if (!token) {
-      router.replace("/SignUp");
+      router.push("/SignUp");
     }
-  }, [token,router]);
+    else {
+      router.push("/dashboard");
+
+    }
+  }, [token, router]);
 
   return null;
 }

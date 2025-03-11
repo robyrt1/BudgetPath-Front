@@ -19,15 +19,20 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
-  min-height: 100vh; /* Garante que o corpo ocupe a altura inteira da tela */
-  display: flex; /* Usamos flexbox para centralizar o conteúdo */
-  align-items: center; /* Centraliza o conteúdo verticalmente */
-  justify-content: center; /* Centraliza o conteúdo horizontalmente */
+  min-height: 100vh;
+  /* Garante que o corpo ocupe a altura inteira da tela */
+  display: flex;
+  /* Usamos flexbox para centralizar o conteúdo */
+  align-items: center;
+  /* Centraliza o conteúdo verticalmente */
+  justify-content: center;
+  /* Centraliza o conteúdo horizontalmente */
 }
 
 html {
   transition: background-color 0.3s, color 0.3s;
-  height: 100%; /* Garante que o HTML ocupe 100% da altura */
+  height: 100%;
+  /* Garante que o HTML ocupe 100% da altura */
 }
 
 /* Evita problemas de layout com margens indesejadas */
@@ -47,6 +52,11 @@ html {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }

@@ -16,35 +16,35 @@ const LoginView = () => {
     errorSign,
   } = UseAuthenticationViewModel();
   
-  const handleGoToHome = () => router.replace('/Home');
+  const handleGoToHome = () => router.push('/dashboard');
   const handleLogin = async () => {
     const response = await signUp();
     if (response) {
-      handleGoToHome
+      handleGoToHome()
     }
 };
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg px-6 py-8 ring shadow-xl ring-gray-900/5 flex flex-col items-center justify-center min-h-[300px]">
-      <label className="text-2xl text-gray-900 dark:text-white pb-2">
-        Faça Login
+      <label className="text-2xl text-gray-900 dark:text-white pb-3">
+        Login
       </label>
-      <div className="w-full max-w-sm min-w-[200px]">
+      <div className="w-full max-w-sm min-w-[500px]">
         <div className="relative">
           <input
             type="email"
-            className="w-full bg-transparent placeholder:text-slate-400  text-white text-sm border border-slate-200 rounded-md pl-3 pr-16 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+            className="w-full bg-transparent placeholder:text-slate-200  text-white text-lg border border-slate-600 rounded-md pl-3 pr-16 py-3 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
             placeholder="Digite seu e-mail"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
       </div>
-      <div className="w-full max-w-sm min-w-[200px] mt-4">
+      <div className="w-full max-w-sm min-w-[500px] mt-4">
         <div className="relative">
           <input
             type="password"
-            className="w-full pl-3 pr-3 py-2 bg-transparent placeholder:text-write-400 text-white text-sm border border-slate-200 rounded-md transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+            className="w-full pl-3 pr-10 py-3 bg-transparent placeholder:text-slate-200 text-white text-lg border border-slate-600 rounded-md transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
             placeholder="Digite sua senha"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -72,16 +72,6 @@ const LoginView = () => {
       {errorSign && (
         <span className="text-red-600 text-sm">{errorSign}</span>
       )}
-      <div className="flex flex-col items-center justify-center">
-        {
-          <label
-            onClick={() => router.replace("RegisterUser")}
-            className="text-xs text-blue-400 cursor-pointer"
-          >
-            Cadastrar Conta
-          </label>
-        }
-      </div>
 
       {loading ? (
         <div className="loader"></div>
@@ -91,9 +81,19 @@ const LoginView = () => {
           className="mt-4 p-2 bg-blue-500 text-white rounded-md"
           onClick={handleLogin}
         >
-          Entrar
+          sing-up
         </button>
       )}
+      <div className="mt-4 flex flex-col items-center justify-center">
+        {
+          <label
+            onClick={() => router.replace("RegisterUser")}
+            className="text-xs text-blue-400 cursor-pointer"
+          >
+            Create Account
+          </label>
+        }
+      </div>
     </div>
   );
 };

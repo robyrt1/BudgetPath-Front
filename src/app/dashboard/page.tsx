@@ -1,62 +1,39 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+"use client";
+
+import DashboardView from "@/Views/dashboard/dashboardView";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import Sidebar from "../Shared/components/Sidebar";
+import Loading from "./loading";
 
 export default function Dashboard() {
+  const router = useRouter();
+  const token = useSelector((state: any) => {
+    return state.auth.token
+  });
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    if (token === undefined) return;
+
+    if (!token) {
+      router.push("/SignUp");
+    } else {
+      setIsAuthenticated(true);
+    }
+  }, [token, router]);
+
+  if (token === undefined || !isAuthenticated) {
+    return <Loading />;
+  }
+
   return (
-    <div className="mt-20 min-h-screen w-full p-2">
-      {/* Resumo Financeiro */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="w-full">
-          <CardHeader>
-            <CardTitle>Saldo Total</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-semibold text-green-500">R$ 15.000,00</p>
-          </CardContent>
-        </Card>
+    <div style={{ padding: "20px" }}>
 
-        <Card className="w-full">
-          <CardHeader>
-            <CardTitle>Receitas</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-semibold text-blue-500">R$ 5.200,00</p>
-          </CardContent>
-        </Card>
+      <Sidebar />
 
-        <Card className="w-full">
-          <CardHeader>
-            <CardTitle>Despesas</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-semibold text-red-500">R$ 3.800,00</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Gráfico Financeiro */}
-      <div className="bg-white shadow-md rounded-xl p-4 w-full mt-6">
-        <h2 className="text-lg font-bold mb-2">Fluxo de Caixa</h2>
-        <p>📊 Aqui entrará o gráfico das finanças</p>
-      </div>
-
-      {/* Transações Recentes */}
-      <div className="bg-white shadow-md rounded-xl p-4 w-full mt-6">
-        <h2 className="text-lg font-bold mb-2">Últimas Transações</h2>
-        <ul className="space-y-2">
-          <li className="flex justify-between">
-            <span>💡 Conta de Luz</span>
-            <span className="text-red-500">- R$ 150,00</span>
-          </li>
-          <li className="flex justify-between">
-            <span>🍔 Restaurante</span>
-            <span className="text-red-500">- R$ 90,00</span>
-          </li>
-          <li className="flex justify-between">
-            <span>💰 Salário</span>
-            <span className="text-green-500">+ R$ 3.000,00</span>
-          </li>
-        </ul>
-      </div>
+      <DashboardView />
     </div>
   );
 }

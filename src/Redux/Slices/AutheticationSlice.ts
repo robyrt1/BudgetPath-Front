@@ -1,16 +1,19 @@
 import { LocalStoregeKeys } from "@/shared/Constants/LocalStoreage";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { get } from "lodash";
 
 export interface AuthState {
     token: string | null;
     isAuthenticated: boolean;
     error: string | null;
+    userId: string;
 }
 
 const InitalState: AuthState = {
     token: null,
     isAuthenticated: false,
-    error: null
+    error: null,
+    userId: ''
 };
 
 const getTokenFromLocalStorage = () => {
@@ -20,19 +23,31 @@ const getTokenFromLocalStorage = () => {
     return null;
 };
 
+const getUserIdFromLocalStorage = () => {
+    if (typeof window !== "undefined") {
+        return window.localStorage.getItem(LocalStoregeKeys.USERID);
+    }
+    return null;
+};
+
 const AuthenticationSlice = createSlice({
     name: "auth",
     initialState: {
         ...InitalState,
         token: getTokenFromLocalStorage(),
+        userId: getUserIdFromLocalStorage()
     },
     reducers: {
-        login: (state, action: PayloadAction<string | null>) => {
+        login: (state, action: PayloadAction<{ token: string, userId: string } | null>) => {
+            console.log('action.payload >>>', action.payload)
             if (action.payload) {
-                state.token = action.payload;
+                state.token = get(action.payload, 'token', null);
+                state.userId = get(action.payload, 'userId', '');
                 state.isAuthenticated = true;
                 if (typeof window !== "undefined") {
-                    localStorage.setItem(LocalStoregeKeys.TOKEN, action.payload);
+                    localStorage.setItem(LocalStoregeKeys.TOKEN, get(action.payload, 'token', null) as string);
+                    localStorage.setItem(LocalStoregeKeys.USERID, get(action.payload, 'userId', null) as string);
+
                 } state.error = null;
             } else {
                 state.error = "Falha no login. Verifique suas credenciais.";

@@ -1,3 +1,4 @@
 export const LocalStoregeKeys = {
-    TOKEN : 'token'
+    TOKEN: 'token',
+    USERID: 'userId'
 }

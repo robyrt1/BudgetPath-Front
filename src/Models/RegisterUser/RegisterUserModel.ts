@@ -1,11 +1,10 @@
-import { Environment } from "@/app/Shared/Environment";
 import { ErrorResponse } from "@/shared/Interfaces/ErrorResponse";
 import { get } from "lodash";
 import { RegisterUserModelPort } from "./Port/RegisterUserModelPort";
 import { RegisterUserRequest } from "./Requests/RequestUserRequest";
 import { RegisterUserResponse } from "./Responses/RequestUserResponse";
 
-const URL_FINANCE_API: string = Environment.URL_FINANCE_API as string || 'http://localhost:5171/api/v1/';
+const URL_FINANCE_API: string = process.env.REACT_APP_API_FINANCE_URL as string || 'http://localhost:5171/api/odata/v1/';
 
 const RegisterUserModel: RegisterUserModelPort = {
     CreateSystem: async (request: RegisterUserRequest): Promise<RegisterUserResponse | ErrorResponse> => {
