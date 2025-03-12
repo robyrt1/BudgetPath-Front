@@ -39,7 +39,6 @@ const AuthenticationSlice = createSlice({
     },
     reducers: {
         login: (state, action: PayloadAction<{ token: string, userId: string } | null>) => {
-            console.log('action.payload >>>', action.payload)
             if (action.payload) {
                 state.token = get(action.payload, 'token', null);
                 state.userId = get(action.payload, 'userId', '');

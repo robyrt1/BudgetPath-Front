@@ -13,6 +13,7 @@
     "@reduxjs/toolkit": "^2.5.1",
     "@tailwindcss/postcss": "^4.0.1",
     "ag-grid-community": "^33.1.1",
+    "ag-grid-enterprise": "^33.1.1",
     "ag-grid-react": "^33.1.1",
     "date-fns": "^4.1.0",
     "lodash": "^4.17.21",

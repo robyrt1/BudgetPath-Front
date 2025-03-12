@@ -27,10 +27,17 @@ export interface Datum {
     Amount: number;
     TransactionDate: Date;
     PaymentMethodId: string;
+    PaymentMethod: PaymentMethod;
     Status: string;
     CreatedAt: Date;
 }
 
+export interface PaymentMethod {
+    Id: string,
+    Description: string,
+    DescriptionLower: string,
+    UserId: string
+}
 export interface Account {
     Id: string;
     UserId: string;
