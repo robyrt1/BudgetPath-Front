@@ -1,4 +1,5 @@
 import { Datum } from "@/Models/Transactions/Responses/ResponseTransacrions";
+import { formatNumber } from "@/shared/formatNumber";
 import { ColDef, ValueGetterParams } from "ag-grid-community";
 
 export const TransactionsColunsDefs: ColDef<Datum>[] = [
@@ -8,6 +9,7 @@ export const TransactionsColunsDefs: ColDef<Datum>[] = [
         sortable: true,
         filter: "agTextColumnFilter",
         floatingFilter: true,
+        chartDataType: 'category'
     },
     {
         headerName: "Account ",
@@ -25,27 +27,27 @@ export const TransactionsColunsDefs: ColDef<Datum>[] = [
         headerName: "Value",
         field: "Amount",
         sortable: true,
-        // filter: true,
         filter: "agNumberColumnFilter",
-        aggFunc: "avg",
+        aggFunc: "sum",
         valueFormatter: (params: any) => {
-            const isDespesa = (params.data?.Category?.Group?.Descript === 'DESPESA') ? '-' : '+';
-            return ` ${isDespesa} R$ ${params.value}`;
+            return `R$ ${formatNumber(params.value)}`;
         },
         cellStyle: (params: any) => {
             const isDespesa = params.data?.Category?.Group?.Descript === 'DESPESA';
+            const isNegative = params.value < 0;
             return {
-                color: isDespesa ? 'red' : 'green',
+                color: isNegative ? 'red' : 'green',
                 fontWeight: 'bold',
                 textAlign: "center",
             };
         },
+        chartDataType: 'series'
     },
     {
         headerName: "Description",
         field: "Description",
         sortable: true,
-        filter: true,
+        filter: "agTextColumnFilter",
         cellRenderer: 'agGroupCellRenderer'
     },
     {
@@ -55,6 +57,7 @@ export const TransactionsColunsDefs: ColDef<Datum>[] = [
         filter: "agTextColumnFilter",
         floatingFilter: true,
         cellStyle: { textAlign: "center" },
+        chartDataType: 'category'
     },
     {
         headerName: "Transaction Date",
@@ -71,7 +74,8 @@ export const TransactionsColunsDefs: ColDef<Datum>[] = [
         filter: true,
         pivot: true,
         cellStyle: { textAlign: "center" },
-        rowGroup: true, hide: true
+        rowGroup: true, hide: true, rowGroupIndex: 0,
+        chartDataType: 'category'
     },
     {
         headerName: "Status",

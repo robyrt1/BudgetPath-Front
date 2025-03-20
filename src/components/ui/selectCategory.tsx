@@ -1,7 +1,8 @@
+import { SubCategories } from "@/Models/Categories/Responses/FindCategoriesResponse";
 import { AuthState } from "@/Redux/Slices/AutheticationSlice";
 import { setCategories } from "@/Redux/Slices/CategoriesSlice";
 import UseFindCategoriesViewModel from "@/ViewModels/Categories/FindCategoriesViewModel";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 interface SelectCategoryProps {
@@ -14,7 +15,9 @@ const SelectCategory = ({ selectedCategoryId, setSelectedCategoryId }: SelectCat
     const userId = useSelector((state: { auth: AuthState }) => state.auth.userId);
     const { categories, find } = UseFindCategoriesViewModel({ UserId: userId });
 
-    // const [selectedRows, setSelectedRows] = useState<any[]>([]);
+    const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(null);
+    const [seleteSubCategories, setSeleteSubCategories] = useState<SubCategories[]>([])
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
     useEffect(() => {
         find();
@@ -27,55 +30,51 @@ const SelectCategory = ({ selectedCategoryId, setSelectedCategoryId }: SelectCat
     }, [categories]);
 
     const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedCategoryId(event.target.value);
+        const category = JSON.parse(event.target.value);
+        console.log('handleCategoryChange.category : ', category)
+        setSelectedCategoryId(category.Id);
+        setSelectedCategory(category.Id);
+        setSeleteSubCategories(category.SubCategories);
+        setSelectedSubCategory('');
     };
-
-    // const columnDefs = [
-    //     { field: "Descript", headerName: "Descrição", cellRenderer: "agGroupCellRenderer", checkboxSelection: true },
-    //     // { field: "Id", headerName: "ID", hide: true },
-    //     // { field: "GroupId", headerName: "Grupo", hide: true }
-    // ];
-
-    // const getDataPath = (data: any) => {
-    //     if (data.ParentId == null) {
-    //         return [data.Descript];
-    //     }
-    //     return [categories.find((c: any) => c.Id === data.ParentId)?.Descript, data.Descript]; // Subcategorias
-    // };
-
-    // const onSelectionChanged = (event: any) => {
-    //     const selectedNodes = event.api.getSelectedNodes();
-    //     const selectedData = selectedNodes.map((node: any) => node.data);
-    //     setSelectedRows(selectedData);
-    //     console.log("Selecionados:", selectedData);
-    // };
+    const handleSubCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedCategoryId(event.target.value);
+        setSelectedSubCategory(event.target.value);
+    };
 
     return (
         <div>
-            <select value={selectedCategoryId} onChange={handleCategoryChange}>
-                <option value="">Selecione uma categoria</option>
-                {categories.map((category: any) => (
-                    <option key={category.Id} value={category.Id}>
-                        {category.Descript}
-                    </option>
-                ))}
-            </select>
+            {!selectedSubCategory ? (
+                <select
+                    value={selectedCategoryId}
+                    onChange={handleCategoryChange}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                >
+                    <option value="">Selecione uma categoria</option>
+                    {categories.map((category: any) => (
+                        <option key={category.Id} value={JSON.stringify(category)}>
+                            {category.Descript}
+                        </option>
+                    ))}
+                </select>
+            ) : ""}
 
-            {/* <div className="ag-theme-alpine" style={{ height: 300, width: "300px" }}>
-                <AgGridReact
-                    columnDefs={columnDefs}
-                    rowData={categories.flatMap(category => [
-                        { ...category, isCategory: true },
-                        ...(category.SubCategories || []).map(sub => ({ ...sub, ParentDescript: category.Descript })) // Adiciona as subcategorias
-                    ]) as any}
-                    treeData={true}
-                    animateRows={true}
-                    groupDefaultExpanded={1}
-                    rowSelection="multiple"
-                    onSelectionChanged={onSelectionChanged}
-                    getDataPath={getDataPath}
-                />
-            </div> */}
+            {selectedCategoryId && seleteSubCategories ? (
+                <div>
+                    <select
+                        value={selectedCategoryId}
+                        onChange={handleSubCategoryChange}
+                        className="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    >
+                        <option value="">Selecione uma Sub-Categoria</option>
+                        {seleteSubCategories.map((category: any) => (
+                            <option key={category.Id} value={category.Id}>
+                                {category.Descript}
+                            </option>
+                        )) ?? []}
+                    </select>
+                </div>
+            ) : ''}
         </div>
     );
 };

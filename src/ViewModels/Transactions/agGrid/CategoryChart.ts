@@ -1,17 +1,17 @@
 import { GridApi } from "ag-grid-community";
 
-export function createQuarterlyCategoryChart(api: GridApi) {
+export function createQuarterlyCategoryChart(api: GridApi, chartContainer: HTMLElement) {
   api.createCrossFilterChart({
-    chartType: "line",
+    chartType: "column",
     cellRange: {
-      columns: ["Category", "Value"],
+      columns: ["PaymentMethod.Description", "Amount"],
     },
     aggFunc: "sum",
     chartThemeOverrides: {
       common: {
         title: {
           enabled: true,
-          text: "Category value ($)",
+          text: "Payment Method",
         },
         axes: {
           category: {
@@ -22,22 +22,22 @@ export function createQuarterlyCategoryChart(api: GridApi) {
           number: {
             label: {
               formatter: (params: any) => {
-                return params.value + "k";
+                return `R$ ${params.value}`;
               },
             },
           },
         },
       },
     },
-    chartContainer: document.querySelector("#lineChart") as any,
+    chartContainer: chartContainer,
   });
 }
 
-export function createSalesByRefChart(api: GridApi) {
+export function createSalesByRefChart(api: GridApi, chartContainer: HTMLElement) {
   api.createCrossFilterChart({
-    chartType: "donut",
+    chartType: "pie",
     cellRange: {
-      columns: ["Category", "Value"],
+      columns: ["Category.Descript", "Amount"],
     },
     aggFunc: "sum",
     chartThemeOverrides: {
@@ -61,16 +61,16 @@ export function createSalesByRefChart(api: GridApi) {
         },
       },
     },
-    chartContainer: document.querySelector("#donutChart") as any,
+    chartContainer: chartContainer
   });
 }
 
 
-export function createHandsetSalesChart(api: GridApi) {
+export function createHandsetSalesChart(api: GridApi, chartContainer: HTMLElement) {
   api.createCrossFilterChart({
-    chartType: "area",
+    chartType: "bar",
     cellRange: {
-      columns: ["Group", "Value"],
+      columns: ["Category.Group.Descript", "Amount"],
     },
     aggFunc: "count",
     chartThemeOverrides: {
@@ -82,7 +82,7 @@ export function createHandsetSalesChart(api: GridApi) {
         padding: { left: 47, right: 80 },
       },
     },
-    chartContainer: document.querySelector("#areaChart") as any,
+    chartContainer: chartContainer
   });
 }
 

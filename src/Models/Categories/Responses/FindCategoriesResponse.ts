@@ -15,7 +15,7 @@ export interface Category {
     GroupId: string,
     UserId: string | null,
     ParentId: string | null
-    SubCategories?: SubCategories[],
+    SubCategories: SubCategories[] | null,
     children?: any
 
 }

@@ -12,6 +12,7 @@ const UseFindTransactionViewModel = (props: IFindTrasactionsProps): IFindTransac
     const [error, SetError] = useState(null);
     const [colDefs, setColDefs] = useState<ColDef<Datum>[]>(TransactionsColunsDefs);
 
+
     return {
         error,
         colDefs,

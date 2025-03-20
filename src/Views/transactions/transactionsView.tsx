@@ -4,33 +4,70 @@ import UseFindTransactionViewModel from "@/ViewModels/Transactions/TransactionsV
 import { AgChartsEnterpriseModule, AgChartThemeOverrides } from "ag-charts-enterprise";
 import {
     AllCommunityModule,
+    ClientSideRowModelModule,
     ColDef,
+    DateEditorModule,
+    FirstDataRenderedEvent,
     GridReadyEvent,
     ModuleRegistry,
-    SideBarDef
+    NumberEditorModule,
+    NumberFilterModule,
+    RowGroupOpenedEvent,
+    ScrollApiModule,
+    SideBarDef,
+    TextEditorModule,
+    TextFilterModule,
+    ToolPanelSizeChangedEvent,
+    ValidationModule
 } from "ag-grid-community";
 
+import { Category } from "@/Models/Categories/Responses/FindCategoriesResponse";
 import { chartThemeOverridesAgGrid, createHandsetSalesChart, createQuarterlyCategoryChart, createSalesByRefChart } from "@/ViewModels/Transactions/agGrid/CategoryChart";
 import AddTransactionPanel from "@/Views/transactions/Panel/AddTransactionPanel";
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
 import {
     AllEnterpriseModule,
+    ColumnMenuModule,
+    ColumnsToolPanelModule,
+    ContextMenuModule,
+    FiltersToolPanelModule,
     IntegratedChartsModule,
-    LicenseManager
+    LicenseManager,
+    MultiFilterModule,
+    RowGroupingModule,
+    SetFilterModule,
 } from "ag-grid-enterprise";
 import { AgGridReact } from 'ag-grid-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import "./transactionsView.css";
 
-LicenseManager.setLicenseKey(process.env.LINCENSE as string)
-ModuleRegistry.registerModules([AllCommunityModule, AllEnterpriseModule, IntegratedChartsModule.with(AgChartsEnterpriseModule),
+LicenseManager.setLicenseKey(process.env.NEXT_PUBLIC_LINCENSE as string)
+ModuleRegistry.registerModules([
+    AllCommunityModule, AllEnterpriseModule, IntegratedChartsModule.with(AgChartsEnterpriseModule,),
+    ClientSideRowModelModule,
+    IntegratedChartsModule.with(AgChartsEnterpriseModule),
+    ColumnsToolPanelModule,
+    FiltersToolPanelModule,
+    ColumnMenuModule,
+    ContextMenuModule,
+    MultiFilterModule,
+    SetFilterModule,
+    RowGroupingModule,
+    NumberFilterModule,
+    TextFilterModule,
+    TextEditorModule,
+    DateEditorModule,
+    NumberEditorModule,
+    ValidationModule,
+    ScrollApiModule
 ]);
 
 
 const TransactionsView = () => {
     const [transactions, setTransactions] = useState<Datum[]>([]);
+    const [toolPanelWidth, setToolPanelWidth] = useState<number>(250);
     const gridRef = useRef<AgGridReact>(null);
     const defaultColDef = useMemo<ColDef>(() => {
         return {
@@ -49,6 +86,7 @@ const TransactionsView = () => {
     const userId = useSelector((state: { auth: AuthState }) => state.auth.userId);
     const { colDefs, error, find } = UseFindTransactionViewModel({ UserId: userId });
 
+
     useEffect(() => {
         const fetchTransactions = async () => {
             if (userId) {
@@ -60,6 +98,21 @@ const TransactionsView = () => {
     }, [userId]);
 
 
+    const panelRef = useRef<HTMLDivElement>(null);
+    const lineChartRef = useRef<HTMLDivElement | null>(null);
+    const donutChartRef = useRef<HTMLDivElement | null>(null);
+    const areaChartRef = useRef<HTMLDivElement | null>(null);
+
+    const handleToolPanelSizeChanged = (event: ToolPanelSizeChangedEvent) => {
+        console.log('handleToolPanelSizeChanged.panelRef.current: ', panelRef.current)
+        setToolPanelWidth(event.width);
+
+        if (panelRef.current) {
+            panelRef.current.style.width = `${event.width}px`;
+            panelRef.current.style.transition = "width 0.3s ease-in-out";
+        }
+    };
+
     const sideBar = useMemo<SideBarDef | string | string[] | boolean | null>(() => {
         return {
             toolPanels: [
@@ -67,22 +120,33 @@ const TransactionsView = () => {
                 "filters",
                 {
                     id: "addTransaction",
-                    labelDefault: "Adicionar Transação",
+                    labelDefault: "Add Transaction",
                     labelKey: "addTransaction",
                     iconKey: "menu",
-                    toolPanel: () => <AddTransactionPanel addTransaction={addTransaction} />
+                    toolPanel: () => <div
+                    >
+                        <AddTransactionPanel
+                            addTransaction={addTransaction}
+                            ref={panelRef}
+                        />
+                    </div>
                 }
             ],
-            defaultToolPanel: "columns",
+            // defaultToolPanel: "columns",
         };
     }, []);
 
     const chartThemeOverrides = useMemo<AgChartThemeOverrides>(() => chartThemeOverridesAgGrid, []);
-    const onGridReady = useCallback((params: GridReadyEvent) => params.api.refreshCells(), [])
-    const onFirstDataRendered = useCallback((params: any) => {
-        createQuarterlyCategoryChart(params.api);
-        createSalesByRefChart(params.api);
-        createHandsetSalesChart(params.api);
+    const onGridReady = useCallback((params: GridReadyEvent) => {
+        params.api.setGridOption("rowData", transactions);
+        params.api.refreshCells()
+    }, [])
+    const onFirstDataRendered = useCallback((params: FirstDataRenderedEvent) => {
+        if (params.api && lineChartRef.current && donutChartRef.current && areaChartRef.current) {
+            createQuarterlyCategoryChart(params.api, lineChartRef.current);
+            createSalesByRefChart(params.api, donutChartRef.current);
+            createHandsetSalesChart(params.api, areaChartRef.current);
+        }
 
         params.api.createRangeChart({
             cellRange: {
@@ -107,36 +171,46 @@ const TransactionsView = () => {
             minWidth: 200,
         };
     }, [])
+
+    const onRowGroupOpened = useCallback(
+        (event: RowGroupOpenedEvent<Category[]>) => {
+            if (event.expanded) {
+                const rowNodeIndex = event.node.rowIndex!;
+                const childCount = event.node.childrenAfterSort
+                    ? event.node.childrenAfterSort.length
+                    : 0;
+                const newIndex = rowNodeIndex + childCount;
+                gridRef.current!.api.ensureIndexVisible(newIndex);
+            }
+        },
+        [],
+    );
     return (
         <div className="transactions-container">
-            <div id="wrapper">
-                <div id="top">
-                    <div id="lineChart"></div>
-                    <div id="donutChart"></div>
-                </div>
-                <div id="areaChart"></div>
-                <div className="transactions-grid">
-                    <AgGridReact
-                        ref={gridRef}
-                        enableCharts={true}
-                        cellSelection={true}
-                        pivotMode={false}
-                        columnDefs={colDefs}
-                        rowData={transactions}
-                        domLayout="autoHeight"
-                        defaultColDef={defaultColDef}
-                        onGridReady={onGridReady}
-                        groupDisplayType={"singleColumn"}
-                        suppressHorizontalScroll={true}
-                        pagination={true}
-                        paginationPageSize={10}
-                        sideBar={sideBar}
-                        chartThemeOverrides={chartThemeOverrides}
-                        onFirstDataRendered={onFirstDataRendered}
-                        autoGroupColumnDef={autoGroupColumnDef}
-                        groupDefaultExpanded={1}
-                    />
-                </div>
+            <div className="transactions-grid">
+                <AgGridReact
+                    ref={gridRef}
+                    enableCharts={true}
+                    cellSelection={true}
+                    pivotMode={false}
+                    columnDefs={colDefs}
+                    rowData={transactions}
+                    defaultColDef={defaultColDef}
+                    onGridReady={onGridReady}
+                    groupDisplayType={"singleColumn"}
+                    suppressHorizontalScroll={false}
+                    suppressExcelExport={false}
+                    pagination={false}
+                    rowBuffer={10}
+                    animateRows={false}
+                    onRowGroupOpened={onRowGroupOpened}
+                    sideBar={sideBar}
+                    onToolPanelSizeChanged={handleToolPanelSizeChanged}
+                    chartThemeOverrides={chartThemeOverrides}
+                    onFirstDataRendered={onFirstDataRendered}
+                    autoGroupColumnDef={autoGroupColumnDef}
+                    groupDefaultExpanded={1}
+                />
             </div>
         </div>
     );
