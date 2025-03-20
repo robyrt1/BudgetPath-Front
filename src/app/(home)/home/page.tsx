@@ -1,13 +1,12 @@
 "use client";
 
-import DashboardView from "@/Views/dashboard/dashboardView";
+import HomeView from "@/Views/home/HomeView";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import Sidebar from "../Shared/components/Sidebar";
 import Loading from "./loading";
 
-export default function Dashboard() {
+export default function Home() {
   const router = useRouter();
   const token = useSelector((state: any) => {
     return state.auth.token
@@ -29,11 +28,6 @@ export default function Dashboard() {
   }
 
   return (
-    <div style={{ padding: "20px" }}>
-
-      <Sidebar />
-
-      <DashboardView />
-    </div>
+    <HomeView />
   );
 }

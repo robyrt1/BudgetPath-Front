@@ -22,7 +22,7 @@ import {
 } from "ag-grid-community";
 
 import { Category } from "@/Models/Categories/Responses/FindCategoriesResponse";
-import { chartThemeOverridesAgGrid, createHandsetSalesChart, createQuarterlyCategoryChart, createSalesByRefChart } from "@/ViewModels/Transactions/agGrid/CategoryChart";
+import { chartThemeOverridesAgGrid } from "@/ViewModels/Transactions/agGrid/CategoryChart";
 import AddTransactionPanel from "@/Views/transactions/Panel/AddTransactionPanel";
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
@@ -104,7 +104,6 @@ const TransactionsView = () => {
     const areaChartRef = useRef<HTMLDivElement | null>(null);
 
     const handleToolPanelSizeChanged = (event: ToolPanelSizeChangedEvent) => {
-        console.log('handleToolPanelSizeChanged.panelRef.current: ', panelRef.current)
         setToolPanelWidth(event.width);
 
         if (panelRef.current) {
@@ -142,12 +141,6 @@ const TransactionsView = () => {
         params.api.refreshCells()
     }, [])
     const onFirstDataRendered = useCallback((params: FirstDataRenderedEvent) => {
-        if (params.api && lineChartRef.current && donutChartRef.current && areaChartRef.current) {
-            createQuarterlyCategoryChart(params.api, lineChartRef.current);
-            createSalesByRefChart(params.api, donutChartRef.current);
-            createHandsetSalesChart(params.api, areaChartRef.current);
-        }
-
         params.api.createRangeChart({
             cellRange: {
                 rowStartIndex: 0,

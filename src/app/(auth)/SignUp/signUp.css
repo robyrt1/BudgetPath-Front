@@ -1,0 +1,13 @@
+.signup-container {
+    width: 1536px;
+
+    @media (max-width: 1024px) {
+        width: 1024px;
+        margin-left: 0;
+    }
+
+    @media (max-width: 768px) {
+        margin-left: 0;
+        width: 768px;
+    }
+}

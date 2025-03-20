@@ -1,4 +1,6 @@
+import SelectAccounts from "@/components/ui/selectAccounts";
 import SelectCategory from "@/components/ui/selectCategory";
+import { GetAccountUserResponse } from "@/Models/Accounts/Responses/GetAccountUserResponse";
 import { AuthState } from "@/Redux/Slices/AutheticationSlice";
 import React, { forwardRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,7 +15,13 @@ export interface IAddTransactionPanel {
 
 const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ addTransaction }, ref) => {
     const [userId, setUserId] = useState("");
-    const [accountId, setAccountId] = useState("");
+    const [account, setAccount] = useState<GetAccountUserResponse>({
+        Id: '',
+        UserId: '',
+        Name: '',
+        Balance: 0,
+        CreateAt: '',
+    });
     const [creditCardId, setCreditCardId] = useState("");
     const [debtId, setDebtId] = useState("");
     const [installmentId, setInstallmentId] = useState("");
@@ -36,7 +44,6 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
 
         addTransaction({
             UserId: userId,
-            AccountId: accountId || null,
             CreditCardId: creditCardId || null,
             DebtId: debtId || null,
             InstallmentId: installmentId || null,
@@ -48,7 +55,6 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
         });
 
         setUserId("");
-        setAccountId("");
         setCreditCardId("");
         setDebtId("");
         setInstallmentId("");
@@ -78,7 +84,7 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
                     disabled
                 />
             </div>
-            <input type="text" placeholder="Conta (Opcional)" value={accountId} onChange={(e) => setAccountId(e.target.value)} className="input-field" />
+            <SelectAccounts account={account} setAccount={setAccount} />
             <input type="text" placeholder="Cartão de Crédito (Opcional)" value={creditCardId} onChange={(e) => setCreditCardId(e.target.value)} className="input-field" />
             <SelectCategory selectedCategoryId={categoryId} setSelectedCategoryId={setCategoryId} />
             <input type="text" placeholder="Método de Pagamento" value={paymentMethodId} onChange={(e) => setPaymentMethodId(e.target.value)} className="input-field" required />

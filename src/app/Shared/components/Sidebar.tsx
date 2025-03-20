@@ -1,8 +1,14 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { logout } from "./../../../Redux/Slices/AutheticationSlice";
 
 const Sidebar = () => {
     const [isOpen, setIsOpen] = useState(false);
-
+    const dispatch = useDispatch();
+    const handleLogout = () => {
+        dispatch(logout());
+        window.location.href = "/SignUp";
+    };
     return (
         <div className="relative">
             <button
@@ -28,7 +34,7 @@ const Sidebar = () => {
                     <ul className="space-y-2 font-medium">
                         <li>
                             <a
-                                href="/dashboard"
+                                href="/home"
                                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                             >
                                 <svg
@@ -36,12 +42,12 @@ const Sidebar = () => {
                                     aria-hidden="true"
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="currentColor"
-                                    viewBox="0 0 22 21"
+                                    viewBox="0 0 20 20"
                                 >
-                                    <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
-                                    <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
+                                    <path d="M10.707 1.293a1 1 0 0 0-1.414 0l-8 8A1 1 0 0 0 2 11h1v7a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-4h2v4a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-7h1a1 1 0 0 0 .707-1.707l-8-8Z" />
                                 </svg>
-                                <span className="ms-3">Dashboard</span>
+
+                                <span className="ms-3">Home</span>
                             </a>
                         </li>
                         <li>
@@ -62,6 +68,28 @@ const Sidebar = () => {
                                     Transactions
                                 </span>
                             </a>
+                        </li>
+
+                        <li>
+                            <button
+                                onClick={handleLogout}
+                                className="w-full flex items-center p-2 text-red-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                            >
+                                <svg
+                                    className="w-5 h-5 text-red-500 transition duration-75 dark:text-red-400 group-hover:text-red-700"
+                                    aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                >
+                                    <path
+                                        fillRule="evenodd"
+                                        d="M3 10a1 1 0 0 1 1-1h8.586L10.293 6.707a1 1 0 0 1 1.414-1.414l4 4a1 1 0 0 1 0 1.414l-4 4a1 1 0 0 1-1.414-1.414L12.586 11H4a1 1 0 0 1-1-1z"
+                                        clipRule="evenodd"
+                                    />
+                                </svg>
+                                <span className="ms-3">Sair</span>
+                            </button>
                         </li>
                     </ul>
                 </div>

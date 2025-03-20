@@ -9,7 +9,8 @@ export const TransactionsColunsDefs: ColDef<Datum>[] = [
         sortable: true,
         filter: "agTextColumnFilter",
         floatingFilter: true,
-        chartDataType: 'category'
+        chartDataType: 'category',
+        // rowGroupIndex: 2,
     },
     {
         headerName: "Account ",
@@ -22,15 +23,16 @@ export const TransactionsColunsDefs: ColDef<Datum>[] = [
         },
         pivot: true,
         cellStyle: { textAlign: "center" },
+        // rowGroupIndex: 1,
     },
     {
         headerName: "Value",
         field: "Amount",
         sortable: true,
         filter: "agNumberColumnFilter",
-        aggFunc: "sum",
+        // aggFunc: "sum",
         valueFormatter: (params: any) => {
-            return `R$ ${formatNumber(params.value)}`;
+            return `${params.value ? 'R$ ' + formatNumber(params.value) : ''}`;
         },
         cellStyle: (params: any) => {
             const isDespesa = params.data?.Category?.Group?.Descript === 'DESPESA';

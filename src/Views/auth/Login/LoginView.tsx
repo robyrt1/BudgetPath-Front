@@ -15,17 +15,17 @@ const LoginView = () => {
     signUp,
     errorSign,
   } = UseAuthenticationViewModel();
-  
-  const handleGoToHome = () => router.push('/dashboard');
+
+  const handleGoToHome = () => router.push('/home');
   const handleLogin = async () => {
     const response = await signUp();
     if (response) {
       handleGoToHome()
     }
-};
+  };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg px-6 py-8 ring shadow-xl ring-gray-900/5 flex flex-col items-center justify-center min-h-[300px]">
+    <div className="bg-white dark:bg-gray-800 rounded-lg px-6 py-8 ring shadow-xl ring-gray-900/5 flex flex-col items-center justify-center">
       <label className="text-2xl text-gray-900 dark:text-white pb-3">
         Login
       </label>

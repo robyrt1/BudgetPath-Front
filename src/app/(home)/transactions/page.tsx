@@ -1,5 +1,5 @@
 "use client";
-import Loading from "@/app/dashboard/loading";
+import Loading from "@/app/(home)/home/loading";
 import TransactionsView from "@/Views/transactions/transactionsView";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

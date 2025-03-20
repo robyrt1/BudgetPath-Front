@@ -11,8 +11,7 @@ export default function Home() {
       router.push("/SignUp");
     }
     else {
-      router.push("/dashboard");
-
+      router.push("/home");
     }
   }, [token, router]);
 
