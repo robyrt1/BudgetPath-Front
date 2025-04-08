@@ -8,6 +8,12 @@ const InitalState: Category[] = [{
     Id: '',
     ParentId: '',
     UserId: '',
+    Group: {
+        Id: "",
+        Descript: "",
+        CREATED_AT: ""
+    },
+    SubCategories: null
 }]
 
 const CategoriesSlice = createSlice({

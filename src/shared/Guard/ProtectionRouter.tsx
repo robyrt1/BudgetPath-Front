@@ -18,7 +18,7 @@ const WithAuthentication = <P extends object>(WrappedComponent: FC<P>) => {
       if (token === undefined) return;
 
       if (!token) {
-        router.replace("/SignUp");
+        router.replace("/SignIn");
       } else {
         setLoading(false);
       }

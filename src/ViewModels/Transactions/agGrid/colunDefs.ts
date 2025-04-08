@@ -38,7 +38,7 @@ export const TransactionsColunsDefs: ColDef<Datum>[] = [
             const isDespesa = params.data?.Category?.Group?.Descript === 'DESPESA';
             const isNegative = params.value < 0;
             return {
-                color: isNegative ? 'red' : 'green',
+                color: isDespesa ? 'red' : 'green',
                 fontWeight: 'bold',
                 textAlign: "center",
             };
@@ -76,7 +76,7 @@ export const TransactionsColunsDefs: ColDef<Datum>[] = [
         filter: true,
         pivot: true,
         cellStyle: { textAlign: "center" },
-        rowGroup: true, hide: true, rowGroupIndex: 0,
+        // rowGroup: true, hide: true, /*rowGroupIndex: 0,*/
         chartDataType: 'category'
     },
     {

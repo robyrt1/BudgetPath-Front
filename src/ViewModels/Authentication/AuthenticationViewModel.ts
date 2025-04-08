@@ -23,10 +23,10 @@ const UseAuthenticationViewModel = (): IAuthenticationState => {
 
         password: PasswordState.password,
         passwordError: PasswordState.error,
-        setPassword: (password: string) => PasswordDispatch({ type: "SET_PASSWORD", payload: password }),
+        setPassword: (password: string) => PasswordDispatch({ type: "SET_PASSWORD_SIGN_IN", payload: password }),
 
         errorSign: errorSign,
-        signUp: async () => {
+        signIn: async () => {
             SetErrorSign(null);
             setLoading(true)
 

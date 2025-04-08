@@ -16,7 +16,7 @@ export default function TransactionsPage() {
         if (token === undefined) return;
 
         if (!token) {
-            router.push("/SignUp");
+            router.push("/SignIn");
         } else {
             setIsAuthenticated(true);
         }

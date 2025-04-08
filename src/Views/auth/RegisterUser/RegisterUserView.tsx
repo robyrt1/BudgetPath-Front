@@ -23,12 +23,12 @@ const RegisterUserView = () => {
 
 
   const router = useRouter();
-  const handleGoToSignUp = () => router.replace("/SignUp");
+  const handleGoToSignIn = () => router.replace("/SignIn");
 
   const handleRegister = async () => {
     const response = await register();
     if (response) {
-      handleGoToSignUp();
+      handleGoToSignIn();
     }
   };
 

@@ -1,10 +1,11 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Datum } from "@/Models/Transactions/Responses/ResponseTransacrions";
 import { AuthState } from "@/Redux/Slices/AutheticationSlice";
 import { formatNumber } from "@/shared/formatNumber";
 import UseFindTransactionViewModel from "@/ViewModels/Transactions/TransactionsViewModel";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import BankAccountCarousel from "../accounts/BankAccountCarouselView";
+import DespesasEvolucao from "./Chart/ExpensesEvolution";
 import './HomeView.css';
 
 const HomeView = () => {
@@ -13,6 +14,7 @@ const HomeView = () => {
     return state.auth.userId
   });
   const { error, find } = UseFindTransactionViewModel({ UserId: userId });
+  const [showBalances, setShowBalances] = useState(true);
 
 
   useEffect(() => {
@@ -33,60 +35,36 @@ const HomeView = () => {
 
   return (
     <div className="home-container">
-      <div className="grid">
-        <Card className="w-full">
-          <CardHeader>
-            <CardTitle>Saldo Total</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-semibold text-green-500">R$ 15.000,00</p>
-          </CardContent>
-        </Card>
+      <section>
+        <BankAccountCarousel showBalances={showBalances} setShowBalances={setShowBalances} />
+      </section>
 
-        <Card className="w-full">
-          <CardHeader>
-            <CardTitle>Receitas</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-semibold text-blue-500">R$ 5.200,00</p>
-          </CardContent>
-        </Card>
+      <section>
+        <DespesasEvolucao showBalances={showBalances} />
+      </section>
+      <section className="bg-white shadow-md rounded-xl p-4 w-full max-w-xl mt-2">
+        <h2 className="text-lg font-bold mb-2">Últimas Transações</h2>
 
-        <Card className="w-full">
-          <CardHeader>
-            <CardTitle>Despesas</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-semibold text-red-500">R$ 3.800,00</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="bg-white shadow-md rounded-xl p-4 w-full mt-6">
-        <h2 className="text-lg font-bold mb-2">Fluxo de Caixa</h2>
-        <p>📊 Aqui entrará o gráfico das finanças</p>
-      </div>
-
-      <div className=" bg-white shadow-md rounded-xl p-4 w-full mt-5">
-        <h2 className="text-lg font-bold ">Últimas Transações</h2>
-        <ul className=" transaction-container space-y-2">
+        <ul className="max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-gray-100 divide-y divide-gray-100">
           {transactions.map((transaction, index) => (
-            <li key={transaction.Id || index} className="flex justify-between">
+            <li key={transaction.Id || index} className="py-3 flex justify-between items-start">
               <div>
-                <span>{transaction.Description}</span>
-                <div className="text-sm text-gray-500">
+                <p className="font-medium text-gray-700">{transaction.Description}</p>
+                <div className="text-sm text-gray-500 space-x-2">
                   <span>Conta: {transaction.Account?.Name || transaction.CreditCard.Name}</span>
-                  <span className="ml-2">Categoria: {transaction.Category?.Descript}</span>
-                  <span className="ml-2">Data: {new Date(transaction.TransactionDate).toLocaleDateString()}</span>
+                  <span>• Categoria: {transaction.Category?.Descript}</span>
+                  <span>• {new Date(transaction.TransactionDate).toLocaleDateString()}</span>
                 </div>
               </div>
-              <span className={transaction.Amount < 0 ? 'text-red-500' : 'text-green-500'}>
-                {'R$'} {formatNumber(String(transaction.Amount))}
-              </span>
+              <div className={`text-right font-semibold ${transaction.Category.Group.Descript == 'DESPESA' ? 'text-red-500' : 'text-green-600'}`}>
+                R$ {formatNumber(String(transaction.Amount))}
+              </div>
             </li>
           ))}
         </ul>
-      </div>
+      </section>
+
+
     </div>
   );
 };

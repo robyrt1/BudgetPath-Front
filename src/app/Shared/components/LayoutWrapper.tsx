@@ -5,7 +5,7 @@ import Sidebar from "./Sidebar";
 
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
-    const hideSidebarRoutes = ["/SignUp", "/RegisterUser"]; // Rotas que não devem ter Sidebar
+    const hideSidebarRoutes = ["/SignIn", "/RegisterUser"]; // Rotas que não devem ter Sidebar
     const showSidebar = !hideSidebarRoutes.includes(pathname);
 
     return (

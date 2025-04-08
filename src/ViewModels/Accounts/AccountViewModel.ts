@@ -14,7 +14,6 @@ const AccountViewModel = (props: IAccountViewModelProps): IUseAccountViewModel =
         SetAccount,
         find: async () => {
             const accounts = await accountModel.findByUser({ userId: props.UserId })
-            console.log("accounts >>>", accounts)
             SetAccount(accounts);
         }
     }

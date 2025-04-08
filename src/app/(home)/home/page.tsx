@@ -17,7 +17,7 @@ export default function Home() {
     if (token === undefined) return;
 
     if (!token) {
-      router.push("/SignUp");
+      router.push("/SignIn");
     } else {
       setIsAuthenticated(true);
     }

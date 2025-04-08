@@ -22,6 +22,8 @@ import {
 } from "ag-grid-community";
 
 import { Category } from "@/Models/Categories/Responses/FindCategoriesResponse";
+import { RequestCreateTransaction } from "@/Models/Transactions/Requests/RequesTransactions";
+import TransactionsModel from "@/Models/Transactions/TransactionsModel";
 import { chartThemeOverridesAgGrid } from "@/ViewModels/Transactions/agGrid/CategoryChart";
 import AddTransactionPanel from "@/Views/transactions/Panel/AddTransactionPanel";
 import 'ag-grid-community/styles/ag-theme-alpine.css';
@@ -67,8 +69,9 @@ ModuleRegistry.registerModules([
 
 const TransactionsView = () => {
     const [transactions, setTransactions] = useState<Datum[]>([]);
-    const [toolPanelWidth, setToolPanelWidth] = useState<number>(250);
     const gridRef = useRef<AgGridReact>(null);
+    const userId = useSelector((state: { auth: AuthState }) => state.auth.userId);
+    const { colDefs, error, find } = UseFindTransactionViewModel({ UserId: userId });
     const defaultColDef = useMemo<ColDef>(() => {
         return {
             editable: true,
@@ -79,33 +82,30 @@ const TransactionsView = () => {
         };
     }, []);
 
-    const addTransaction = (newTransaction: Datum) => {
-        setTransactions((prev) => [...prev, newTransaction]);
+    const addTransaction = async (newTransaction: RequestCreateTransaction) => {
+        try {
+            const result = await TransactionsModel.CreateTransaction(newTransaction);
+            await fetchTransactions()
+            return result;
+        } catch (error) {
+            throw error;
+        }
     };
 
-    const userId = useSelector((state: { auth: AuthState }) => state.auth.userId);
-    const { colDefs, error, find } = UseFindTransactionViewModel({ UserId: userId });
-
-
+    const fetchTransactions = async () => {
+        if (userId) {
+            const response: ResponseTransactions = await find();
+            setTransactions(response.Data || []);
+        }
+    };
     useEffect(() => {
-        const fetchTransactions = async () => {
-            if (userId) {
-                const response: ResponseTransactions = await find();
-                setTransactions(response.Data || []);
-            }
-        };
         fetchTransactions();
     }, [userId]);
 
 
     const panelRef = useRef<HTMLDivElement>(null);
-    const lineChartRef = useRef<HTMLDivElement | null>(null);
-    const donutChartRef = useRef<HTMLDivElement | null>(null);
-    const areaChartRef = useRef<HTMLDivElement | null>(null);
 
     const handleToolPanelSizeChanged = (event: ToolPanelSizeChangedEvent) => {
-        setToolPanelWidth(event.width);
-
         if (panelRef.current) {
             panelRef.current.style.width = `${event.width}px`;
             panelRef.current.style.transition = "width 0.3s ease-in-out";
@@ -137,7 +137,7 @@ const TransactionsView = () => {
 
     const chartThemeOverrides = useMemo<AgChartThemeOverrides>(() => chartThemeOverridesAgGrid, []);
     const onGridReady = useCallback((params: GridReadyEvent) => {
-        params.api.setGridOption("rowData", transactions);
+        // params.api.setGridOption("rowData", transactions);
         params.api.refreshCells()
     }, [])
     const onFirstDataRendered = useCallback((params: FirstDataRenderedEvent) => {

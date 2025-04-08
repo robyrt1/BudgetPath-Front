@@ -8,7 +8,7 @@ export default function Home() {
 
   useEffect(() => {
     if (!token) {
-      router.push("/SignUp");
+      router.push("/SignIn");
     }
     else {
       router.push("/home");

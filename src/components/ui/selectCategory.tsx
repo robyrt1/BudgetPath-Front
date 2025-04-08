@@ -7,17 +7,18 @@ import { useDispatch, useSelector } from "react-redux";
 
 interface SelectCategoryProps {
     selectedCategoryId: string;
+    transactionType: string,
     setSelectedCategoryId: (categoryId: string) => void;
 }
 
-const SelectCategory = ({ selectedCategoryId, setSelectedCategoryId }: SelectCategoryProps) => {
+const SelectCategory = ({ selectedCategoryId, setSelectedCategoryId, transactionType }: SelectCategoryProps) => {
     const dispatch = useDispatch();
     const userId = useSelector((state: { auth: AuthState }) => state.auth.userId);
     const { categories, find } = UseFindCategoriesViewModel({ UserId: userId });
 
     const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(null);
     const [seleteSubCategories, setSeleteSubCategories] = useState<SubCategories[]>([])
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const [selectedCategory, setSelectedCategory] = useState<any>();
 
     useEffect(() => {
         find();
@@ -31,9 +32,8 @@ const SelectCategory = ({ selectedCategoryId, setSelectedCategoryId }: SelectCat
 
     const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const category = JSON.parse(event.target.value);
-        console.log('handleCategoryChange.category : ', category)
         setSelectedCategoryId(category.Id);
-        setSelectedCategory(category.Id);
+        setSelectedCategory(event.target.value);
         setSeleteSubCategories(category.SubCategories);
         setSelectedSubCategory('');
     };
@@ -44,20 +44,22 @@ const SelectCategory = ({ selectedCategoryId, setSelectedCategoryId }: SelectCat
 
     return (
         <div>
-            {!selectedSubCategory ? (
+            {(
                 <select
-                    value={selectedCategoryId}
+                    value={selectedCategory}
                     onChange={handleCategoryChange}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 >
                     <option value="">Selecione uma categoria</option>
-                    {categories.map((category: any) => (
+                    {categories.filter(item => {
+                        return [transactionType].includes(item.Group.Descript)
+                    }).map((category: any) => (
                         <option key={category.Id} value={JSON.stringify(category)}>
                             {category.Descript}
                         </option>
                     ))}
                 </select>
-            ) : ""}
+            )}
 
             {selectedCategoryId && seleteSubCategories ? (
                 <div>

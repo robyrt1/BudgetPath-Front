@@ -13,6 +13,11 @@ export interface Category {
     Id: string,
     Descript: string,
     GroupId: string,
+    Group: {
+        Id: string,
+        Descript: string,
+        CREATED_AT: string
+    }
     UserId: string | null,
     ParentId: string | null
     SubCategories: SubCategories[] | null,

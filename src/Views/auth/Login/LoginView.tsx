@@ -12,13 +12,13 @@ const LoginView = () => {
     password,
     passwordError,
     setPassword,
-    signUp,
+    signIn,
     errorSign,
   } = UseAuthenticationViewModel();
 
   const handleGoToHome = () => router.push('/home');
   const handleLogin = async () => {
-    const response = await signUp();
+    const response = await signIn();
     if (response) {
       handleGoToHome()
     }
@@ -27,7 +27,7 @@ const LoginView = () => {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg px-6 py-8 ring shadow-xl ring-gray-900/5 flex flex-col items-center justify-center">
       <label className="text-2xl text-gray-900 dark:text-white pb-3">
-        Login
+        Sign in to our platform
       </label>
       <div className="w-full max-w-sm min-w-[500px]">
         <div className="relative">
@@ -81,17 +81,20 @@ const LoginView = () => {
           className="mt-4 p-2 bg-blue-500 text-white rounded-md"
           onClick={handleLogin}
         >
-          sing-up
+          Login to your account
         </button>
       )}
       <div className="mt-4 flex flex-col items-center justify-center">
         {
-          <label
-            onClick={() => router.replace("RegisterUser")}
-            className="text-xs text-blue-400 cursor-pointer"
-          >
-            Create Account
-          </label>
+          <div className="text-sm font-medium text-gray-500 dark:text-gray-300" onClick={() => router.replace("RegisterUser")}>
+            Not registered? <a href="#" className="text-blue-700 hover:underline dark:text-blue-500">Create account</a>
+          </div>
+          // <label
+          //   onClick={() => router.replace("RegisterUser")}
+          //   className="text-xs text-blue-400 cursor-pointer"
+          // >
+          //   Create Account
+          // </label>
         }
       </div>
     </div>

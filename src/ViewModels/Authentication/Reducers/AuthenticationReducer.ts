@@ -28,6 +28,12 @@ export const PasswordReducer = (state: PasswordState, action: PasswordAction): P
                 password: action.payload,
                 error: action.payload.length < 6 ? "A senha deve ter pelo menos 6 caracteres." : null,
             };
+        case "SET_PASSWORD_SIGN_IN":
+            return {
+                ...state,
+                password: action.payload,
+                error: ''
+            };
         default:
             return state;
     }
