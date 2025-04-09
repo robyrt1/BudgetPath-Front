@@ -4,7 +4,7 @@ import { ColDef } from "ag-grid-community";
 export interface IFindTransactions {
     error: any,
     colDefs: ColDef<Datum>[];
-    find: (top?: number) => Promise<ResponseTransactions> | ResponseTransactions
+    find: (input: { top?: number, group?: string }) => Promise<ResponseTransactions> | ResponseTransactions
 }
 
 export interface IFindTrasactionsProps {

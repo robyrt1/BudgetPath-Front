@@ -1,7 +1,7 @@
 import SelectAccounts from "@/components/ui/selectAccounts";
 import SelectCategory from "@/components/ui/selectCategory";
 import SelectPaymentMethod from "@/components/ui/selectPaymentMethod";
-import { GetAccountUserResponse } from "@/Models/Accounts/Responses/GetAccountUserResponse";
+import { CreditCard, GetAccountUserResponse } from "@/Models/Accounts/Responses/GetAccountUserResponse";
 import { PaymentMethod } from "@/Models/PaymentMethod/Responses/ResponseFindPaymentMethods";
 import { RequestCreateTransaction } from "@/Models/Transactions/Requests/RequesTransactions";
 import { AuthState } from "@/Redux/Slices/AutheticationSlice";
@@ -24,6 +24,7 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
         Name: '',
         Balance: 0,
         CreateAt: '',
+        CreditCard: []
     });
     const [creditCardId, setCreditCardId] = useState("");
     const [debtId, setDebtId] = useState("");
@@ -34,6 +35,7 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
     const [amount, setAmount] = useState("");
     const [transactionDate, setTransactionDate] = useState("");
     const [transactionType, setTransactionType] = useState("");
+    const [credit, setCredit] = useState<CreditCard | null>();
 
 
     const dispatch = useDispatch();
@@ -59,6 +61,7 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
             Name: '',
             Balance: 0,
             CreateAt: '',
+            CreditCard: []
         });
         setAmount("");
         setCategoryId("");
@@ -80,7 +83,7 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
         try {
             const result: any = await addTransaction({
                 userId: getUserId,
-                creditCardId: creditCardId || null,
+                creditCardId: credit?.Id || null,
                 debtId: debtId || null,
                 installmentId: installmentId || null,
                 categoryId: categoryId,
@@ -88,7 +91,7 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
                 description: description,
                 amount: amountNumber,
                 transactionDate: transactionDate,
-                accountId: account.Id
+                accountId: credit?.Id ? '' : account.Id
             });
 
             if (result?.errors) {
@@ -143,8 +146,7 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
                             disabled
                         />
                     </div>
-                    <SelectAccounts account={account} setAccount={setAccount} />
-                    <input type="text" placeholder="Cartão de Crédito (Opcional)" value={creditCardId} onChange={(e) => setCreditCardId(e.target.value)} className="input-field" />
+                    <SelectAccounts account={account} setAccount={setAccount} setCredit={setCredit} creditCardProp={credit} />
                     <SelectCategory selectedCategoryId={categoryId} setSelectedCategoryId={setCategoryId} transactionType={transactionType} />
                     <SelectPaymentMethod selectedPaymentMethod={paymentMethodId} setSelectedPaymentMethod={setPaymentMethodId} />
                     <input type="text" placeholder="Descrição" value={description} onChange={(e) => setDescription(e.target.value)} className="input-field" required />

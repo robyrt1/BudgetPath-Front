@@ -23,7 +23,6 @@ const UseFindPaymentMethodViewModel = (props: IFindPaymentMethodProps): IUseFind
                 const message = get(response, 'details', null)
                 SetError(message);
             }
-            console.log(response.data)
             SetPaymentMethod(response.data as unknown as PaymentMethod[])
 
             dispatch(setPaymentMethods(paymentMethod));

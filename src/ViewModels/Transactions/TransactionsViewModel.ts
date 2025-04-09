@@ -16,9 +16,9 @@ const UseFindTransactionViewModel = (props: IFindTrasactionsProps): IFindTransac
     return {
         error,
         colDefs,
-        find: async (top?: number) => {
+        find: async (input: { top?: number, group?: string }) => {
 
-            const response = await TransactionsModel.FindTransactions({ userId: props.UserId, top });
+            const response = await TransactionsModel.FindTransactions({ userId: props.UserId, top: input.top, group: input.group });
             if (!get(response, 'Succeeded', stubTrue())) {
                 const message = get(response, 'details', null)
                 SetError(message);

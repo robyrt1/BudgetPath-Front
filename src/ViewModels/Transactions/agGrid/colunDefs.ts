@@ -10,7 +10,7 @@ export const TransactionsColunsDefs: ColDef<Datum>[] = [
         filter: "agTextColumnFilter",
         floatingFilter: true,
         chartDataType: 'category',
-        // rowGroupIndex: 2,
+        enableRowGroup: true,
     },
     {
         headerName: "Account ",
@@ -19,18 +19,20 @@ export const TransactionsColunsDefs: ColDef<Datum>[] = [
         filter: "agTextColumnFilter",
         floatingFilter: true,
         valueGetter: (params: ValueGetterParams) => {
-            return params.data?.Account?.Name || params.data?.CreditCard?.Name || '';
+            if (params.data?.Account?.Id && params.data?.CreditCard?.Id) {
+                return params.data?.CreditCard?.Name
+            }
+            return params.data?.Account?.Name || '';
         },
         pivot: true,
         cellStyle: { textAlign: "center" },
-        // rowGroupIndex: 1,
+        enableRowGroup: true,
     },
     {
         headerName: "Value",
         field: "Amount",
         sortable: true,
         filter: "agNumberColumnFilter",
-        // aggFunc: "sum",
         valueFormatter: (params: any) => {
             return `${params.value ? 'R$ ' + formatNumber(params.value) : ''}`;
         },
@@ -43,7 +45,7 @@ export const TransactionsColunsDefs: ColDef<Datum>[] = [
                 textAlign: "center",
             };
         },
-        chartDataType: 'series'
+        enableValue: true
     },
     {
         headerName: "Description",
@@ -58,8 +60,10 @@ export const TransactionsColunsDefs: ColDef<Datum>[] = [
         sortable: true,
         filter: "agTextColumnFilter",
         floatingFilter: true,
+        pivot: true,
         cellStyle: { textAlign: "center" },
-        chartDataType: 'category'
+        chartDataType: 'category',
+        enableRowGroup: true,
     },
     {
         headerName: "Transaction Date",
@@ -76,8 +80,7 @@ export const TransactionsColunsDefs: ColDef<Datum>[] = [
         filter: true,
         pivot: true,
         cellStyle: { textAlign: "center" },
-        // rowGroup: true, hide: true, /*rowGroupIndex: 0,*/
-        chartDataType: 'category'
+        enableRowGroup: true,
     },
     {
         headerName: "Status",

@@ -18,7 +18,7 @@ const optionsFiltro = {
     year: 'year'
 }
 
-export default function EvolucaoDespesas({ showBalances }: { showBalances?: boolean }) {
+export default function ExpensesEvolution({ showBalances, transactionsProp }: { showBalances?: boolean, transactionsProp?: Datum[] }) {
     const [transactions, setTransactions] = useState<Datum[]>([]);
     const [data, setData] = useState<PontoEvolucao[]>([]);
     const [resumo, setResumo] = useState<PontoEvolucao[]>([]);
@@ -31,13 +31,17 @@ export default function EvolucaoDespesas({ showBalances }: { showBalances?: bool
 
         const fetchTransactions = async () => {
             try {
-                const response = await find(1000);
+                const response = await find({ top: 1000 });
                 const transacoes = response.Data || [];
                 setTransactions(transacoes);
             } catch (err) {
-                console.log(err);
             }
         };
+
+        if (transactionsProp) {
+            setTransactions(transactionsProp);
+            return;
+        }
 
         fetchTransactions();
     }, [userId]);
@@ -79,7 +83,7 @@ export default function EvolucaoDespesas({ showBalances }: { showBalances?: bool
     return (
         <div className="bg-white p-6 rounded-xl shadow-md mt-6 w-full">
             <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-700">📊 Evolução de Despesas</h2>
+                <h2 className="text-xl font-bold text-gray-700">📊 Expense Evolution</h2>
                 <div className="flex gap-2">
                     {(['month', 'week', 'year'] as Agrupamento[]).map((f) => (
                         <button
@@ -90,15 +94,13 @@ export default function EvolucaoDespesas({ showBalances }: { showBalances?: bool
                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                 }`}
                         >
-                            {f === 'month' ? 'Months' : f === 'week' ? 'weeks' : 'Year'}
+                            {f === 'month' ? 'Months' : f === 'week' ? 'Weeks' : 'Year'}
                         </button>
                     ))}
                 </div>
             </div>
 
-            {/* Gráfico + Resumo lado a lado */}
             <div className="flex flex-col lg:flex-row gap-6">
-                {/* Gráfico */}
                 <div className="flex-1">
                     {data.length === 0 ? (
                         <p className="text-gray-500">Nenhuma despesa encontrada.</p>
@@ -108,14 +110,13 @@ export default function EvolucaoDespesas({ showBalances }: { showBalances?: bool
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis dataKey="data" />
                                 <YAxis />
-                                <Tooltip formatter={(value: number) => `R$ ${value.toFixed(2)}`} />
+                                <Tooltip formatter={(value: number) => showBalances ? `R$ ${value.toFixed(2)}` : 'R$ ****'} />
                                 <Line type="monotone" dataKey="total" stroke="#f87171" strokeWidth={2} />
                             </LineChart>
                         </ResponsiveContainer>
                     )}
                 </div>
 
-                {/* Resumo */}
                 <div className="w-full lg:w-[300px] bg-gray-50 rounded-xl p-4 shadow-inner">
                     <h3 className="text-lg font-semibold text-gray-800 mb-3">📄 Summary by {filtro}</h3>
                     <ul className="divide-y divide-gray-200">

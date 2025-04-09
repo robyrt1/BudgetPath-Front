@@ -43,6 +43,7 @@ import {
 import { AgGridReact } from 'ag-grid-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import TransactionGrid from "./Grid/TransactionGrid";
 import "./transactionsView.css";
 
 LicenseManager.setLicenseKey(process.env.NEXT_PUBLIC_LINCENSE as string)
@@ -94,7 +95,7 @@ const TransactionsView = () => {
 
     const fetchTransactions = async () => {
         if (userId) {
-            const response: ResponseTransactions = await find();
+            const response: ResponseTransactions = await find({});
             setTransactions(response.Data || []);
         }
     };
@@ -178,33 +179,37 @@ const TransactionsView = () => {
         },
         [],
     );
+
+
+    const handleGridReady = useCallback((params: any) => {
+        window.gridApi = params.api;
+        window.columnApi = params.columnApi;
+    }, []);
+
+    const handleExport = () => {
+        window.gridApi?.exportDataAsExcel({
+            fileName: "transacoes.xlsx",
+            sheetName: "Transações"
+        });
+    };
+
+    const handleGroupByCategory = () => {
+        window.columnApi?.setRowGroupColumns(["Category"]);
+    };
+
+    const handleClearGrouping = () => {
+        window.columnApi?.setRowGroupColumns([]);
+    };
+
     return (
         <div className="transactions-container">
-            <div className="transactions-grid">
-                <AgGridReact
-                    ref={gridRef}
-                    enableCharts={true}
-                    cellSelection={true}
-                    pivotMode={false}
-                    columnDefs={colDefs}
-                    rowData={transactions}
-                    defaultColDef={defaultColDef}
-                    onGridReady={onGridReady}
-                    groupDisplayType={"singleColumn"}
-                    suppressHorizontalScroll={false}
-                    suppressExcelExport={false}
-                    pagination={false}
-                    rowBuffer={10}
-                    animateRows={false}
-                    onRowGroupOpened={onRowGroupOpened}
-                    sideBar={sideBar}
-                    onToolPanelSizeChanged={handleToolPanelSizeChanged}
-                    chartThemeOverrides={chartThemeOverrides}
-                    onFirstDataRendered={onFirstDataRendered}
-                    autoGroupColumnDef={autoGroupColumnDef}
-                    groupDefaultExpanded={1}
-                />
-            </div>
+            <TransactionGrid
+                colDefs={colDefs}
+                transactions={transactions}
+                addTransaction={addTransaction}
+                onGridReady={handleGridReady}
+                onGroupBy={handleGroupByCategory}
+            />
         </div>
     );
 };
