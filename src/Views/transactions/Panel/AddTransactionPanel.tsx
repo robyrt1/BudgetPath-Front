@@ -91,7 +91,7 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
                 description: description,
                 amount: amountNumber,
                 transactionDate: transactionDate,
-                accountId: credit?.Id ? '' : account.Id
+                accountId: credit?.Id ? null : account.Id
             });
 
             if (result?.errors) {

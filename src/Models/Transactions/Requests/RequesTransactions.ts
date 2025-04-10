@@ -8,7 +8,7 @@ export type RequestTransactions = {
 
 export type RequestCreateTransaction = {
     userId: string;
-    accountId: string;
+    accountId: string | null;
     creditCardId: string | null;
     debtId: string | null;
     installmentId: string | null;
@@ -17,4 +17,8 @@ export type RequestCreateTransaction = {
     amount: number;
     transactionDate: string; // ISO 8601 date-time string
     paymentMethod: string;
+}
+
+export type RequestAggregatedExpenses = {
+    userId: string; groupBy: string
 }

@@ -19,7 +19,7 @@ export const TransactionsColunsDefs: ColDef<Datum>[] = [
         filter: "agTextColumnFilter",
         floatingFilter: true,
         valueGetter: (params: ValueGetterParams) => {
-            if (params.data?.Account?.Id && params.data?.CreditCard?.Id) {
+            if (params.data?.CreditCardId) {
                 return params.data?.CreditCard?.Name
             }
             return params.data?.Account?.Name || '';
