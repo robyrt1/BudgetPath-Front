@@ -1,7 +1,6 @@
 // components/TransactionGrid.tsx
 import { RequestCreateTransaction } from "@/Models/Transactions/Requests/RequesTransactions";
 import { Datum } from "@/Models/Transactions/Responses/ResponseTransacrions";
-import AddTransactionPanel from "@/Views/transactions/Panel/AddTransactionPanel";
 import { AgChartThemeOverrides } from "ag-charts-enterprise";
 import {
     ColDef,
@@ -10,13 +9,13 @@ import {
     GridReadyEvent,
     IServerSideDatasource,
     RowGroupOpenedEvent,
-    SideBarDef,
     themeQuartz,
     ToolPanelSizeChangedEvent
 } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import "../transactionsView.css";
+import { SideBarGrid } from "./SiderBarGrid";
 
 
 interface Props {
@@ -27,11 +26,16 @@ interface Props {
     onGroupBy: (column: string) => void;
 }
 
-const TransactionGrid: React.FC<Props> = ({ colDefs, transactions, addTransaction, onGridReady }) => {
+const TransactionGrid: React.FC<Props> = ({ colDefs, transactions, addTransaction }) => {
     const gridRef = useRef<AgGridReact>(null);
     const panelRef = useRef<HTMLDivElement>(null);
     const themeDarkBlue = themeQuartz.withPart(colorSchemeDarkBlue);
+    const [gridApi, setGridApi] = useState<any>(null);
 
+
+    const onGridReady = (params: any) => {
+        setGridApi(params.api);
+    };
 
     const defaultColDef = useMemo<ColDef>(() => ({
         editable: true,
@@ -54,29 +58,6 @@ const TransactionGrid: React.FC<Props> = ({ colDefs, transactions, addTransactio
             panelRef.current.style.transition = "width 0.3s ease-in-out";
         }
     };
-
-    const sideBar = useMemo<SideBarDef | string | string[] | boolean | null>(() => {
-        return {
-            toolPanels: [
-                "columns",
-                "filters",
-                {
-                    id: "addTransaction",
-                    labelDefault: "Add Transaction",
-                    labelKey: "addTransaction",
-                    iconKey: "menu",
-                    toolPanel: () => <div
-                    >
-                        <AddTransactionPanel
-                            addTransaction={addTransaction}
-                            ref={panelRef}
-                        />
-                    </div>
-                }
-            ],
-            // defaultToolPanel: "columns",
-        };
-    }, []);
 
     const onFirstDataRendered = useCallback((params: FirstDataRenderedEvent) => {
         params.api.createRangeChart({
@@ -103,34 +84,32 @@ const TransactionGrid: React.FC<Props> = ({ colDefs, transactions, addTransactio
     const datasource: IServerSideDatasource<any> = {
         getRows: (params) => {
             console.log('🚀 filterModel:', params.request.filterModel);
-
-            // // Aqui você manda isso pro backend com fetch/axios
-            // fetch('/api/transactions', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({
-            //         filterModel: params.request.filterModel,
-            //         startRow: params.request.startRow,
-            //         endRow: params.request.endRow,
-            //         sortModel: params.request.sortModel,
-            //         // outros parâmetros se quiser
-            //     }),
-            // })
-            //     .then((res) => res.json())
-            //     .then((data) => {
-            //         // params.successCallback(data.rows, data.totalCount);
-            //     })
-            //     .catch((err) => {
-            //         console.error('Erro no getRows:', err);
-            //         // params.failCallback();
-            //     });
         },
     };
 
+    const getSelectedDateRange = () => {
+        const filterModel = gridApi?.getFilterModel();
+        if (filterModel && filterModel.TransactionDate) {
+            const { dateFrom, dateTo } = filterModel.TransactionDate;
+            return {
+                startDate: dateFrom,
+                endDate: dateTo,
+            };
+        }
+        return null;
+    };
 
+    const fetchFilteredData = () => {
+        const dateRange = getSelectedDateRange();
+        console.log(dateRange)
+        if (dateRange) {
+            console.log('Chamando API com intervalo de datas:', dateRange);
+        }
+    };
 
     return (
         <div className="transactions-grid ag-theme-balham-dark w-full h-full">
+            {/* <button onClick={fetchFilteredData}>Buscar dados filtrados</button> */}
             <AgGridReact
                 ref={gridRef}
                 enableCharts={true}
@@ -147,13 +126,12 @@ const TransactionGrid: React.FC<Props> = ({ colDefs, transactions, addTransactio
                 rowBuffer={10}
                 animateRows={false}
                 onRowGroupOpened={onRowGroupOpened}
-                sideBar={sideBar}
+                sideBar={SideBarGrid(addTransaction, panelRef)}
                 onToolPanelSizeChanged={handleToolPanelSizeChanged}
                 chartThemeOverrides={chartThemeOverrides}
                 onFirstDataRendered={onFirstDataRendered}
                 theme={themeDarkBlue}
                 serverSideDatasource={datasource}
-                // autoGroupColumnDef={autoGroupColumnDef}
                 groupDefaultExpanded={1}
             />
         </div>

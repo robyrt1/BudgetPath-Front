@@ -1,3 +1,6 @@
+import { FindByUseRequest } from "../Requests/FindByUser";
+import { Debts } from "../Responses/FindByUser";
+
 export interface IDebtsModelPort {
-    findByUser(): any
+    findByUser(input: FindByUseRequest): Promise<Debts[]>
 }

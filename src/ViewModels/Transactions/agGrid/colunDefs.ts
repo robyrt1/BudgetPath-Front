@@ -38,10 +38,17 @@ export const TransactionsColunsDefs: ColDef<Datum>[] = [
             return `${params.value ? 'R$ ' + formatNumber(params.value) : ''}`;
         },
         cellStyle: (params: any) => {
-            const isDespesa = params.data?.Category?.Group?.Descript === 'DESPESA';
-            const isNegative = params.value < 0;
+            const colorValue: { [key: string]: string } = {
+                DESPESA: 'red',
+                RECEITA: 'green',
+                '': '',
+            };
+
+            const group: string | undefined | null = params.data?.Category?.Group?.Descript;
+
+            const validGroup = group || '';
             return {
-                color: isDespesa ? 'red' : 'green',
+                color: colorValue[validGroup],
                 fontWeight: 'bold',
                 textAlign: "center",
             };
@@ -71,19 +78,35 @@ export const TransactionsColunsDefs: ColDef<Datum>[] = [
         field: "TransactionDate",
         sortable: true,
         filter: "agDateColumnFilter",
+        // filterParams: {
+        //     browserDatePicker: true,
+        //     inRangeFloatingFilterDateFormat: "dd/MM/yyyy",
+        // },
         filterParams: {
-            browserDatePicker: true,
-            inRangeFloatingFilterDateFormat: "dd/MM/yyyy",
+            comparator: (filterLocalDateAtMidnight: any, cellValue: any) => {
+                const date1 = new Date(cellValue);
+                const date2 = new Date(filterLocalDateAtMidnight);
+                console.log('date1 >>>', date1, '\ndate2 >>', date2)
+                date1.setHours(0, 0, 0, 0);
+                date2.setHours(0, 0, 0, 0);
+
+                if (date1 <= date2) return -1;
+                if (date1 >= date2) return 1;
+                return 0;
+            }
         },
         cellStyle: { textAlign: "center" },
         valueGetter: (params) => {
             const raw: any = params.data?.TransactionDate;
-            const parsedDate = parseISO(raw);
-            return isValid(parsedDate) ? parsedDate : null;
+            if (params.data?.TransactionDate) {
+                const parsedDate = parseISO(raw);
+                return isValid(parsedDate) ? parsedDate : null;
+            }
+            return null
         },
         valueFormatter: (params) => {
             if (!params.value) return '';
-            return format(params.value, 'dd/MM/yyyy'); // <- agora sem parseISO
+            return format(params.value, 'dd/MM/yyyy');
         },
 
     },

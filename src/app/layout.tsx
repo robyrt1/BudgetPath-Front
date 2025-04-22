@@ -25,12 +25,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR" className="h-full">
+    <html lang="pt-BR">
       <head>
         <title>BudgetPath</title>
         <meta name="description" content="width=device-width, initial-scale=1.0" />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} h-full`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen flex`}>
         <Providers>
           <LayoutWrapper>{children}</LayoutWrapper>
         </Providers>

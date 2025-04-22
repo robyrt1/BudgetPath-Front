@@ -103,6 +103,8 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
         } catch (error: any) {
             const err = String(error)
             setError(err)
+        } finally {
+            setCredit(null)
         }
 
     };
