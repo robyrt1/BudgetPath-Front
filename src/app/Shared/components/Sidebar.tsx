@@ -1,26 +1,87 @@
+import { Route } from "@/shared/Interfaces/Router";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { logout } from "./../../../Redux/Slices/AutheticationSlice";
 
+
+
 const Sidebar = () => {
+    const router = useRouter()
+    const path = usePathname()
+
+
     const [isOpen, setIsOpen] = useState(false);
+
+    const routes: Route[] = [
+        {
+            path: "/home", label: "Home", icon: 'mdi-light:home'
+        },
+        { path: "/transactions", label: "Transactions", icon: "mdi-light:bank" }
+    ]
+
+
     const dispatch = useDispatch();
-    const handleLogout = () => {
+
+    function handleSide() {
+        setIsOpen(!isOpen)
+    }
+    function handleLogout() {
         dispatch(logout());
         window.location.href = "/SignIn";
     };
+    const handleClick = (item: Route) => router.push(item.path)
+
     return (
+        // <nav
+        //     className={"select-none relative border-r border-zinc-300 transition-all duration-400 ease-in-out " + (isOpen ? 'w-120' : 'w-16')}
+        //     style={{
+        //         backgroundColor: "var(--background)",
+        //         color: "var(--foreground)",
+        //         border: "1px solid #2f365f"
+        //     }}>
+        //     <div className="flex flex-col gap-3 p-2">
+        //         <div className={"flex items-center gap-2 text-xl my-2 " + (!isOpen ? 'justify-center' : null)}>
+        //             <Icon icon="mdi:link-lock" className="text-2xl text-[#395df1]" />
+        //             {isOpen &&
+        //                 <span className="font-semibold text-[#0f1949]"> Budget Path</span>
+        //             }
+        //         </div>
+        //     </div>
+
+        //     <div className="flex flex-col">
+        //         <nav className="flex flex-col gap-1">
+        //             {routes.map(route => (
+        //                 <SideItem key={route.path} item={route} isOpenSide={isOpen} path={path} onClick={handleClick} />
+        //             ))}
+        //         </nav>
+        //     </div>
+
+        //     <button onClick={handleSide} className="absolute flex justify-center items-center top-4 -right-2.5 h-5 w-5 bg-gray-100 rounded-full border border-gray-200 cursor-pointer outline-0">
+        //         <Icon icon={isOpen ? 'ri:arrow-left-s-line' : 'ri:arrow-right-s-line'} className="text-gray-500" />
+        //     </button>
+        // </nav>
         <div className="relative">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="md:hidden fixed top-4 left-4 z-50 p-2 text-gray-900 bg-white rounded-lg shadow-lg dark:bg-gray-800 dark:text-white"
+                className="md:hidden fixed top-4 left-4 z-50 p-2 text-gray-900 rounded-lg shadow-lg dark:bg-gray-800 dark:text-white"
+                style={{
+                    backgroundColor: "var(--background)",
+                    color: "var(--foreground)",
+                    border: "1px solid #2f365f"
+                }}
             >
                 ☰
             </button>
             <div
                 id="drawer-navigation"
                 className={`fixed top-0 left-0 z-40 w-64 h-screen p-4 overflow-y-auto transition-transform ${isOpen ? 'translate-x-0' : '-translate-x-full'
-                    } bg-white dark:bg-gray-800 flex flex-col md:translate-x-0`}
+                    } dark:bg-gray-800 flex flex-col md:translate-x-0`}
+                style={{
+                    backgroundColor: "var(--background)",
+                    color: "var(--foreground)",
+                    border: "1px solid #2f365f"
+                }}
                 aria-labelledby="drawer-navigation-label"
             >
                 <h5

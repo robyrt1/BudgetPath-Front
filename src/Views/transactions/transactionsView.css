@@ -2,14 +2,36 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding: 1rem;
-    margin-left: 15rem;
+    /* padding-top: 2rem; */
+    /* margin-left: 15.2rem; */
 
-    @media (max-width: 1024px) {
+    @media (max-width: 1925px) {
+        width: 120rem;
+        height: 911px;
+    }
+
+    @media (max-width: 1536px) {
+        width: 95rem;
+        height: 695px;
+    }
+
+
+    @media (max-width: 1375px) {
+        width: 80rem;
+        height: 656px;
+    }
+
+
+    @media (max-width: 1280px) {
+        width: 80rem;
+        height: 535px;
+    }
+
+    @media (max-width: 1075px) {
         margin-left: 8rem;
         flex-direction: column;
         width: 100%;
-        padding: 1rem;
+        height: 586px;
     }
 
     @media (max-width: 768px) {
@@ -19,17 +41,42 @@
 }
 
 .transactions-grid {
-    width: 80rem;
-    max-width: 1200;
-    height: 650px;
+    margin-left: 16rem;
+    /* width: 203rem; */
+    /* height: 692px; */
     overflow: hidden;
 
+
+    @media (max-width: 1925px) {
+        width: 1925px;
+        /* margin-left: 15rem; */
+        height: 911px;
+    }
+
+    @media (max-width: 1536px) {
+        width: 203rem;
+        margin-left: 16rem;
+        height: 692px;
+    }
+
+
+    @media (max-width: 1375px) {
+        width: 69rem;
+        margin-left: 15rem;
+        height: 656px;
+    }
+
+    @media (max-width: 1280px) {
+        width: 63rem;
+        margin-left: 16rem;
+        height: 543px;
+    }
+
     /* Responsividade para telas de 1024px */
-    @media (max-width: 1024px) {
-        width: 35rem;
-        /* max-width: 400px; */
-        margin: 0 0;
-        height: 600px;
+    @media (max-width: 1075px) {
+        width: 50rem;
+        margin-left: 8rem;
+        height: 586px;
     }
 
     @media (max-width: 970px) {
@@ -54,4 +101,22 @@
     max-height: 500px;
     overflow: auto;
     /* Ativa o scroll automaticamente se necessário */
+}
+
+
+
+.ag-theme-alpine-dark,
+.ag-theme-balham-dark {
+    --ag-background-color: var(--background);
+    --ag-foreground-color: var(--foreground);
+    --ag-header-background-color: #12193c;
+    --ag-header-foreground-color: var(--foreground);
+    --ag-row-hover-color: #1c2455;
+    --ag-border-color: #2a3262;
+    --ag-selected-row-background-color: #243169;
+    --ag-header-cell-hover-background-color: #1b2550;
+}
+
+.ag-root-wrapper {
+    border: none;
 }

@@ -1,0 +1,7 @@
+.dark-card {
+    background-color: #1a1e3a;
+    color: var(--foreground);
+    border: 1px solid #2f365f;
+    border-radius: 0.5rem;
+    padding: 1rem;
+}

@@ -1,6 +1,7 @@
 import { Datum } from "@/Models/Transactions/Responses/ResponseTransacrions";
 import { formatNumber } from "@/shared/formatNumber";
 import { ColDef, ValueGetterParams } from "ag-grid-community";
+import { format, isValid, parseISO } from "date-fns";
 
 export const TransactionsColunsDefs: ColDef<Datum>[] = [
     {
@@ -69,9 +70,22 @@ export const TransactionsColunsDefs: ColDef<Datum>[] = [
         headerName: "Transaction Date",
         field: "TransactionDate",
         sortable: true,
-        filter: true,
+        filter: "agDateColumnFilter",
+        filterParams: {
+            browserDatePicker: true,
+            inRangeFloatingFilterDateFormat: "dd/MM/yyyy",
+        },
         cellStyle: { textAlign: "center" },
-        valueFormatter: (params: any) => new Date(params.value).toLocaleDateString()
+        valueGetter: (params) => {
+            const raw: any = params.data?.TransactionDate;
+            const parsedDate = parseISO(raw);
+            return isValid(parsedDate) ? parsedDate : null;
+        },
+        valueFormatter: (params) => {
+            if (!params.value) return '';
+            return format(params.value, 'dd/MM/yyyy'); // <- agora sem parseISO
+        },
+
     },
     {
         headerName: "Group",

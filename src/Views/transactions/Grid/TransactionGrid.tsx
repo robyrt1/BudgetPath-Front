@@ -5,10 +5,13 @@ import AddTransactionPanel from "@/Views/transactions/Panel/AddTransactionPanel"
 import { AgChartThemeOverrides } from "ag-charts-enterprise";
 import {
     ColDef,
+    colorSchemeDarkBlue,
     FirstDataRenderedEvent,
     GridReadyEvent,
+    IServerSideDatasource,
     RowGroupOpenedEvent,
     SideBarDef,
+    themeQuartz,
     ToolPanelSizeChangedEvent
 } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
@@ -27,6 +30,8 @@ interface Props {
 const TransactionGrid: React.FC<Props> = ({ colDefs, transactions, addTransaction, onGridReady }) => {
     const gridRef = useRef<AgGridReact>(null);
     const panelRef = useRef<HTMLDivElement>(null);
+    const themeDarkBlue = themeQuartz.withPart(colorSchemeDarkBlue);
+
 
     const defaultColDef = useMemo<ColDef>(() => ({
         editable: true,
@@ -95,10 +100,37 @@ const TransactionGrid: React.FC<Props> = ({ colDefs, transactions, addTransactio
         [],
     );
 
+    const datasource: IServerSideDatasource<any> = {
+        getRows: (params) => {
+            console.log('🚀 filterModel:', params.request.filterModel);
+
+            // // Aqui você manda isso pro backend com fetch/axios
+            // fetch('/api/transactions', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({
+            //         filterModel: params.request.filterModel,
+            //         startRow: params.request.startRow,
+            //         endRow: params.request.endRow,
+            //         sortModel: params.request.sortModel,
+            //         // outros parâmetros se quiser
+            //     }),
+            // })
+            //     .then((res) => res.json())
+            //     .then((data) => {
+            //         // params.successCallback(data.rows, data.totalCount);
+            //     })
+            //     .catch((err) => {
+            //         console.error('Erro no getRows:', err);
+            //         // params.failCallback();
+            //     });
+        },
+    };
+
 
 
     return (
-        <div className="transactions-grid">
+        <div className="transactions-grid ag-theme-balham-dark w-full h-full">
             <AgGridReact
                 ref={gridRef}
                 enableCharts={true}
@@ -119,6 +151,8 @@ const TransactionGrid: React.FC<Props> = ({ colDefs, transactions, addTransactio
                 onToolPanelSizeChanged={handleToolPanelSizeChanged}
                 chartThemeOverrides={chartThemeOverrides}
                 onFirstDataRendered={onFirstDataRendered}
+                theme={themeDarkBlue}
+                serverSideDatasource={datasource}
                 // autoGroupColumnDef={autoGroupColumnDef}
                 groupDefaultExpanded={1}
             />

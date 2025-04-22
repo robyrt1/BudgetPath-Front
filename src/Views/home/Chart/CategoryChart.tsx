@@ -29,14 +29,43 @@ const CategoryChart = ({ transactions, showBalances }: Props) => {
     }));
 
     return (
-        <div className="bg-white shadow-md rounded-xl p-4 w-full max-w-xl">
+        <div
+            className="rounded-xl shadow-md p-4 w-full max-w-xl"
+            style={{
+                backgroundColor: "var(--background)",
+                color: "var(--foreground)",
+                border: "1px solid #2f365f"
+            }}
+        >
             <h3 className="text-lg font-semibold mb-2">Expense by category</h3>
             <ResponsiveContainer width={500} height={300}>
-                <BarChart layout="vertical" data={data} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis type="number" />
-                    <YAxis type="category" dataKey="category" width={120} tick={{ fontSize: 12 }} />
-                    <Tooltip formatter={(value: number) => showBalances ? `R$ ${value.toFixed(2)}` : 'R$ ***'} />
+                <BarChart
+                    layout="vertical"
+                    data={data}
+                    margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+                >
+                    <CartesianGrid stroke="#334155" strokeDasharray="3 3" />
+                    <XAxis
+                        type="number"
+                        stroke="var(--foreground)"
+                        tick={{ fontSize: 12, fill: "var(--foreground)" }}
+                    />
+                    <YAxis
+                        type="category"
+                        dataKey="category"
+                        width={120}
+                        tick={{ fontSize: 12, fill: "var(--foreground)" }}
+                    />
+                    <Tooltip
+                        contentStyle={{
+                            backgroundColor: "#1a1e3a",
+                            borderColor: "#2f365f",
+                            color: "var(--foreground)",
+                        }}
+                        formatter={(value: number) =>
+                            showBalances ? `R$ ${value.toFixed(2)}` : "R$ ***"
+                        }
+                    />
                     <Bar dataKey="total">
                         {data.map((_, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

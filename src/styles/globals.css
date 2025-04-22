@@ -14,6 +14,25 @@
     --foreground: #ededed;
   }
 } */
+:root {
+  --background: #0a0e2a;
+  /* fundo azul escuro */
+  --foreground: #f4f4ff;
+  /* texto claro suave */
+  --primary: #1e3a8a;
+  /* azul Tailwind 900 */
+  --accent: #60a5fa;
+  /* azul claro */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0e2a;
+    --foreground: #f4f4ff;
+  }
+}
+
+
 
 body {
   color: var(--foreground);

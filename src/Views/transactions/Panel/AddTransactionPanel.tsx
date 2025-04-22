@@ -6,7 +6,7 @@ import { PaymentMethod } from "@/Models/PaymentMethod/Responses/ResponseFindPaym
 import { RequestCreateTransaction } from "@/Models/Transactions/Requests/RequesTransactions";
 import { AuthState } from "@/Redux/Slices/AutheticationSlice";
 import React, { forwardRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import './addTransactionPanelCSS.css';
 
 export interface IAddTransactionPanel {
@@ -38,7 +38,6 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
     const [credit, setCredit] = useState<CreditCard | null>();
 
 
-    const dispatch = useDispatch();
     const getUserId = useSelector((state: { auth: AuthState }) => state.auth.userId);
     const getUserName = useSelector((state: { auth: AuthState }) => state.auth.nameUser);
 
@@ -53,6 +52,9 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
         setAmount(valorFormatado);
     };
 
+    const handlerSelectCreditCard = (id: string) => {
+        setCreditCardId(id)
+    }
     const handlerCancel = () => {
         setTransactionType("");
         setAccount({
@@ -148,7 +150,7 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
                     </div>
                     <SelectAccounts account={account} setAccount={setAccount} setCredit={setCredit} creditCardProp={credit} />
                     <SelectCategory selectedCategoryId={categoryId} setSelectedCategoryId={setCategoryId} transactionType={transactionType} />
-                    <SelectPaymentMethod selectedPaymentMethod={paymentMethodId} setSelectedPaymentMethod={setPaymentMethodId} />
+                    <SelectPaymentMethod selectedPaymentMethod={paymentMethodId} setSelectedPaymentMethod={setPaymentMethodId} isCreditSelected={credit?.Id ? true : false} />
                     <input type="text" placeholder="Descrição" value={description} onChange={(e) => setDescription(e.target.value)} className="input-field" required />
                     <input type="text-right" placeholder="R$ 0,00" value={amount} onChange={handleChangeValor} className="w-full px-3 py-2 border rounded text-left" required />
                     <input type="date" placeholder="Data da Transação" value={transactionDate} onChange={(e) => setTransactionDate(e.target.value)} className="input-field" required />

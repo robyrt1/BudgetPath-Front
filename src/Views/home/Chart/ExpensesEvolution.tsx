@@ -35,9 +35,13 @@ export default function ExpensesEvolution({ showBalances, transactionsProp }: { 
 
 
     return (
-        <div className="bg-white p-6 rounded-xl shadow-md mt-6 w-full">
+        <div className="p-6 rounded-xl shadow-md mt-6 w-full" style={{
+            backgroundColor: "var(--background)",
+            color: "var(--foreground)",
+            border: "1px solid #2f365f"
+        }}>
             <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-700">📊 Expense Evolution</h2>
+                <h2 className="text-xl font-bold text-gray-100">📊 Expense Evolution</h2>
                 <div className="flex gap-2">
                     {(Object.values(groupByKey)).map((f) => (
                         <button
@@ -71,17 +75,21 @@ export default function ExpensesEvolution({ showBalances, transactionsProp }: { 
                     )}
                 </div>
 
-                <div className="w-full lg:w-[400px] bg-gray-50 rounded-xl p-4 shadow-inner">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-3">📄 Summary by {filtro}</h3>
+                <div className="w-full lg:w-[400px] bg-gray-50 rounded-xl p-4 shadow-inner" style={{
+                    backgroundColor: "var(--background)",
+                    color: "var(--foreground)",
+                    border: "1px solid #2f365f"
+                }}>
+                    <h3 className="text-lg font-semibold text-gray-100 mb-3">📄 Summary by {filtro}</h3>
                     <ul className="divide-y divide-gray-200 max-h-[220px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-500 scrollbar-track-gray-100">
                         {DataAggregateExpenses.map((item, index) => (
                             <li
                                 key={index}
                                 className="flex flex-col sm:grid sm:grid-cols-[35%_25%_25%] gap-1 sm:gap-4 py-2 text-sm"
                             >
-                                <span className="text-gray-700 capitalize sm:col-span-1">{item.account}</span>
-                                <span className="text-gray-700 capitalize sm:col-span-1">{item.period}</span>
-                                <span className="font-semibold text-gray-900 sm:text-right sm:col-span-1">
+                                <span className="text-gray-100 capitalize sm:col-span-1">{item.account}</span>
+                                <span className="text-gray-100 capitalize sm:col-span-1">{item.period}</span>
+                                <span className="font-semibold text-gray-150 sm:text-right sm:col-span-1">
                                     {showBalances
                                         ? `R$ ${item.total.toLocaleString('pt-BR', {
                                             minimumFractionDigits: 2,

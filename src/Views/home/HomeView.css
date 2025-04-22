@@ -1,6 +1,18 @@
 .home-container {
     width: 1200px;
     margin-left: 16rem;
+    background-color: var(--background);
+    color: var(--foreground);
+    min-height: 100vh;
+    padding: 1.5rem;
+
+
+    @media (max-width: 1280px) {
+        margin-left: 17rem;
+        flex-direction: column;
+        width: 60rem;
+        padding: 1rem;
+    }
 
     @media (max-width: 1024px) {
         margin-left: 20rem;
@@ -16,43 +28,35 @@
 }
 
 
-.grid {
-    display: grid;
-    grid-template-columns: repeat(1, minmax(300px, 1fr));
-    gap: 20px;
-}
-
-@media (min-width: 1024px) {
-    .grid {
-        grid-template-columns: repeat(3, minmax(200px, 1fr));
-    }
-}
-
 .transaction-container {
     max-height: 350px;
     overflow-y: auto;
-    background-color: white;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #12193c;
+    /* azul escuro estilizado */
+    color: var(--foreground);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
     border-radius: 12px;
     padding: 16px;
     width: 100%;
     margin-top: 24px;
 }
 
-.transaction-container::-webkit-scrollbar {
-    width: 6px;
-}
 
 .transaction-container::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
+    background: #2b2f45;
+    /* mais escuro */
 }
 
 .transaction-container::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 10px;
+    background: #4b5563;
 }
 
 .transaction-container::-webkit-scrollbar-thumb:hover {
-    background: #a1a1a1;
+    background: #6b7280;
+}
+
+
+section.bg-white {
+    background-color: #12193c !important;
+    color: var(--foreground);
 }

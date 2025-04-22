@@ -8,9 +8,10 @@ import { useDispatch, useSelector } from "react-redux";
 interface SelectPaymentMethosProps {
     selectedPaymentMethod: PaymentMethod | null;
     setSelectedPaymentMethod: (paymentMethod: PaymentMethod) => void;
+    isCreditSelected?: boolean
 }
 
-const SelectPaymentMethod = ({ selectedPaymentMethod, setSelectedPaymentMethod }: SelectPaymentMethosProps) => {
+const SelectPaymentMethod = ({ selectedPaymentMethod, setSelectedPaymentMethod, isCreditSelected }: SelectPaymentMethosProps) => {
     const dispatch = useDispatch();
     const userId = useSelector((state: { auth: AuthState }) => state.auth.userId);
     const { paymentMethod, find } = UseFindPaymentMethodViewModel({ UserId: userId });
@@ -18,6 +19,14 @@ const SelectPaymentMethod = ({ selectedPaymentMethod, setSelectedPaymentMethod }
     useEffect(() => {
         find();
     }, []);
+
+    useEffect(() => {
+        if (isCreditSelected) {
+            paymentMethod.filter(({ description }) => description == 'Crédito')
+            setSelectedPaymentMethod(paymentMethod.filter(({ description }) => description == 'Crédito')[0])
+        }
+    }, [isCreditSelected]);
+
 
     useEffect(() => {
         if (paymentMethod.length > 0) {
