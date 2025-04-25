@@ -3,7 +3,6 @@ import { AuthState } from "@/Redux/Slices/AutheticationSlice";
 import { formatNumber } from "@/shared/formatNumber";
 import UseFindTransactionViewModel from "@/ViewModels/Transactions/TransactionsViewModel";
 import { useEffect, useState } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import BankAccount from "../accounts/BankAccountView";
 import CategoryChart from "./Chart/CategoryChart";
@@ -42,8 +41,8 @@ const HomeView = () => {
   return (
     <div className="home-container">
 
-      <section>
-        <div className="flex justify-end pr-10 mt-5 fixed right-4 z-50">
+      {/* <section>
+        <div className="flex justify-end pr-10 mt-5 fixed right-20 z-50">
           <button
             onClick={() => setShowBalances(!showBalances)}
             className="flex items-center text-sm text-gray-600 hover:text-gray-800 transition-colors"
@@ -52,7 +51,7 @@ const HomeView = () => {
             {showBalances ? "Hide balance" : "Show balance"}
           </button>
         </div>
-      </section>
+      </section> */}
 
       <section>
         <BankAccount showBalances={showBalances} setShowBalances={setShowBalances} />

@@ -8,6 +8,7 @@ export interface AuthState {
     error: string | null;
     userId: string;
     nameUser: string;
+    email?: string
 }
 
 const InitalState: AuthState = {
@@ -15,7 +16,8 @@ const InitalState: AuthState = {
     isAuthenticated: false,
     error: null,
     userId: '',
-    nameUser: ''
+    nameUser: '',
+    email: ''
 };
 
 const getValueLocalStorage = (key: string) => {
@@ -30,7 +32,8 @@ const AuthenticationSlice = createSlice({
         ...InitalState,
         token: getValueLocalStorage(LocalStoregeKeys.TOKEN),
         userId: getValueLocalStorage(LocalStoregeKeys.USERID),
-        nameUser: getValueLocalStorage(LocalStoregeKeys.NAMEUSER)
+        nameUser: getValueLocalStorage(LocalStoregeKeys.NAMEUSER),
+        email: getValueLocalStorage(LocalStoregeKeys.EMAIL),
     },
     reducers: {
         login: (state, action: PayloadAction<{ token: string, userId: string } | null>) => {
@@ -39,11 +42,14 @@ const AuthenticationSlice = createSlice({
                 state.userId = get(action.payload, 'userId', '');
                 state.isAuthenticated = true;
                 state.nameUser = get(action.payload, 'name', '');
+                state.email = get(action.payload, 'email', '');
 
                 if (typeof window !== "undefined") {
                     localStorage.setItem(LocalStoregeKeys.TOKEN, get(action.payload, 'token', null) as string);
                     localStorage.setItem(LocalStoregeKeys.USERID, get(action.payload, 'userId', null) as string);
                     localStorage.setItem(LocalStoregeKeys.NAMEUSER, get(action.payload, 'name', '') as string);
+                    localStorage.setItem(LocalStoregeKeys.EMAIL, get(action.payload, 'email', '') as string);
+
                 } state.error = null;
             } else {
                 state.error = "Falha no login. Verifique suas credenciais.";

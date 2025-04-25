@@ -15,7 +15,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
                 className={`flex flex-col ${showSidebar ? "flex-1" : "w-full"
                     }`}
             >
-                <div className="w-full flex-grow">{children}</div>
+                <div className="w-full flex-grow mt-10">{children}</div>
             </div>
         </div>
     );

@@ -106,7 +106,7 @@ const TransactionsView = () => {
 
 
     return (
-        <div className="transactions-container">
+        <div className="transactions-container" style={{ height: 639 }}>
             <TransactionGrid
                 colDefs={colDefs}
                 transactions={transactions}

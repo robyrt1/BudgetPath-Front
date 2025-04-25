@@ -3,6 +3,7 @@ import { AuthState } from "@/Redux/Slices/AutheticationSlice";
 import AccountViewModel from "@/ViewModels/Accounts/AccountViewModel";
 import { first } from "lodash";
 import { Dispatch, SetStateAction, useEffect } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import './BankAccountView.css';
 export default function BankAccount({ showBalances, setShowBalances }: { showBalances?: boolean, setShowBalances: Dispatch<SetStateAction<boolean>> }) {
@@ -32,7 +33,18 @@ export default function BankAccount({ showBalances, setShowBalances }: { showBal
       <div
         style={{ backgroundColor: "var(--background)", color: "var(--foreground)" }}
         className="dark-card shadow-sm">
-        <h3 className="text-xl font-bold mb-4">My accounts</h3>
+
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-xl font-bold">My accounts</h3>
+          <button
+            onClick={() => setShowBalances(!showBalances)}
+            className="flex items-center text-sm text-gray-600 hover:text-gray-800 transition-colors"
+          >
+            {showBalances ? <FaEyeSlash className="mr-1" /> : <FaEye className="mr-1" />}
+            {showBalances ? "Hide balance" : "Show balance"}
+          </button>
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {accounts ? accounts?.map(account => (
             <div key={account.Id} className="border p-4 rounded-lg shadow-sm">

@@ -25,7 +25,7 @@ const CategoryChart = ({ transactions, showBalances }: Props) => {
 
     const data = Object.entries(grouped).map(([category, group]) => ({
         category,
-        total: _.sumBy(group, "Amount"),
+        Total: _.sumBy(group, "Amount"),
     }));
 
     return (
@@ -58,7 +58,7 @@ const CategoryChart = ({ transactions, showBalances }: Props) => {
                     />
                     <Tooltip
                         contentStyle={{
-                            backgroundColor: "#1a1e3a",
+                            backgroundColor: "#fb923c",
                             borderColor: "#2f365f",
                             color: "var(--foreground)",
                         }}
@@ -66,7 +66,7 @@ const CategoryChart = ({ transactions, showBalances }: Props) => {
                             showBalances ? `R$ ${value.toFixed(2)}` : "R$ ***"
                         }
                     />
-                    <Bar dataKey="total">
+                    <Bar dataKey="Total">
                         {data.map((_, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
