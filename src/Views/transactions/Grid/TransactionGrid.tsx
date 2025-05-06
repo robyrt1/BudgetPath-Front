@@ -1,6 +1,7 @@
 // components/TransactionGrid.tsx
 import { RequestCreateTransaction } from "@/Models/Transactions/Requests/RequesTransactions";
 import { Datum } from "@/Models/Transactions/Responses/ResponseTransacrions";
+import { getContextMenuItems } from "@/ViewModels/Transactions/agGrid/ContextMenuItems";
 import { AgChartThemeOverrides } from "ag-charts-enterprise";
 import {
     ColDef,
@@ -26,16 +27,16 @@ interface Props {
     onGroupBy: (column: string) => void;
 }
 
-const TransactionGrid: React.FC<Props> = ({ colDefs, transactions, addTransaction }) => {
+const TransactionGrid: React.FC<Props> = ({ colDefs, transactions, addTransaction, onGridReady }) => {
     const gridRef = useRef<AgGridReact>(null);
     const panelRef = useRef<HTMLDivElement>(null);
     const themeDarkBlue = themeQuartz.withPart(colorSchemeDarkBlue);
     const [gridApi, setGridApi] = useState<any>(null);
 
 
-    const onGridReady = (params: any) => {
-        setGridApi(params.api);
-    };
+    // const onGridReady = (params: any) => {
+    //     setGridApi(params.api);
+    // };
 
     const defaultColDef = useMemo<ColDef>(() => ({
         editable: true,
@@ -133,6 +134,7 @@ const TransactionGrid: React.FC<Props> = ({ colDefs, transactions, addTransactio
                 theme={themeDarkBlue}
                 serverSideDatasource={datasource}
                 groupDefaultExpanded={1}
+                getContextMenuItems={getContextMenuItems}
             />
         </div>
     );

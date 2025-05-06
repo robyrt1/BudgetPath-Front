@@ -3,7 +3,9 @@ export type RequestTransactions = {
     accountId?: string;
     category?: string;
     top?: number;
-    group?: string
+    group?: string,
+    year?: string | number
+    month?: string | number
 }
 
 export type RequestCreateTransaction = {

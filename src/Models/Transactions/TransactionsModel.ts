@@ -7,7 +7,7 @@ import { ResponseTransactions } from "./Responses/ResponseTransacrions";
 
 const TransactionsModel: TransactionsModelPort = {
     FindTransactions: async (request: RequestTransactions): Promise<ResponseTransactions> => {
-        const response = await fetch(UrlsService.URL_FINANCE_API + `Transactions?$expand=data($expand=account,creditCard,user,paymentMethod,debtInstallment,category($expand=group),debt;$filter=userId eq ${request.userId} ${request?.group ? `and category/group/descript eq '${request.group}'` : ''};$orderby=TransactionDate desc;${request?.top ? '$top=' + request.top : ''})`, { method: 'Get', headers: { 'Content-Type': 'application/json' } })
+        const response = await fetch(UrlsService.URL_FINANCE_API + `Transactions?$expand=data($expand=account,creditCard,user,paymentMethod,debtInstallment,category($expand=group),debt;$filter=userId eq ${request.userId} ${request.year && request.month ? `and year(TransactionDate) eq ${request.year} and month(TransactionDate) eq ${request.month}` : ''} ${request?.group ? `and category/group/descript eq '${request.group}'` : ''};$orderby=TransactionDate desc;${request?.top ? '$top=' + request.top : ''})`, { method: 'Get', headers: { 'Content-Type': 'application/json' } })
         const result = await response.json();
         return result;
     },

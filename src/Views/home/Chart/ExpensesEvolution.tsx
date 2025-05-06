@@ -1,15 +1,10 @@
 import { Datum } from '@/Models/Transactions/Responses/ResponseTransacrions';
 import { AuthState } from '@/Redux/Slices/AutheticationSlice';
 import UseAggregatedExpensesViewModel from '@/ViewModels/Transactions/AggregatedExpensesViewModel';
+import { ITransformExpenseDataResponse } from '@/ViewModels/Transactions/Types/FindTransactionsType';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-
-
-interface PontoEvolucao {
-    data: string;
-    total: number;
-}
 
 const groupByKey = {
     month: 'Month',
@@ -22,16 +17,29 @@ export default function ExpensesEvolution({ showBalances, transactionsProp }: { 
     const userId = useSelector((state: { auth: AuthState }) => state.auth.userId);
     const [filtro, setFiltro] = useState<string>(groupByKey.month);
 
-    const { data: DataAggregateExpenses, find } = UseAggregatedExpensesViewModel({ groupBy, userId });
+    const { data: DataAggregateExpenses, transformExpensesData, getAccountColor, find } = UseAggregatedExpensesViewModel({ groupBy, userId });
 
     useEffect(() => {
         if (!userId || !groupBy) return;
         find()
     }, [userId, groupBy]);
 
-    useEffect(() => {
-
-    }, [filtro, groupBy, filtro])
+    const transformedData = transformExpensesData(DataAggregateExpenses);
+    const tooltipFormatter = (value: number) => showBalances ? `R$ ${value.toFixed(2)}` : 'R$ ****';
+    const renderLines = (data: ITransformExpenseDataResponse[]) => {
+        return Object.keys(data[0] || {})
+            .filter(key => key !== 'period')
+            .map((account, idx) => (
+                <Line
+                    key={account}
+                    type="monotone"
+                    dataKey={account}
+                    strokeWidth={2}
+                    stroke={getAccountColor(idx)}
+                    name={account}
+                />
+            ));
+    };
 
 
     return (
@@ -64,14 +72,23 @@ export default function ExpensesEvolution({ showBalances, transactionsProp }: { 
                         <p className="text-gray-500">Nenhuma despesa encontrada.</p>
                     ) : (
                         <ResponsiveContainer width="100%" height={300}>
-                            <LineChart data={DataAggregateExpenses}>
+                            <LineChart data={transformedData} >
                                 <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="data" />
+                                <XAxis dataKey="period" />
                                 <YAxis />
-                                <Tooltip formatter={(value: number) => showBalances ? `R$ ${value.toFixed(2)}` : 'R$ ****'} />
-                                <Line type="monotone" dataKey="total" stroke="#f87171" strokeWidth={2} />
+                                <Tooltip
+                                    contentStyle={{
+                                        backgroundColor: "var(--background)",
+                                        borderColor: "#2f365f",
+                                        color: "var(--foreground)",
+                                    }}
+                                    formatter={tooltipFormatter} />
+                                {
+                                    renderLines(transformedData)
+                                }
                             </LineChart>
                         </ResponsiveContainer>
+
                     )}
                 </div>
 

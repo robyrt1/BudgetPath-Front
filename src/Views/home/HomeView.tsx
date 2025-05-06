@@ -17,6 +17,8 @@ const HomeView = () => {
   const { find } = UseFindTransactionViewModel({ UserId: userId });
   const [showBalances, setShowBalances] = useState(false);
   const [transactionsForChart, setTransactionsForChart] = useState<Datum[]>([])
+  const [year, setYear] = useState<number>(new Date().getFullYear())
+  const [month, setMonth] = useState<number>(new Date().getMonth() + 1)
 
 
   useEffect(() => {
@@ -25,9 +27,10 @@ const HomeView = () => {
       const defaultTop = 15;
       if (userId != '') {
         try {
+          const now = new Date();
           const [topTenTransaction, transactionsForChartResponse] = await Promise.all([
             find({ top: defaultTop }),
-            find({ group: 'DESPESA' })
+            find({ group: 'DESPESA', year, month: month })
           ])
           setTransactions(topTenTransaction.Data || []);
           setTransactionsForChart(transactionsForChartResponse.Data)
@@ -38,21 +41,28 @@ const HomeView = () => {
     fetchTransactions();
   }, [userId]);
 
+  useEffect(() => {
+    if (!userId) return;
+    const fetchTransactions = async () => {
+      const defaultTop = 15;
+      if (userId != '') {
+        try {
+          const now = new Date();
+          const [topTenTransaction, transactionsForChartResponse] = await Promise.all([
+            find({ top: defaultTop }),
+            find({ group: 'DESPESA', year, month: month })
+          ])
+          setTransactions(topTenTransaction.Data || []);
+          setTransactionsForChart(transactionsForChartResponse.Data)
+        } catch (err) {
+        }
+      }
+    };
+    fetchTransactions();
+  }, [year, month]);
+
   return (
     <div className="home-container">
-
-      {/* <section>
-        <div className="flex justify-end pr-10 mt-5 fixed right-20 z-50">
-          <button
-            onClick={() => setShowBalances(!showBalances)}
-            className="flex items-center text-sm text-gray-600 hover:text-gray-800 transition-colors"
-          >
-            {showBalances ? <FaEyeSlash className="mr-1" /> : <FaEye className="mr-1" />}
-            {showBalances ? "Hide balance" : "Show balance"}
-          </button>
-        </div>
-      </section> */}
-
       <section>
         <BankAccount showBalances={showBalances} setShowBalances={setShowBalances} />
       </section>
@@ -101,7 +111,7 @@ const HomeView = () => {
 
 
         <section className="flex-[0.4]">
-          <CategoryChart transactions={transactionsForChart} showBalances={showBalances} />
+          <CategoryChart transactions={transactionsForChart} showBalances={showBalances} setYear={setYear} setMonth={setMonth} year={year} month={month} />
         </section>
       </section>
 
