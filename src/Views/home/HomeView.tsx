@@ -89,7 +89,18 @@ const HomeView = () => {
                 className="py-2 flex justify-between items-start"
               >
                 <div>
-                  <p className="font-medium">{transaction.Description}</p>
+                  {transaction.Category.Group.Descript != 'DESPESA' ? (
+                    <div className="flex">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill="#00fc4a" fill-rule="evenodd" d="M11.78 11.78a.75.75 0 0 0 0-1.06L6.56 5.5h3.69a.75.75 0 0 0 0-1.5h-5.5a.75.75 0 0 0-.75.75v5.5a.75.75 0 0 0 1.5 0V6.56l5.22 5.22a.75.75 0 0 0 1.06 0" clip-rule="evenodd" />
+                      </svg>
+                      <p className="font-medium ml-1">{transaction.Description}</p>
+                    </div>
+                  ) : (
+                    <div className="flex">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill="#fc0000" fill-rule="evenodd" d="M4.22 11.78a.75.75 0 0 1 0-1.06L9.44 5.5H5.75a.75.75 0 0 1 0-1.5h5.5a.75.75 0 0 1 .75.75v5.5a.75.75 0 0 1-1.5 0V6.56l-5.22 5.22a.75.75 0 0 1-1.06 0" clip-rule="evenodd" /></svg>
+                      <p className="font-medium ml-1">{transaction.Description}</p>
+                    </div>
+                  )}
                   <div className="text-sm opacity-80 space-x-2">
                     <span>Account: {transaction.Account?.Name || transaction.CreditCard.Name}</span>
                     <span>• Category: {transaction.Category?.Descript}</span>
