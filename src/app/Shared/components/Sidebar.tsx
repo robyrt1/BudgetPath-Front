@@ -8,14 +8,18 @@ import { useDispatch, useSelector } from "react-redux";
 const routes: Route[] = [
     { path: "/home", label: "Home", icon: "lucide-lab:house-roof" },
     { path: "/transactions", label: "Transactions", icon: "lucide-lab:coins-stack" },
+    { path: "/accounts", label: "Accounts", icon: "hugeicons:credit-card" },
+    {
+        path: "/Debts", label: "Debts", icon: "bitcoin-icons:buoy-outline"
+    },
 ];
 
 export default function NavbarWithSidebar() {
     const router = useRouter();
     const dispatch = useDispatch();
 
-    const [isOpen, setIsOpen] = useState(false); // controla sidebar
-    const [dropdownOpen, setDropdownOpen] = useState(false); // controla dropdown
+    const [isOpen, setIsOpen] = useState(false);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     const email = useSelector((state: { auth: AuthState }) => {

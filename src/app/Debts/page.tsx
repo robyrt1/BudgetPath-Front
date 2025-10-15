@@ -1,6 +1,6 @@
 "use client";
-
-import DebtList from "@/Views/Debts/ListDebtsView";
+import dynamic from "next/dynamic";
+const DebtList = dynamic(() => import("@/Views/Debts/ListDebtsView"));
 
 
 export default function ListDebtsPage() {

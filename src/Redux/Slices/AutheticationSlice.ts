@@ -1,5 +1,6 @@
 import { LocalStoregeKeys } from "@/shared/Constants/LocalStoreage";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import Cookies from 'js-cookie';
 import { get } from "lodash";
 
 export interface AuthState {
@@ -44,12 +45,22 @@ const AuthenticationSlice = createSlice({
                 state.nameUser = get(action.payload, 'name', '');
                 state.email = get(action.payload, 'email', '');
 
+                const cookieOptions = { expires: 7, secure: true, sameSite: 'Lax' as const }; // Expira em 7 dias
+
+
                 if (typeof window !== "undefined") {
+                    const token = get(action.payload, 'token', null) as string;
+                    const userId = get(action.payload, 'userId', null) as string;
+                    const nameUser = get(action.payload, 'name', '') as string;
+                    const email = get(action.payload, 'email', '') as string;
                     localStorage.setItem(LocalStoregeKeys.TOKEN, get(action.payload, 'token', null) as string);
                     localStorage.setItem(LocalStoregeKeys.USERID, get(action.payload, 'userId', null) as string);
                     localStorage.setItem(LocalStoregeKeys.NAMEUSER, get(action.payload, 'name', '') as string);
                     localStorage.setItem(LocalStoregeKeys.EMAIL, get(action.payload, 'email', '') as string);
-
+                    if (token) Cookies.set(LocalStoregeKeys.TOKEN, token, cookieOptions);
+                    if (userId) Cookies.set(LocalStoregeKeys.USERID, userId, cookieOptions);
+                    if (nameUser) Cookies.set(LocalStoregeKeys.NAMEUSER, nameUser, cookieOptions);
+                    if (email) Cookies.set(LocalStoregeKeys.EMAIL, email, cookieOptions);
                 } state.error = null;
             } else {
                 state.error = "Falha no login. Verifique suas credenciais.";
@@ -61,6 +72,10 @@ const AuthenticationSlice = createSlice({
             state.isAuthenticated = false;
             state.error = null;
             localStorage.removeItem(LocalStoregeKeys.TOKEN);
+            Cookies.remove(LocalStoregeKeys.TOKEN);
+            Cookies.remove(LocalStoregeKeys.USERID);
+            Cookies.remove(LocalStoregeKeys.NAMEUSER);
+            Cookies.remove(LocalStoregeKeys.EMAIL);
         },
         setError: (state, action: PayloadAction<string>) => {
             state.error = action.payload;

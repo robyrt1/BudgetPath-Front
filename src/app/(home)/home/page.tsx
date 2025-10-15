@@ -1,10 +1,11 @@
 "use client";
 
-import HomeView from "@/Views/home/HomeView";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import Loading from "./loading";
+const Loading = dynamic(() => import("./loading"), { ssr: false });
+const HomeView = dynamic(() => import("@/Views/home/HomeView"), { ssr: false });
 
 export default function Home() {
   const router = useRouter();

@@ -6,17 +6,22 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "start:otel-verbose": "NEXT_OTEL_VERBOSE=1 next start"
   },
   "proxy": "http://192.168.1.9:5171",
   "dependencies": {
+    "@ag-grid-community/client-side-row-model": "^32.3.9",
+    "@ag-grid-community/core": "^32.3.9",
     "@iconify/react": "^5.2.1",
     "@reduxjs/toolkit": "^2.5.1",
     "@tailwindcss/postcss": "^4.0.1",
+    "@vercel/otel": "^2.0.1",
     "ag-grid-community": "^33.1.1",
     "ag-grid-enterprise": "^33.1.1",
     "ag-grid-react": "^33.1.1",
     "date-fns": "^4.1.0",
+    "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
     "next": "15.1.6",
     "react": "^19.0.0",
@@ -29,6 +34,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/js-cookie": "^3.0.6",
     "@types/lodash": "^4.17.15",
     "@types/node": "^20",
     "@types/react": "^19",

@@ -71,6 +71,7 @@ const HomeView = () => {
         <ExpensesEvolution showBalances={showBalances} />
       </section>
 
+
       <section className="flex mt-3 mb-3 gap-6">
         <section
           className="rounded-xl p-4 w-full flex-[0.6] mt-2 shadow-md"
@@ -91,13 +92,13 @@ const HomeView = () => {
                 <div>
                   {transaction.Category.Group.Descript != 'DESPESA' ? (
                     <div className="flex">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill="#00fc4a" fill-rule="evenodd" d="M11.78 11.78a.75.75 0 0 0 0-1.06L6.56 5.5h3.69a.75.75 0 0 0 0-1.5h-5.5a.75.75 0 0 0-.75.75v5.5a.75.75 0 0 0 1.5 0V6.56l5.22 5.22a.75.75 0 0 0 1.06 0" clip-rule="evenodd" />
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill="#00fc4a" d="M11.78 11.78a.75.75 0 0 0 0-1.06L6.56 5.5h3.69a.75.75 0 0 0 0-1.5h-5.5a.75.75 0 0 0-.75.75v5.5a.75.75 0 0 0 1.5 0V6.56l5.22 5.22a.75.75 0 0 0 1.06 0" />
                       </svg>
                       <p className="font-medium ml-1">{transaction.Description}</p>
                     </div>
                   ) : (
                     <div className="flex">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill="#fc0000" fill-rule="evenodd" d="M4.22 11.78a.75.75 0 0 1 0-1.06L9.44 5.5H5.75a.75.75 0 0 1 0-1.5h5.5a.75.75 0 0 1 .75.75v5.5a.75.75 0 0 1-1.5 0V6.56l-5.22 5.22a.75.75 0 0 1-1.06 0" clip-rule="evenodd" /></svg>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill="#fc0000" d="M4.22 11.78a.75.75 0 0 1 0-1.06L9.44 5.5H5.75a.75.75 0 0 1 0-1.5h5.5a.75.75 0 0 1 .75.75v5.5a.75.75 0 0 1-1.5 0V6.56l-5.22 5.22a.75.75 0 0 1-1.06 0" /></svg>
                       <p className="font-medium ml-1">{transaction.Description}</p>
                     </div>
                   )}

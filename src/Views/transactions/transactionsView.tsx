@@ -21,6 +21,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
 import {
     AllEnterpriseModule,
+    CellSelectionModule,
     ColumnMenuModule,
     ColumnsToolPanelModule,
     ContextMenuModule,
@@ -54,7 +55,8 @@ ModuleRegistry.registerModules([
     DateEditorModule,
     NumberEditorModule,
     ValidationModule,
-    ScrollApiModule
+    ScrollApiModule,
+    CellSelectionModule
 ]);
 
 
@@ -106,7 +108,10 @@ const TransactionsView = () => {
 
 
     return (
-        <div className="transactions-container" style={{ height: 639 }}>
+        <div className="transactions-container flex flex-col mt-10">
+            <div className="flex items-center justify-start mb-4 ms-[16rem] mx-[18rem]">
+                <h2 className="text-xl font-bold">Transaction</h2>
+            </div>
             <TransactionGrid
                 colDefs={colDefs}
                 transactions={transactions}

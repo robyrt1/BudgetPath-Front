@@ -30,10 +30,12 @@ export const TransactionsColunsDefs: ColDef<Datum>[] = [
         enableRowGroup: true,
     },
     {
-        headerName: "Value",
+        headerName: "Amount",
         field: "Amount",
         sortable: true,
         filter: "agNumberColumnFilter",
+        cellRenderer: "agAnimateShowChangeCellRenderer",
+
         valueFormatter: (params: any) => {
             return `${params.value ? 'R$ ' + formatNumber(params.value) : ''}`;
         },

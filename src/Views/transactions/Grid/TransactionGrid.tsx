@@ -109,15 +109,18 @@ const TransactionGrid: React.FC<Props> = ({ colDefs, transactions, addTransactio
     };
 
     return (
-        <div className="transactions-grid ag-theme-balham-dark w-full h-full">
+        <div className="transactions-grid ag-theme-balham-dark h-[calc(100vh-9rem)] w-[calc(185vh-1rem)] mt-10">
             {/* <button onClick={fetchFilteredData}>Buscar dados filtrados</button> */}
             <AgGridReact
+                // domLayout="autoHeight"
                 ref={gridRef}
                 enableCharts={true}
                 cellSelection={true}
                 pivotMode={false}
                 columnDefs={colDefs}
                 rowData={transactions}
+                rowNumbers={true}
+                // paginationPageSize={15}
                 defaultColDef={defaultColDef}
                 onGridReady={onGridReady}
                 groupDisplayType={"singleColumn"}
@@ -126,13 +129,13 @@ const TransactionGrid: React.FC<Props> = ({ colDefs, transactions, addTransactio
                 pagination={false}
                 rowBuffer={10}
                 animateRows={false}
+                rowHeight={30}
                 onRowGroupOpened={onRowGroupOpened}
                 sideBar={SideBarGrid(addTransaction, panelRef)}
                 onToolPanelSizeChanged={handleToolPanelSizeChanged}
                 chartThemeOverrides={chartThemeOverrides}
                 onFirstDataRendered={onFirstDataRendered}
                 theme={themeDarkBlue}
-                serverSideDatasource={datasource}
                 groupDefaultExpanded={1}
                 getContextMenuItems={getContextMenuItems}
             />
