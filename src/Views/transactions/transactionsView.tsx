@@ -109,9 +109,6 @@ const TransactionsView = () => {
 
     return (
         <div className="transactions-container flex flex-col mt-10">
-            <div className="flex items-center justify-start mb-4 ms-[16rem] mx-[18rem]">
-                <h2 className="text-xl font-bold">Transaction</h2>
-            </div>
             <TransactionGrid
                 colDefs={colDefs}
                 transactions={transactions}

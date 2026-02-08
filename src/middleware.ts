@@ -17,6 +17,16 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
+    matcher: [
+    /*
+     * Exclui os seguintes caminhos das regras do middleware:
+     * 1. api (rotas de API)
+     * 2. _next/static (arquivos JS/CSS compilados)
+     * 3. _next/image (imagens otimizadas)
+     * 4. favicon.ico, public assets
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)',
+  ],
     // matcher: ['/home/*']
     // matcher: ['/home/*', '/transactions/:path*', '/Debts/:path*', '/Categories/:path*', '/Account/:path*', '/Profile/:path*'],
 }
