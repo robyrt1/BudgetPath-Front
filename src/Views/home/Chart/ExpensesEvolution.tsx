@@ -4,7 +4,7 @@ import UseAggregatedExpensesViewModel from '@/ViewModels/Transactions/Aggregated
 import { ITransformExpenseDataResponse } from '@/ViewModels/Transactions/Types/FindTransactionsType';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { CartesianGrid, Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 const groupByKey = {
     month: 'Month',
@@ -26,16 +26,18 @@ export default function ExpensesEvolution({ showBalances, transactionsProp }: { 
 
     const transformedData = transformExpensesData(DataAggregateExpenses);
     const tooltipFormatter = (value: number) => showBalances ? `R$ ${value.toFixed(2)}` : 'R$ ****';
-    const renderLines = (data: ITransformExpenseDataResponse[]) => {
+    const renderAreas = (data: ITransformExpenseDataResponse[]) => {
         return Object.keys(data[0] || {})
             .filter(key => key !== 'period')
             .map((account, idx) => (
-                <Line
+                <Area
                     key={account}
                     type="monotone"
                     dataKey={account}
-                    strokeWidth={2}
+                    strokeWidth={3}
                     stroke={getAccountColor(idx)}
+                    fillOpacity={1}
+                    fill={`url(#color${idx})`}
                     name={account}
                 />
             ));
@@ -43,11 +45,7 @@ export default function ExpensesEvolution({ showBalances, transactionsProp }: { 
 
 
     return (
-        <div className="p-6 rounded-xl shadow-md mt-6 w-full" style={{
-            backgroundColor: "var(--background)",
-            color: "var(--foreground)",
-            border: "1px solid #2f365f"
-        }}>
+        <div className="rounded-2xl border border-white/5 bg-[#111827] shadow-[0_8px_30px_rgb(0,0,0,0.12)] p-6 mt-6 w-full h-full flex flex-col">
             <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-gray-100">📊 Expense Evolution</h2>
                 <div className="flex gap-2">
@@ -55,9 +53,9 @@ export default function ExpensesEvolution({ showBalances, transactionsProp }: { 
                         <button
                             key={f}
                             onClick={() => { setgroupBy(f), setFiltro(f) }}
-                            className={`px-3 py-1 rounded-full text-sm font-medium ${filtro === f
-                                ? 'bg-indigo-600 text-white'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-colors shadow-sm ${filtro === f
+                                ? 'bg-[#3B82F6] text-white shadow-[#3B82F6]/30'
+                                : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-slate-200'
                                 }`}
                         >
                             {f}
@@ -72,41 +70,48 @@ export default function ExpensesEvolution({ showBalances, transactionsProp }: { 
                         <p className="text-gray-500">Nenhuma despesa encontrada.</p>
                     ) : (
                         <ResponsiveContainer width="100%" height={300}>
-                            <LineChart data={transformedData} >
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="period" />
-                                <YAxis />
+                            <AreaChart data={transformedData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                                <defs>
+                                  {Object.keys(transformedData[0] || {}).filter(key => key !== 'period').map((account, idx) => (
+                                    <linearGradient key={`color${idx}`} id={`color${idx}`} x1="0" y1="0" x2="0" y2="1">
+                                      <stop offset="5%" stopColor={getAccountColor(idx)} stopOpacity={0.4}/>
+                                      <stop offset="95%" stopColor={getAccountColor(idx)} stopOpacity={0}/>
+                                    </linearGradient>
+                                  ))}
+                                </defs>
+                                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff" strokeOpacity={0.05} vertical={false} />
+                                <XAxis dataKey="period" stroke="#94a3b8" tick={{fill: '#94a3b8', fontSize: 12}} />
+                                <YAxis stroke="#94a3b8" tick={{fill: '#94a3b8', fontSize: 12}} />
                                 <Tooltip
                                     contentStyle={{
-                                        backgroundColor: "var(--background)",
-                                        borderColor: "#2f365f",
-                                        color: "var(--foreground)",
+                                        backgroundColor: "#0A0F1C",
+                                        borderColor: "rgba(255,255,255,0.1)",
+                                        color: "#f1f5f9",
+                                        borderRadius: "12px",
+                                        boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.5)"
                                     }}
+                                    itemStyle={{ color: "#f1f5f9" }}
                                     formatter={tooltipFormatter} />
                                 {
-                                    renderLines(transformedData)
+                                    renderAreas(transformedData)
                                 }
-                            </LineChart>
+                            </AreaChart>
                         </ResponsiveContainer>
 
                     )}
                 </div>
 
-                <div className="w-full lg:w-[400px] bg-gray-50 rounded-xl p-4 shadow-inner" style={{
-                    backgroundColor: "var(--background)",
-                    color: "var(--foreground)",
-                    border: "1px solid #2f365f"
-                }}>
-                    <h3 className="text-lg font-semibold text-gray-100 mb-3">📄 Summary by {filtro}</h3>
-                    <ul className="divide-y divide-gray-200 max-h-[220px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-500 scrollbar-track-gray-100">
+                <div className="w-full lg:w-[400px] bg-[#1A2235] border border-white/5 rounded-xl p-6 shadow-md flex mx-auto flex-col">
+                    <h3 className="text-lg font-semibold text-slate-100 mb-4 tracking-tight">📄 Summary by {filtro}</h3>
+                    <ul className="divide-y divide-white/5 max-h-[260px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-[#1E293B] hover:scrollbar-thumb-[#334155] scrollbar-track-transparent">
                         {DataAggregateExpenses.map((item, index) => (
                             <li
                                 key={index}
-                                className="flex flex-col sm:grid sm:grid-cols-[35%_25%_25%] gap-1 sm:gap-4 py-2 text-sm"
+                                className="flex flex-col sm:grid sm:grid-cols-[35%_25%_25%] gap-1 sm:gap-4 py-3 text-sm transition-colors hover:bg-white/5 rounded-lg px-2"
                             >
-                                <span className="text-gray-100 capitalize sm:col-span-1">{item.account}</span>
-                                <span className="text-gray-100 capitalize sm:col-span-1">{item.period}</span>
-                                <span className="font-semibold text-gray-150 sm:text-right sm:col-span-1">
+                                <span className="text-slate-300 capitalize sm:col-span-1">{item.account}</span>
+                                <span className="text-slate-400 capitalize sm:col-span-1">{item.period}</span>
+                                <span className="font-semibold text-slate-100 sm:text-right sm:col-span-1">
                                     {showBalances
                                         ? `R$ ${item.total.toLocaleString('pt-BR', {
                                             minimumFractionDigits: 2,

@@ -1,7 +1,7 @@
 import { AuthState, logout } from "@/Redux/Slices/AutheticationSlice";
 import { Route } from "@/shared/Interfaces/Router";
 import { Icon } from "@iconify/react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -14,8 +14,14 @@ const routes: Route[] = [
     },
 ];
 
-export default function NavbarWithSidebar() {
+interface SidebarProps {
+    isExpanded?: boolean;
+    toggleSidebar?: () => void;
+}
+
+export default function NavbarWithSidebar({ isExpanded = true, toggleSidebar }: SidebarProps) {
     const router = useRouter();
+    const pathname = usePathname();
     const dispatch = useDispatch();
 
     const [isOpen, setIsOpen] = useState(false);
@@ -53,11 +59,7 @@ export default function NavbarWithSidebar() {
     return (
         <>
             {/* Navbar */}
-            <nav className="fixed top-0 left-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700" style={{
-                backgroundColor: "var(--background)",
-                color: "var(--foreground)",
-                border: "1px solid #2f365f"
-            }}>
+            <nav className="fixed top-0 left-0 z-50 w-full bg-[#0A0F1C] border-b border-white/5 text-slate-100">
                 <div className="px-3 py-3 lg:px-5 lg:pl-3">
                     <div className="flex items-center justify-between">
                         {/* Botão abrir Sidebar */}
@@ -103,33 +105,32 @@ export default function NavbarWithSidebar() {
 
                             </button>
 
-                            {/* Dropdown aberto */}
                             {dropdownOpen && (
-                                <div className="absolute right-0 z-50 mt-2 w-48 text-base list-none bg-white divide-y divide-gray-100 rounded-md shadow-md dark:bg-gray-700 dark:divide-gray-600">
+                                <div className="absolute right-0 z-50 mt-2 w-48 text-base list-none bg-[#111827] border border-white/10 divide-y divide-white/5 rounded-xl shadow-lg">
                                     <div className="px-4 py-3">
-                                        <p className="text-sm text-gray-900 dark:text-white">{nameUser}</p>
-                                        <p className="text-sm font-medium text-gray-900 truncate dark:text-gray-300">
+                                        <p className="text-sm text-slate-100">{nameUser}</p>
+                                        <p className="text-sm font-medium text-slate-300 truncate">
                                             {email}
                                         </p>
                                     </div>
                                     <ul className="py-1">
                                         <li>
-                                            <a href="#" className="block px-4 py-2 text-sm hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white">
+                                            <a href="#" className="block px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5">
                                                 Dashboard
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#" className="block px-4 py-2 text-sm hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white">
+                                            <a href="#" className="block px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5">
                                                 Settings
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="#" className="block px-4 py-2 text-sm hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white">
+                                            <a href="#" className="block px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5">
                                                 Earnings
                                             </a>
                                         </li>
                                         <li>
-                                            <a onClick={handleLogout} className="block px-4 py-2 text-sm hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer">
+                                            <a onClick={handleLogout} className="block px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-white/5 cursor-pointer">
                                                 Sign out
                                             </a>
                                         </li>
@@ -144,35 +145,46 @@ export default function NavbarWithSidebar() {
             {/* Sidebar */}
             <aside
                 id="logo-sidebar"
-                className={`fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700
+                className={`fixed top-0 left-0 z-40 h-screen pt-20 transition-all duration-300 ease-in-out bg-[#0A0F1C] border-r border-white/5
+                ${isExpanded ? "w-64" : "w-20"}
                 ${isOpen ? "translate-x-0" : "-translate-x-full"} sm:translate-x-0`}
                 aria-label="Sidebar"
-                style={{
-                    backgroundColor: "var(--background)",
-                    color: "var(--foreground)",
-                    border: "1px solid #2f365f"
-                }}
             >
-                <div className="h-full px-3 pb-2 overflow-y-auto bg-white dark:bg-gray-800" style={{
-                    backgroundColor: "var(--background)",
-                    color: "var(--foreground)",
-                }}>
-                    <ul className="space-y-2 font-medium">
-                        {routes.map((route) => (
+                <div className="flex flex-col h-full px-4 pb-4 overflow-y-auto bg-[#0A0F1C] scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
+                    <ul className="space-y-3 font-medium flex-1">
+                        {routes.map((route) => {
+                            const isActive = pathname === route.path || pathname.startsWith(route.path);
+                            return (
                             <li key={route.path}>
                                 <a
                                     onClick={() => handleClick(route)}
-                                    className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-pointer"
+                                    className={`flex items-center p-3 rounded-xl transition-all group cursor-pointer ${
+                                        isActive ? "bg-[#3B82F6]/15 text-[#3B82F6] font-semibold" : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
+                                    }`}
                                 >
                                     <Icon
                                         icon={route.icon}
-                                        className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                                        className={`w-6 h-6 flex-shrink-0 transition duration-75 ${
+                                            isActive ? "text-[#3B82F6]" : "text-slate-500 group-hover:text-slate-300"
+                                        }`}
                                     />
-                                    <span className="ml-3">{route.label}</span>
+                                    <span className={`transition-all duration-300 overflow-hidden whitespace-nowrap ${isExpanded ? "ml-3 opacity-100 max-w-[200px]" : "ml-0 opacity-0 max-w-0"}`}>{route.label}</span>
                                 </a>
                             </li>
-                        ))}
+                        )})}
                     </ul>
+
+                    {toggleSidebar && (
+                        <div className="mt-auto pt-4 border-t border-white/5">
+                            <button
+                                onClick={toggleSidebar}
+                                className="flex justify-center items-center w-full p-3 rounded-xl transition-all text-slate-500 hover:text-white hover:bg-white/5"
+                                title={isExpanded ? "Recolher Menu" : "Expandir Menu"}
+                            >
+                                <Icon icon={isExpanded ? "lucide:chevron-left" : "lucide:chevron-right"} className="w-6 h-6" />
+                            </button>
+                        </div>
+                    )}
                 </div>
             </aside>
 

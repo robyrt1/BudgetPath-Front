@@ -30,7 +30,6 @@ interface Props {
 const TransactionGrid: React.FC<Props> = ({ colDefs, transactions, addTransaction, onGridReady }) => {
     const gridRef = useRef<AgGridReact>(null);
     const panelRef = useRef<HTMLDivElement>(null);
-    const themeDarkBlue = themeQuartz.withPart(colorSchemeDarkBlue);
     const [gridApi, setGridApi] = useState<any>(null);
 
 
@@ -109,7 +108,7 @@ const TransactionGrid: React.FC<Props> = ({ colDefs, transactions, addTransactio
     };
 
     return (
-        <div className="transactions-grid ag-theme-balham-dark h-[calc(100vh-9rem)] w-[calc(185vh-1rem)] mt-10">
+        <div className="ag-theme-alpine-dark w-full h-[calc(100vh-14rem)] min-h-[600px] mt-2 rounded-2xl border border-white/5 bg-[#111827] shadow-[0_8px_30px_rgb(0,0,0,0.12)] p-4 flex flex-col">
             {/* <button onClick={fetchFilteredData}>Buscar dados filtrados</button> */}
             <AgGridReact
                 // domLayout="autoHeight"
@@ -135,7 +134,6 @@ const TransactionGrid: React.FC<Props> = ({ colDefs, transactions, addTransactio
                 onToolPanelSizeChanged={handleToolPanelSizeChanged}
                 chartThemeOverrides={chartThemeOverrides}
                 onFirstDataRendered={onFirstDataRendered}
-                theme={themeDarkBlue}
                 groupDefaultExpanded={1}
                 getContextMenuItems={getContextMenuItems}
             />

@@ -30,7 +30,7 @@ export default function RootLayout({
         <title>BudgetPath</title>
         <meta name="description" content="width=device-width, initial-scale=1.0" />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen flex`}>
+      <body className={`h-screen flex`}>
         <Providers>
           <LayoutWrapper>{children}</LayoutWrapper>
         </Providers>

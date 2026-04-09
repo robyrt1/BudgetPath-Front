@@ -11,8 +11,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        border: "hsl(var(--border))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: "hsl(var(--primary))",
+        accent: "hsl(var(--accent))",
       },
     },
   },
