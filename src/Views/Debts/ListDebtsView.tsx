@@ -1,11 +1,14 @@
 "use client";
-import Loading from "@/app/(home)/home/loading";
+import Loading from "@/app/(private)/(home)/home/loading";
+import UseAccountModel from "@/Models/Accounts/AccountsModel";
+import CategoriesModel from "@/Models/Categories/CategoriesModal";
 import { AuthState } from "@/Redux/Slices/AutheticationSlice";
 import { useFindDebtsViewModel } from "@/ViewModels/Debts/DebtsViewModel";
 import { useEffect, useState } from "react";
 import { FaListOl, FaPen, FaPlus, FaTrash } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import Installments from "./Installments"; // Importando o componente de parcelas
+import DebtForm from "./modal/debtForm";
 
 const getStatusBadge = (status: string) => {
   switch (status) {
@@ -48,13 +51,18 @@ const DebtList = () => {
 
   const { debts, setDebts, state, setState, findDebt, isModalOpen, setSelectedDebt, openCreateModal, openEditModal, closeModal, saveDebt, confirmDelete, setIsDeleteConfirmOpen, doDelete, debtToDelete, editingDebt, isDeleteConfirmOpen, selectedDebt } = useFindDebtsViewModel();
 
+  const [accounts, setAccounts] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
+
   useEffect(() => {
+    if (!userId) return;
     findDebt(userId);
+    UseAccountModel.findByUser({ userId }).then(res => setAccounts(res || []));
+    CategoriesModel.FindCategories({ userId }).then(res => setCategories(res.Data || []));
   }, [userId]);
-  console.log(debts);
 
   return (
-    <div className="w-full min-h-screen py-10">
+    <div className="w-full min-h-screen py-10 mt-10">
       <div className="max-w-[1580px] w-full mx-auto px-4 md:px-8">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl font-bold text-white tracking-tight">Minhas Dívidas</h1>
@@ -111,7 +119,7 @@ const DebtList = () => {
                         <button onClick={() => openEditModal(debt)} className="p-2.5 text-slate-400 hover:text-[#3B82F6] hover:bg-[#3B82F6]/10 rounded-xl transition-colors" title="Editar Dívida">
                           <FaPen size={14} />
                         </button>
-                        <button onClick={() => confirmDelete(debt)} className="p-2.5 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl transition-colors" title="Excluir Dívida">
+                        <button onClick={() => confirmDelete(debt, userId)} className="p-2.5 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl transition-colors" title="Excluir Dívida">
                           <FaTrash size={14} />
                         </button>
                       </div>
@@ -128,7 +136,7 @@ const DebtList = () => {
             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={closeModal}></div>
             <div className="bg-[#111827] border border-white/10 shadow-2xl w-full max-w-xl p-8 rounded-[24px] relative z-10">
               <h3 className="text-xl font-bold text-white mb-8 tracking-tight">{editingDebt?.id ? 'Editar Dívida' : 'Nova Dívida'}</h3>
-              <DebtForm debt={editingDebt} onCancel={closeModal} onSave={saveDebt} />
+              <DebtForm debt={editingDebt} accounts={accounts} categories={categories} onCancel={closeModal} onSave={(d) => saveDebt(d, userId)} />
             </div>
           </div>
         )}
@@ -156,46 +164,3 @@ const DebtList = () => {
 };
 
 export default DebtList;
-
-function DebtForm({ debt, onSave, onCancel }: { debt: any; onSave: (d: any) => void; onCancel: () => void }) {
-  const [form, setForm] = useState<any>({ ...debt });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setForm((prev: any) => ({ ...prev, [name]: name === 'totalAmount' || name === 'installments' ? Number(value) : value }));
-  }
-
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // basic validation
-    if (!form.description || !form.totalAmount) return;
-    onSave({ ...form });
-  }
-
-  return (
-    <form onSubmit={submit} className="space-y-5">
-      <div>
-        <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-2">Descrição</label>
-        <input name="description" value={form.description} onChange={handleChange} className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-[#3B82F6] transition-colors" />
-      </div>
-      <div className="grid grid-cols-2 gap-5">
-        <div>
-          <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-2">Total</label>
-          <input name="totalAmount" type="number" step="0.01" value={form.totalAmount} onChange={handleChange} className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-[#3B82F6] transition-colors" />
-        </div>
-        <div>
-          <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-2">Parcelas</label>
-          <input name="installments" type="number" value={form.installments} onChange={handleChange} className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-[#3B82F6] transition-colors" />
-        </div>
-      </div>
-      <div>
-        <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-2">Vencimento</label>
-        <input name="dueDate" type="date" value={form.dueDate?.slice?.(0, 10) ?? ''} onChange={handleChange} className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-[#3B82F6] transition-colors [color-scheme:dark]" />
-      </div>
-      <div className="flex justify-end gap-3 pt-4">
-        <button type="button" onClick={onCancel} className="px-5 py-2.5 rounded-xl font-semibold text-slate-400 hover:text-white hover:bg-white/5 transition-colors">Cancelar</button>
-        <button type="submit" className="px-6 py-2.5 rounded-xl font-bold bg-[#3B82F6] text-white hover:bg-[#2563EB] shadow-lg shadow-blue-500/20 transition-all">Salvar</button>
-      </div>
-    </form>
-  );
-}

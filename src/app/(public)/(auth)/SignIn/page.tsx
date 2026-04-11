@@ -7,7 +7,6 @@ export default function SignInPage() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.18),_transparent_36%),radial-gradient(circle_at_bottom_right,_rgba(96,165,250,0.12),_transparent_28%)]" />
       <div className="relative w-full max-w-[1500px] h-full mx-auto">
         <div className="grid gap-8 lg:gap-12 lg:grid-cols-2 lg:min-h-[800px] items-stretch">
-
           <div className="rounded-[40px] border border-white/5 bg-[#111827] p-8 lg:p-16 shadow-[0_40px_120px_rgba(2,8,41,0.24)] flex flex-col justify-center w-full">
             <LoginView />
           </div>

@@ -50,19 +50,41 @@ export const useFindDebtsViewModel = () => {
 
         closeModal: () => closeModal(),
 
-        saveDebt: (debt: any) => {
-            if (debt.Id) {
-                setDebts(prev => prev.map(d => d.Id === debt.Id ? { ...d, ...debt } : d));
-            } else {
-                const newDebt = { ...debt, Id: crypto.randomUUID(), CreatedAt: new Date().toISOString() };
-                setDebts(prev => [newDebt, ...prev]);
+        saveDebt: async (debt: any, userId: string) => {
+            try {
+                if (debt.Id) {
+                    setDebts(prev => prev.map(d => d.Id === debt.Id ? { ...d, ...debt } : d));
+                } else {
+                    setState('loading');
+                    await DebtsModel.createDebt({
+                        userId: userId,
+                        accountId: debt.accountId,
+                        creditCardId: debt.creditCardId || null,
+                        categoryId: debt.categoryId,
+                        description: debt.description,
+                        totalAmount: debt.totalAmount,
+                        installments: debt.installments,
+                        dueDate: new Date(debt.dueDate).toISOString()
+                    });
+                    const data = await DebtsModel.findByUser({ userId });
+                    setDebts(data);
+                    setState('ready');
+                }
+                closeModal();
+            } catch (error) {
+                console.error("Erro ao salvar a dívida", error);
+                setState('error');
             }
-            closeModal();
         },
 
-        confirmDelete: (debt: any) => {
-            setDebtToDelete(debt);
-            setIsDeleteConfirmOpen(true);
+        confirmDelete: async (debt: Debt, userId: string) => {
+            console.log("Confirmar exclusão da dívida", debt);
+            if (!debt) return;
+            setState('loading');
+            await DebtsModel.deleteDebt(debt.Id);
+            const data = await DebtsModel.findByUser({ userId });
+            setDebts(data);
+            setState('ready');
         },
 
         doDelete: () => {

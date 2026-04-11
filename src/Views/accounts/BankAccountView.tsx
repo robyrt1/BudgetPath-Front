@@ -30,7 +30,7 @@ export default function BankAccount({ showBalances, setShowBalances }: { showBal
   }, [userId]);
 
   return (
-    <div className="relative w-full">
+    <div className="w-full mt-10">
       <div className="rounded-2xl border border-white/5 bg-[#111827] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
 
         <div className="flex items-center justify-between mb-6">
@@ -66,10 +66,10 @@ export default function BankAccount({ showBalances, setShowBalances }: { showBal
                   <div className="text-lg font-bold text-slate-100">{showBalances ? `R$ ${account.Balance}` : "R$ ****"}</div>
                 </div>
                 {first(account.CreditCard)?.AvailableBalance && (
-                   <div className="text-right">
-                     <div className="text-xs text-slate-500 uppercase tracking-wide">Available</div>
-                     <div className="text-sm font-semibold text-slate-200">{showBalances ? `R$ ${first(account.CreditCard)?.AvailableBalance}` : "R$ ****"}</div>
-                   </div>
+                  <div className="text-right">
+                    <div className="text-xs text-slate-500 uppercase tracking-wide">Available</div>
+                    <div className="text-sm font-semibold text-slate-200">{showBalances ? `R$ ${first(account.CreditCard)?.AvailableBalance}` : "R$ ****"}</div>
+                  </div>
                 )}
               </div>
             </div>

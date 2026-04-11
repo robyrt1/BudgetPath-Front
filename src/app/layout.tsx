@@ -2,17 +2,17 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Providers from "../Redux/Providers";
 import "../styles/globals.css";
-import LayoutWrapper from "./Shared/components/LayoutWrapper"; // Importamos o wrapper
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// const geistSans = Geist({
+//   variable: "--font-geist-sans",
+//   subsets: ["latin"],
+// });
+
+// const geistMono = Geist_Mono({
+//   variable: "--font-geist-mono",
+//   subsets: ["latin"],
+// });
 
 export const metadata: Metadata = {
   title: "Finance",
@@ -30,9 +30,9 @@ export default function RootLayout({
         <title>BudgetPath</title>
         <meta name="description" content="width=device-width, initial-scale=1.0" />
       </head>
-      <body className={`h-screen flex`}>
+      <body className={`h-screen w-full bg-[#0A0F1C]`}>
         <Providers>
-          <LayoutWrapper>{children}</LayoutWrapper>
+          {children}
         </Providers>
       </body>
     </html>
