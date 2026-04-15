@@ -6,6 +6,7 @@ import { PaymentMethod } from "@/Models/PaymentMethod/Responses/ResponseFindPaym
 import { RequestCreateTransaction } from "@/Models/Transactions/Requests/RequesTransactions";
 import { AuthState } from "@/Redux/Slices/AutheticationSlice";
 import React, { forwardRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { useSelector } from "react-redux";
 import './addTransactionPanelCSS.css';
 
@@ -17,6 +18,7 @@ export interface IAddTransactionPanel {
 }
 
 const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ addTransaction }, ref) => {
+    const t = useTranslations('addTransaction');
     const [Error, setError] = useState<any>(null);
     const [account, setAccount] = useState<GetAccountUserResponse>({
         Id: '',
@@ -74,7 +76,7 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
     const handleSubmit = async () => {
 
         if (!categoryId || !account.Id || !paymentMethodId || !amount) {
-            alert("Preencha os campos obrigatórios!");
+            alert(t('requiredFields'));
             return;
         }
 
@@ -111,7 +113,7 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
 
     return (
         <div ref={ref} className="add-transaction-panel">
-            <h4>Adicionar Transação</h4>
+            <h4>{t('title')}</h4>
             <hr className="border-gray-300 w-full" />
 
             {transactionType ? '' : (
@@ -120,13 +122,13 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
                         className={`px-4 py-2 rounded bg-green-500 text-white`}
                         onClick={() => setTransactionType("RECEITA")}
                     >
-                        Receita
+                        {t('income')}
                     </button>
                     <button
                         className={`px-4 py-2 rounded bg-red-500 text-white`}
                         onClick={() => setTransactionType("DESPESA")}
                     >
-                        Despesa
+                        {t('expense')}
                     </button>
                 </div>
             )}
@@ -153,11 +155,11 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
                     <SelectAccounts account={account} setAccount={setAccount} setCredit={setCredit} creditCardProp={credit} />
                     <SelectCategory selectedCategoryId={categoryId} setSelectedCategoryId={setCategoryId} transactionType={transactionType} />
                     <SelectPaymentMethod selectedPaymentMethod={paymentMethodId} setSelectedPaymentMethod={setPaymentMethodId} isCreditSelected={credit?.Id ? true : false} />
-                    <input type="text" placeholder="Descrição" value={description} onChange={(e) => setDescription(e.target.value)} className="input-field" required />
-                    <input type="text-right" placeholder="R$ 0,00" value={amount} onChange={handleChangeValor} className="w-full px-3 py-2 border rounded text-left" required />
-                    <input type="date" placeholder="Data da Transação" value={transactionDate} onChange={(e) => setTransactionDate(e.target.value)} className="input-field" required />
-                    <button className="submit-btn" onClick={handleSubmit}>Adicionar Transação</button>
-                    <button className="px-4 py-2 rounded bg-red-500 text-white" onClick={handlerCancel}>Cancelar</button>
+                    <input type="text" placeholder={t('description')} value={description} onChange={(e) => setDescription(e.target.value)} className="input-field" required />
+                    <input type="text-right" placeholder={t('amount')} value={amount} onChange={handleChangeValor} className="w-full px-3 py-2 border rounded text-left" required />
+                    <input type="date" placeholder={t('date')} value={transactionDate} onChange={(e) => setTransactionDate(e.target.value)} className="input-field" required />
+                    <button className="submit-btn" onClick={handleSubmit}>{t('submit')}</button>
+                    <button className="px-4 py-2 rounded bg-red-500 text-white" onClick={handlerCancel}>{t('cancel')}</button>
 
                 </div>
             ) : ""}

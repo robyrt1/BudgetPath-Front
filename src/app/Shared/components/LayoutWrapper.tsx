@@ -6,8 +6,9 @@ import { useState } from "react";
 
 export default function LayoutWrapper({ children, className }: { children: React.ReactNode, className?: string }) {
     const pathname = usePathname();
-    const hideSidebarRoutes = ["/SignIn", "/RegisterUser"]; // Rotas que não devem ter Sidebar
-    const showSidebar = !hideSidebarRoutes.includes(pathname);
+    // Routes that should not show the Sidebar (ignoring locale prefix)
+    const hideSidebarRoutes = ["/SignIn", "/RegisterUser"];
+    const showSidebar = !hideSidebarRoutes.some(route => pathname.endsWith(route) || pathname.includes(route + '/'));
     const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
 
     return (

@@ -1,5 +1,5 @@
 "use client";
-import Loading from "@/app/(private)/(home)/home/loading";
+import Loading from "@/app/[locale]/(private)/(home)/home/loading";
 import UseAccountModel from "@/Models/Accounts/AccountsModel";
 import CategoriesModel from "@/Models/Categories/CategoriesModal";
 import { AuthState } from "@/Redux/Slices/AutheticationSlice";

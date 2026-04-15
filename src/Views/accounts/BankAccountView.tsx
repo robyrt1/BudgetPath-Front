@@ -1,21 +1,17 @@
 // components/BankAccountCarousel.tsx
 import { AuthState } from "@/Redux/Slices/AutheticationSlice";
-import { Icon } from "@iconify/react";
 import AccountViewModel from "@/ViewModels/Accounts/AccountViewModel";
+import { Icon } from "@iconify/react";
 import { first } from "lodash";
+import { useTranslations } from "next-intl";
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import './BankAccountView.css';
 export default function BankAccount({ showBalances, setShowBalances }: { showBalances?: boolean, setShowBalances: Dispatch<SetStateAction<boolean>> }) {
+  const t = useTranslations('home');
   const userId = useSelector((state: { auth: AuthState }) => state.auth.userId);
   const { accounts, find, error } = AccountViewModel({ UserId: userId });
 
-
-  const maskedId = (id: string) => {
-    const idStr = id.toString();
-    return idStr.length > 10 ? `***${idStr.slice(-4)}` : idStr;
-  };
 
   const calcularTotal = (accounts: { Balance: string | number }[]) => {
     return accounts.reduce((total, acc) => {
@@ -34,13 +30,13 @@ export default function BankAccount({ showBalances, setShowBalances }: { showBal
       <div className="rounded-2xl border border-white/5 bg-[#111827] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
 
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xl font-semibold text-slate-100 tracking-tight">My accounts</h3>
+          <h3 className="text-xl font-semibold text-slate-100 tracking-tight">{t('accounts')}</h3>
           <button
             onClick={() => setShowBalances(!showBalances)}
             className="flex items-center text-sm bg-white/5 px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-white/10 transition-colors"
           >
             {showBalances ? <FaEyeSlash className="mr-1" /> : <FaEye className="mr-1" />}
-            {showBalances ? "Hide balance" : "Show balance"}
+            {showBalances ? t('hideBalance') : t('showBalance')}
           </button>
         </div>
 

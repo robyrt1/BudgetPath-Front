@@ -13,7 +13,7 @@ const CategoriesModel = {
 
     create: async (request: RequestCreateCategory): Promise<void | { error: string }> => {
         try {
-            const response = await fetch(UrlsService.URL_FINANCE_API + `CategoriesOData`, { method: 'POST', headers: { 'Content-Type': 'application/json' } })
+            await fetch(UrlsService.URL_FINANCE_API + `CategoriesOData`, { method: 'POST', headers: { 'Content-Type': 'application/json' } })
         } catch (error) {
             return { error: String(error) }
         }

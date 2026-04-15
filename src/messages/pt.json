@@ -1,0 +1,114 @@
+{
+  "nav": {
+    "home": "Home",
+    "transactions": "Transações",
+    "accounts": "Contas",
+    "debts": "Dívidas",
+    "dashboard": "Dashboard",
+    "settings": "Configurações",
+    "earnings": "Ganhos",
+    "signOut": "Sair",
+    "collapseMenu": "Recolher Menu",
+    "expandMenu": "Expandir Menu"
+  },
+  "transactions": {
+    "account": "Conta",
+    "category": "Categoria",
+    "title": "Transações",
+    "search": "Buscar transação...",
+    "newTransaction": "Nova Transação",
+    "filters": "Filtros",
+    "clearFilters": "Limpar filtros",
+    "noResults": "Nenhuma transação encontrada.",
+    "latestTransactions": "Últimas transações",
+    "showing": "Mostrando",
+    "of": "de",
+    "transactions_count": "{count} transação | {count} transações",
+    "rowsPerPage": "Linhas por página:",
+    "firstPage": "Primeira página",
+    "lastPage": "Última página",
+    "previous": "‹ Anterior",
+    "next": "Próximo ›",
+    "columns": {
+      "category": "Categoria",
+      "account": "Conta",
+      "amount": "Valor",
+      "description": "Descrição",
+      "paymentMethod": "Pagamento",
+      "date": "Data",
+      "group": "Grupo",
+      "status": "Status"
+    },
+    "filterLabels": {
+      "type": "Tipo",
+      "all": "Todos",
+      "allAccounts": "Todas",
+      "status": "Status",
+      "account": "Conta",
+      "dateFrom": "Data de",
+      "dateTo": "Data até",
+      "amountMin": "Valor mín.",
+      "amountMax": "Valor máx."
+    },
+    "summary": {
+      "income": "Receita",
+      "expense": "Despesa",
+      "balance": "Saldo"
+    }
+  },
+  "addTransaction": {
+    "title": "Adicionar Transação",
+    "income": "Receita",
+    "expense": "Despesa",
+    "description": "Descrição",
+    "amount": "R$ 0,00",
+    "date": "Data da Transação",
+    "submit": "Adicionar Transação",
+    "cancel": "Cancelar",
+    "requiredFields": "Preencha os campos obrigatórios!"
+  },
+  "auth": {
+    "signIn": "Entrar",
+    "signUp": "Criar conta",
+    "email": "E-mail",
+    "password": "Senha",
+    "forgotPassword": "Esqueceu a senha?",
+    "noAccount": "Não tem conta?",
+    "hasAccount": "Já tem conta?",
+    "welcome": "Bem-vindo ao futuro",
+    "tagline": "Design moderno e confiável",
+    "description": "Transforme seus gastos em dados inteligentes. O BudgetPath segmenta suas despesas por cartão, oferecendo uma visão clara do seu fluxo de caixa para você tomar decisões financeiras mais assertivas."
+  },
+  "home": {
+    "welcome": "Bem-vindo ao BudgetPath",
+    "tagline": "Sua jornada financeira começa aqui",
+    "description": "Transforme seus gastos em dados inteligentes. O BudgetPath segmenta suas despesas por cartão, oferecendo uma visão clara do seu fluxo de caixa para você tomar decisões financeiras mais assertivas.",
+    "accounts": "Minhas Contas",
+    "showBalance": "Mostrar saldo",
+    "hideBalance": "Ocultar saldo",
+    "expensesEvolution": {
+      "title": "Evolução das Despesas",
+      "noResults": "Nenhuma despesa encontrada.",
+      "summary": {
+        "income": "Receita",
+        "expense": "Despesa",
+        "balance": "Saldo",
+        "title": "Resumo por",
+        "month": "Mês",
+        "week": "Semana",
+        "day": "Dia",
+        "year": "Ano"
+      }
+    },
+    "categoryChart": {
+      "title": "Despesa por categoria"
+    },
+    "common": {
+      "loading": "Carregando...",
+      "error": "Ocorreu um erro",
+      "retry": "Tentar novamente",
+      "save": "Salvar",
+      "close": "Fechar"
+    }
+  }
+}

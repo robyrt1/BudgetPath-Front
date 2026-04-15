@@ -5,7 +5,7 @@ export interface ResponseFindCategories {
     TotalPages: number,
     TotalRecords: number,
     Succeeded: boolean,
-    Errors: any,
+    Errors: unknown,
     Message: string | null
 }
 
@@ -21,7 +21,7 @@ export interface Category {
     UserId: string | null,
     ParentId: string | null
     SubCategories: SubCategories[] | null,
-    children?: any
+    children?: unknown
 
 }
 export interface SubCategories {

@@ -1,0 +1,114 @@
+{
+  "nav": {
+    "home": "Home",
+    "transactions": "Transactions",
+    "accounts": "Accounts",
+    "debts": "Debts",
+    "dashboard": "Dashboard",
+    "settings": "Settings",
+    "earnings": "Earnings",
+    "signOut": "Sign out",
+    "collapseMenu": "Collapse Menu",
+    "expandMenu": "Expand Menu"
+  },
+  "transactions": {
+    "account": "Account",
+    "category": "Category",
+    "title": "Transactions",
+    "search": "Search transaction...",
+    "newTransaction": "New Transaction",
+    "filters": "Filters",
+    "clearFilters": "Clear filters",
+    "noResults": "No transactions found.",
+    "showing": "Showing",
+    "of": "of",
+    "transactions_count": "{count} transaction | {count} transactions",
+    "latestTransactions": "Latest transactions",
+    "rowsPerPage": "Rows per page:",
+    "firstPage": "First page",
+    "lastPage": "Last page",
+    "previous": "‹ Previous",
+    "next": "Next ›",
+    "columns": {
+      "category": "Category",
+      "account": "Account",
+      "amount": "Amount",
+      "description": "Description",
+      "paymentMethod": "Payment",
+      "date": "Date",
+      "group": "Group",
+      "status": "Status"
+    },
+    "filterLabels": {
+      "type": "Type",
+      "all": "All",
+      "allAccounts": "All",
+      "status": "Status",
+      "account": "Account",
+      "dateFrom": "Date from",
+      "dateTo": "Date to",
+      "amountMin": "Min. amount",
+      "amountMax": "Max. amount"
+    },
+    "summary": {
+      "income": "Income",
+      "expense": "Expense",
+      "balance": "Balance"
+    }
+  },
+  "addTransaction": {
+    "title": "Add Transaction",
+    "income": "Income",
+    "expense": "Expense",
+    "description": "Description",
+    "amount": "$ 0.00",
+    "date": "Transaction Date",
+    "submit": "Add Transaction",
+    "cancel": "Cancel",
+    "requiredFields": "Please fill in the required fields!"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Create account",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "welcome": "Welcome to the future",
+    "tagline": "Modern and reliable design",
+    "description": "Transform your spending into smart data. BudgetPath segments your expenses by card, offering a clear view of your cash flow so you can make more informed financial decisions."
+  },
+  "home": {
+    "welcome": "Welcome to BudgetPath",
+    "tagline": "Your financial journey starts here",
+    "description": "Transform your spending into smart data. BudgetPath segments your expenses by card, offering a clear view of your cash flow so you can make more informed financial decisions.",
+    "accounts": "My Accounts",
+    "showBalance": "Show balance",
+    "hideBalance": "Hide balance",
+    "expensesEvolution": {
+      "title": "Expense Evolution",
+      "noResults": "No expenses found.",
+      "summary": {
+        "title": "Summary by",
+        "income": "Income",
+        "expense": "Expense",
+        "balance": "Balance",
+        "month": "Month",
+        "week": "Week",
+        "day": "Day",
+        "year": "Year"
+      }
+    },
+    "categoryChart": {
+      "title": "Expense by category"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Try again",
+    "save": "Save",
+    "close": "Close"
+  }
+}

@@ -1,18 +1,13 @@
 import { AuthState, logout } from "@/Redux/Slices/AutheticationSlice";
 import { Route } from "@/shared/Interfaces/Router";
 import { Icon } from "@iconify/react";
+import { useTranslations } from "next-intl";
+import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
-const routes: Route[] = [
-    { path: "/home", label: "Home", icon: "lucide-lab:house-roof" },
-    { path: "/transactions", label: "Transactions", icon: "lucide-lab:coins-stack" },
-    { path: "/accounts", label: "Accounts", icon: "hugeicons:credit-card" },
-    {
-        path: "/Debts", label: "Debts", icon: "bitcoin-icons:buoy-outline"
-    },
-];
+import LocaleSwitcher from "./LocaleSwitcher";
 
 interface SidebarProps {
     isExpanded?: boolean;
@@ -20,9 +15,17 @@ interface SidebarProps {
 }
 
 export default function NavbarWithSidebar({ isExpanded = true, toggleSidebar }: SidebarProps) {
+    const t = useTranslations('nav');
     const router = useRouter();
     const pathname = usePathname();
     const dispatch = useDispatch();
+
+    const routes: Route[] = [
+        { path: "/home", label: t('home'), icon: "lucide-lab:house-roof" },
+        { path: "/transactions", label: t('transactions'), icon: "lucide-lab:coins-stack" },
+        { path: "/accounts", label: t('accounts'), icon: "hugeicons:credit-card" },
+        { path: "/Debts", label: t('debts'), icon: "bitcoin-icons:buoy-outline" },
+    ];
 
     const [isOpen, setIsOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -56,6 +59,11 @@ export default function NavbarWithSidebar({ isExpanded = true, toggleSidebar }: 
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
+    // Check if route is active (ignoring locale prefix)
+    const isRouteActive = (routePath: string) => {
+        return pathname.endsWith(routePath) || pathname.includes(routePath + '/');
+    };
+
     return (
         <>
             {/* Navbar */}
@@ -76,67 +84,66 @@ export default function NavbarWithSidebar({ isExpanded = true, toggleSidebar }: 
                             </button>
 
                             {/* Logo */}
-                            <a href="/home" className="flex ms-2 md:me-24">
-                                <img src="../../favicon.ico" className="h-8 me-3" alt="Logo" />
+                            <Link href="/home" className="flex ms-2 md:me-24">
+                                <Image src="/favicon.ico" width={32} height={32} className="h-8 me-3" alt="Logo" />
                                 <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
                                     Budget Path
                                 </span>
-                            </a>
+                            </Link>
                         </div>
 
-                        {/* Profile Dropdown */}
-                        <div className="relative" ref={dropdownRef}>
-                            <button
-                                type="button"
-                                onClick={() => setDropdownOpen(!dropdownOpen)}
-                                className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-                            >
-                                <span className="sr-only">Open user menu</span>
-                                {/* <img
-                                    className="w-8 h-8 rounded-full"
-                                    src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-                                    alt="user photo"
-                                /> */}
-                                <span className="inline-flex items-center justify-center w-8 h-8 text-sm text-gray-900 bg-gray-200 border border-gray-300 rounded-full dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                    <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z" />
-                                    </svg>
-                                </span>
+                        {/* Right side: LocaleSwitcher + Profile */}
+                        <div className="flex items-center gap-3">
+                            <LocaleSwitcher />
 
-                            </button>
+                            {/* Profile Dropdown */}
+                            <div className="relative" ref={dropdownRef}>
+                                <button
+                                    type="button"
+                                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                                    className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                                >
+                                    <span className="sr-only">Open user menu</span>
+                                    <span className="inline-flex items-center justify-center w-8 h-8 text-sm text-gray-900 bg-gray-200 border border-gray-300 rounded-full dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                                        <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z" />
+                                        </svg>
+                                    </span>
+                                </button>
 
-                            {dropdownOpen && (
-                                <div className="absolute right-0 z-50 mt-2 w-48 text-base list-none bg-[#111827] border border-white/10 divide-y divide-white/5 rounded-xl shadow-lg">
-                                    <div className="px-4 py-3">
-                                        <p className="text-sm text-slate-100">{nameUser}</p>
-                                        <p className="text-sm font-medium text-slate-300 truncate">
-                                            {email}
-                                        </p>
+                                {dropdownOpen && (
+                                    <div className="absolute right-0 z-50 mt-2 w-48 text-base list-none bg-[#111827] border border-white/10 divide-y divide-white/5 rounded-xl shadow-lg">
+                                        <div className="px-4 py-3">
+                                            <p className="text-sm text-slate-100">{nameUser}</p>
+                                            <p className="text-sm font-medium text-slate-300 truncate">
+                                                {email}
+                                            </p>
+                                        </div>
+                                        <ul className="py-1">
+                                            <li>
+                                                <a href="#" className="block px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5">
+                                                    {t('dashboard')}
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" className="block px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5">
+                                                    {t('settings')}
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" className="block px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5">
+                                                    {t('earnings')}
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a onClick={handleLogout} className="block px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-white/5 cursor-pointer">
+                                                    {t('signOut')}
+                                                </a>
+                                            </li>
+                                        </ul>
                                     </div>
-                                    <ul className="py-1">
-                                        <li>
-                                            <a href="#" className="block px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5">
-                                                Dashboard
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#" className="block px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5">
-                                                Settings
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#" className="block px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5">
-                                                Earnings
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a onClick={handleLogout} className="block px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-white/5 cursor-pointer">
-                                                Sign out
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            )}
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -153,7 +160,7 @@ export default function NavbarWithSidebar({ isExpanded = true, toggleSidebar }: 
                 <div className="flex flex-col h-full px-4 pb-4 overflow-y-auto bg-[#0A0F1C] scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
                     <ul className="space-y-3 font-medium flex-1">
                         {routes.map((route) => {
-                            const isActive = pathname === route.path || pathname.startsWith(route.path);
+                            const isActive = isRouteActive(route.path);
                             return (
                             <li key={route.path}>
                                 <a
@@ -179,7 +186,7 @@ export default function NavbarWithSidebar({ isExpanded = true, toggleSidebar }: 
                             <button
                                 onClick={toggleSidebar}
                                 className="flex justify-center items-center w-full p-3 rounded-xl transition-all text-slate-500 hover:text-white hover:bg-white/5"
-                                title={isExpanded ? "Recolher Menu" : "Expandir Menu"}
+                                title={isExpanded ? t('collapseMenu') : t('expandMenu')}
                             >
                                 <Icon icon={isExpanded ? "lucide:chevron-left" : "lucide:chevron-right"} className="w-6 h-6" />
                             </button>

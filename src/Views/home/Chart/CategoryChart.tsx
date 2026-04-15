@@ -1,7 +1,9 @@
 import { Datum } from "@/Models/Transactions/Responses/ResponseTransacrions";
 import _ from "lodash";
+import { useTranslations } from "next-intl";
 import { Dispatch, SetStateAction } from "react";
 import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import {
     Bar,
     BarChart,
@@ -28,6 +30,7 @@ const COLORS = [
 ];
 
 const CategoryChart = ({ transactions, showBalances, setYear, setMonth, year, month }: Props) => {
+    const t = useTranslations('home.categoryChart');
 
     const grouped = _.groupBy(transactions, (t) => t.Category?.Descript || "Sem Categoria");
 
@@ -46,7 +49,7 @@ const CategoryChart = ({ transactions, showBalances, setYear, setMonth, year, mo
             }}
         >
             <section className="flex justify-start mb-2">
-                <h3 className="text-lg font-semibold mb-2 mr-2">Expense by category</h3>
+                <h3 className="text-lg font-semibold mb-2 mr-2">{t('title')}</h3>
                 <DatePicker
                     selected={new Date(year, month - 1)}
                     onChange={(date: Date | null) => {

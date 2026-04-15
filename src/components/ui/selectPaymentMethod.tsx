@@ -18,21 +18,21 @@ const SelectPaymentMethod = ({ selectedPaymentMethod, setSelectedPaymentMethod, 
 
     useEffect(() => {
         find();
-    }, []);
+    }, [find]);
 
     useEffect(() => {
         if (isCreditSelected) {
-            paymentMethod.filter(({ description }) => description == 'Crédito')
-            setSelectedPaymentMethod(paymentMethod.filter(({ description }) => description == 'Crédito')[0])
+            const creditMethod = paymentMethod.filter(({ description }) => description == 'Crédito')[0];
+            setSelectedPaymentMethod(creditMethod);
         }
-    }, [isCreditSelected]);
+    }, [isCreditSelected, paymentMethod, setSelectedPaymentMethod]);
 
 
     useEffect(() => {
         if (paymentMethod.length > 0) {
             dispatch(setPaymentMethods(paymentMethod));
         }
-    }, [paymentMethod]);
+    }, [paymentMethod, dispatch]);
 
     const handlePaymentMethodChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const paymentMethod = JSON.parse(event.target.value);

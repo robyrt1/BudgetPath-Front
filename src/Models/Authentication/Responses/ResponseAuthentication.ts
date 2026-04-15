@@ -1,12 +1,15 @@
+export interface AuthDetails {
+    token: string;
+    name: string;
+    userId: string;
+}
+
 export type ResponseAuthentication = {
     status: boolean;
-    details: {
-        token: string,
-        name: string;
-        userId: string;
-    } | any
+    details: AuthDetails | unknown;
 }
 
 export type ErrorAuthentication = {
-    status: boolean, details: any
+    status: boolean;
+    details: unknown;
 }

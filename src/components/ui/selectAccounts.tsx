@@ -15,11 +15,11 @@ interface SelectCategoryProps {
 
 const SelectAccounts = ({ account, setAccount, setCredit, creditCardProp }: SelectCategoryProps) => {
     const userId = useSelector((state: { auth: AuthState }) => state.auth.userId);
-    const { accounts: selectAccounts, credit: selectCredit, find } = AccountViewModel({ UserId: userId });
+    const { accounts: selectAccounts, find } = AccountViewModel({ UserId: userId });
 
     useEffect(() => {
         find();
-    }, [userId]);
+    }, [userId, find]);
 
     const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setAccount(JSON.parse(event.target.value))
@@ -27,7 +27,6 @@ const SelectAccounts = ({ account, setAccount, setCredit, creditCardProp }: Sele
 
     const handleSelectCreditChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         if (event.target.value) {
-            const data = JSON.parse(event.target.value);
             setCredit(JSON.parse(event.target.value))
             return
         }
@@ -69,7 +68,7 @@ const SelectAccounts = ({ account, setAccount, setCredit, creditCardProp }: Sele
                             className="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         >
                             <option value="">Select Credit</option>
-                            {account.CreditCard.map((creditCard: CreditCard, index) => (
+                            {account.CreditCard.map((creditCard: CreditCard) => (
                                 <option key={creditCard.Id} value={JSON.stringify(creditCard)}>
                                     {creditCard.Name}
                                 </option>

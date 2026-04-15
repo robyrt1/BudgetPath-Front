@@ -2,6 +2,7 @@ import { Datum } from "@/Models/Transactions/Responses/ResponseTransacrions";
 import { AuthState } from "@/Redux/Slices/AutheticationSlice";
 import { formatNumber } from "@/shared/formatNumber";
 import UseFindTransactionViewModel from "@/ViewModels/Transactions/TransactionsViewModel";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import BankAccount from "../accounts/BankAccountView";
@@ -9,6 +10,7 @@ import CategoryChart from "./Chart/CategoryChart";
 import ExpensesEvolution from "./Chart/ExpensesEvolution";
 
 const HomeView = () => {
+  const t = useTranslations('transactions');
   const [transactions, setTransactions] = useState<Datum[]>([]);
   const userId = useSelector((state: { auth: AuthState }) => {
     return state.auth.userId
@@ -80,7 +82,7 @@ const HomeView = () => {
             border: "1px solid #2f365f"
           }}
         >
-          <h2 className="text-lg font-bold mb-2">Latest transactions</h2>
+          <h2 className="text-lg font-bold mb-2">{t('latestTransactions')}</h2>
 
           <ul className="divide-y divide-gray-200 max-h-[270px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-500 scrollbar-track-gray-100">
             {transactions.map((transaction, index) => (
@@ -102,8 +104,8 @@ const HomeView = () => {
                     </div>
                   )}
                   <div className="text-sm opacity-80 space-x-2">
-                    <span>Account: {transaction.Account?.Name || transaction.CreditCard.Name}</span>
-                    <span>• Category: {transaction.Category?.Descript}</span>
+                    <span>{t('account')}: {transaction.Account?.Name || transaction.CreditCard.Name}</span>
+                    <span>• {t('category')}: {transaction.Category?.Descript}</span>
                     <span>• {new Date(transaction.TransactionDate).toLocaleDateString()}</span>
                   </div>
                 </div>

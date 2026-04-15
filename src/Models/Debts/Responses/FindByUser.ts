@@ -66,7 +66,7 @@ export interface Debt {
     // Propriedades aninhadas
     DebtInstallments: DebtInstallment[];
     Account: Account;
-    CreditCard: any | null; // Tipagem 'any' ou uma interface para CreditCard, se existir
+    CreditCard: unknown | null; // Tipagem 'unknown' ou uma interface para CreditCard, se existir
     Category: Category;
 }
 

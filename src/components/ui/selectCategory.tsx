@@ -1,4 +1,4 @@
-import { SubCategories } from "@/Models/Categories/Responses/FindCategoriesResponse";
+import { Category, SubCategories } from "@/Models/Categories/Responses/FindCategoriesResponse";
 import { AuthState } from "@/Redux/Slices/AutheticationSlice";
 import { setCategories } from "@/Redux/Slices/CategoriesSlice";
 import UseFindCategoriesViewModel from "@/ViewModels/Categories/FindCategoriesViewModel";
@@ -16,30 +16,27 @@ const SelectCategory = ({ selectedCategoryId, setSelectedCategoryId, transaction
     const userId = useSelector((state: { auth: AuthState }) => state.auth.userId);
     const { categories, find } = UseFindCategoriesViewModel({ UserId: userId });
 
-    const [selectedSubCategory, setSelectedSubCategory] = useState<string | null>(null);
     const [seleteSubCategories, setSeleteSubCategories] = useState<SubCategories[]>([])
-    const [selectedCategory, setSelectedCategory] = useState<any>();
+    const [selectedCategory, setSelectedCategory] = useState<string>();
 
     useEffect(() => {
         find();
-    }, [userId]);
+    }, [userId, find]);
 
     useEffect(() => {
         if (categories.length > 0) {
             dispatch(setCategories(categories));
         }
-    }, [categories]);
+    }, [categories, dispatch]);
 
     const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const category = JSON.parse(event.target.value);
         setSelectedCategoryId(category.Id);
         setSelectedCategory(event.target.value);
         setSeleteSubCategories(category.SubCategories);
-        setSelectedSubCategory('');
     };
     const handleSubCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedCategoryId(event.target.value);
-        setSelectedSubCategory(event.target.value);
     };
 
     return (
@@ -53,7 +50,7 @@ const SelectCategory = ({ selectedCategoryId, setSelectedCategoryId, transaction
                     <option value="">Selecione uma categoria</option>
                     {categories.filter(item => {
                         return [transactionType].includes(item.Group.Descript)
-                    }).map((category: any) => (
+                    }).map((category: Category) => (
                         <option key={category.Id} value={JSON.stringify(category)}>
                             {category.Descript}
                         </option>
@@ -69,7 +66,7 @@ const SelectCategory = ({ selectedCategoryId, setSelectedCategoryId, transaction
                         className="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                     >
                         <option value="">Selecione uma Sub-Categoria</option>
-                        {seleteSubCategories.map((category: any) => (
+                        {seleteSubCategories.map((category: SubCategories) => (
                             <option key={category.Id} value={category.Id}>
                                 {category.Descript}
                             </option>

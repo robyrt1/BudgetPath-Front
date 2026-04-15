@@ -1,7 +1,11 @@
 "use client";
 import LoginView from "@/Views/auth/Login/LoginView";
+import { useTranslations } from "next-intl";
+import Image from "next/image";
 
 export default function SignInPage() {
+  const t = useTranslations('auth');
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#0A0F1C] flex items-center justify-center px-4 py-8 lg:py-16">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.18),_transparent_36%),radial-gradient(circle_at_bottom_right,_rgba(96,165,250,0.12),_transparent_28%)]" />
@@ -19,11 +23,11 @@ export default function SignInPage() {
               <div className="space-y-8 mb-12">
                 <div className="flex items-center justify-between gap-4 rounded-[28px] border border-white/10 bg-white/5 px-6 py-5">
                   <div>
-                    <p className="text-xs uppercase tracking-[0.32em] text-[#8ECBFF] mb-1">Bem-vindo ao futuro</p>
-                    <h2 className="text-2xl font-semibold">Design moderno e confiável</h2>
+                    <p className="text-xs uppercase tracking-[0.32em] text-[#8ECBFF] mb-1">{t('welcome')}</p>
+                    <h2 className="text-2xl font-semibold">{t('tagline')}</h2>
                   </div>
                   <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#1D86FF]/15">
-                    <img src="/globe.svg" alt="Ilustração" className="h-8 w-8" />
+                    <Image src="/globe.svg" width={32} height={32} alt="Ilustração" />
                   </div>
                 </div>
 
@@ -34,11 +38,10 @@ export default function SignInPage() {
               </div>
 
               <div className="grid gap-4 text-base leading-relaxed text-slate-300 px-2">
-                <p>Transforme seus gastos em dados inteligentes. O BudgetPath segmenta suas despesas por cartão, oferecendo uma visão clara do seu fluxo de caixa para você tomar decisões financeiras mais assertivas.</p>
+                <p>{t('description')}</p>
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </div>

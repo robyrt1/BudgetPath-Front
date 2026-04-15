@@ -3,6 +3,7 @@ import { RequestCreateTransaction } from "@/Models/Transactions/Requests/RequesT
 import { Datum } from "@/Models/Transactions/Responses/ResponseTransacrions";
 import { formatNumber } from "@/shared/formatNumber";
 import { format, isValid, parseISO } from "date-fns";
+import { useTranslations } from "next-intl";
 import React, { useMemo, useState } from "react";
 import AddTransactionPanel from "../Panel/AddTransactionPanel";
 
@@ -43,17 +44,6 @@ function getValue(row: Datum, key: SortKey): any {
     }
 }
 
-const COLUMNS: { key: SortKey; label: string; align?: string }[] = [
-    { key: 'Category', label: 'Categoria' },
-    { key: 'Account', label: 'Conta', align: 'center' },
-    { key: 'Amount', label: 'Valor', align: 'center' },
-    { key: 'Description', label: 'Descrição' },
-    { key: 'PaymentMethod', label: 'Pagamento', align: 'center' },
-    { key: 'TransactionDate', label: 'Data', align: 'center' },
-    { key: 'Group', label: 'Grupo', align: 'center' },
-    { key: 'Status', label: 'Status', align: 'center' },
-];
-
 const GroupBadge = ({ group }: { group: string }) => (
     <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${group === 'RECEITA' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'
         }`}>
@@ -77,6 +67,19 @@ const selectCls = "px-3 py-2 rounded-lg bg-[#1e293b] border border-white/10 text
 
 // ─── Main component ───────────────────────────────────────────────────────────
 const TransactionGrid: React.FC<Props> = ({ transactions, addTransaction }) => {
+    const t = useTranslations('transactions');
+
+    const COLUMNS: { key: SortKey; label: string; align?: string }[] = [
+        { key: 'Category', label: t('columns.category') },
+        { key: 'Account', label: t('columns.account'), align: 'center' },
+        { key: 'Amount', label: t('columns.amount'), align: 'center' },
+        { key: 'Description', label: t('columns.description') },
+        { key: 'PaymentMethod', label: t('columns.paymentMethod'), align: 'center' },
+        { key: 'TransactionDate', label: t('columns.date'), align: 'center' },
+        { key: 'Group', label: t('columns.group'), align: 'center' },
+        { key: 'Status', label: t('columns.status'), align: 'center' },
+    ];
+
     // Sort
     const [sortKey, setSortKey] = useState<SortKey | null>(null);
     const [sortDir, setSortDir] = useState<SortDir>(null);
@@ -130,7 +133,6 @@ const TransactionGrid: React.FC<Props> = ({ transactions, addTransaction }) => {
     // ── Filter + sort pipeline ───────────────────────────────────────────────
     const filtered = useMemo(() => {
         return transactions.filter(row => {
-            // Text search
             if (search) {
                 const q = search.toLowerCase();
                 const hit =
@@ -141,19 +143,15 @@ const TransactionGrid: React.FC<Props> = ({ transactions, addTransaction }) => {
                     row.Status?.toLowerCase().includes(q);
                 if (!hit) return false;
             }
-            // Group filter (RECEITA / DESPESA)
             if (filterGroup !== 'ALL') {
                 if ((row.Category?.Group?.Descript ?? '') !== filterGroup) return false;
             }
-            // Status filter
             if (filterStatus !== 'ALL') {
                 if (row.Status !== filterStatus) return false;
             }
-            // Account filter
             if (filterAccount !== 'ALL') {
                 if (getAccount(row) !== filterAccount) return false;
             }
-            // Date range
             if (dateFrom || dateTo) {
                 const ts = row.TransactionDate ? new Date(row.TransactionDate).getTime() : null;
                 if (!ts) return false;
@@ -163,11 +161,9 @@ const TransactionGrid: React.FC<Props> = ({ transactions, addTransaction }) => {
                     if (ts > end.getTime()) return false;
                 }
             }
-            // Amount range
             const amt = row.Amount ?? 0;
             if (amountMin && amt < parseFloat(amountMin)) return false;
             if (amountMax && amt > parseFloat(amountMax)) return false;
-
             return true;
         });
     }, [transactions, search, filterGroup, filterStatus, filterAccount, dateFrom, dateTo, amountMin, amountMax]);
@@ -189,11 +185,8 @@ const TransactionGrid: React.FC<Props> = ({ transactions, addTransaction }) => {
     const paginated = sorted.slice((safePage - 1) * pageSize, safePage * pageSize);
 
     const goTo = (p: number) => setPage(Math.max(1, Math.min(p, totalPages)));
-
-    // Reset to page 1 whenever filters/sort/size change
     const resetPage = () => setPage(1);
 
-    // Active filter count badge
     const activeFilters = [
         filterGroup !== 'ALL',
         filterStatus !== 'ALL',
@@ -230,16 +223,14 @@ const TransactionGrid: React.FC<Props> = ({ transactions, addTransaction }) => {
             {/* ── Toolbar ── */}
             <div className="flex items-center gap-3 flex-wrap justify-between">
                 <div className="flex items-center gap-2 flex-1 flex-wrap">
-                    {/* Search */}
                     <input
                         type="text"
-                        placeholder="Buscar transação..."
+                        placeholder={t('search')}
                         value={search}
                         onChange={e => { setSearch(e.target.value); resetPage(); }}
                         className="flex-1 min-w-[180px] max-w-xs px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-200 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                     />
 
-                    {/* Filter toggle */}
                     <button
                         onClick={() => setFiltersOpen(v => !v)}
                         className={`relative flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-colors ${filtersOpen || activeFilters > 0
@@ -250,7 +241,7 @@ const TransactionGrid: React.FC<Props> = ({ transactions, addTransaction }) => {
                         <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 01.707 1.707L13 9.414V15a1 1 0 01-.553.894l-4 2A1 1 0 017 17v-7.586L3.293 5.707A1 1 0 013 5V3z" clipRule="evenodd" />
                         </svg>
-                        Filtros
+                        {t('filters')}
                         {activeFilters > 0 && (
                             <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-indigo-500 text-white text-[10px] flex items-center justify-center font-bold">
                                 {activeFilters}
@@ -260,7 +251,7 @@ const TransactionGrid: React.FC<Props> = ({ transactions, addTransaction }) => {
 
                     {activeFilters > 0 && (
                         <button onClick={clearFilters} className="text-xs text-slate-500 hover:text-rose-400 transition-colors underline underline-offset-2">
-                            Limpar filtros
+                            {t('clearFilters')}
                         </button>
                     )}
                 </div>
@@ -270,62 +261,55 @@ const TransactionGrid: React.FC<Props> = ({ transactions, addTransaction }) => {
                     className="flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium transition-colors shadow-lg shadow-indigo-500/20"
                 >
                     <span className="text-lg leading-none">+</span>
-                    Nova Transação
+                    {t('newTransaction')}
                 </button>
             </div>
 
             {/* ── Filter Panel ── */}
             {filtersOpen && (
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 p-4 rounded-xl bg-[#0f172a] border border-white/5 animate-in fade-in slide-in-from-top-2 duration-200">
-                    {/* Group */}
                     <div className="flex flex-col gap-1">
-                        <label className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">Tipo</label>
+                        <label className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">{t('filterLabels.type')}</label>
                         <select value={filterGroup} onChange={e => { setFilterGroup(e.target.value as any); resetPage(); }} className={selectCls}>
-                            <option value="ALL">Todos</option>
-                            <option value="RECEITA">Receita</option>
-                            <option value="DESPESA">Despesa</option>
+                            <option value="ALL">{t('filterLabels.all')}</option>
+                            <option value="RECEITA">{t('summary.income')}</option>
+                            <option value="DESPESA">{t('summary.expense')}</option>
                         </select>
                     </div>
 
-                    {/* Status */}
                     <div className="flex flex-col gap-1">
-                        <label className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">Status</label>
+                        <label className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">{t('filterLabels.status')}</label>
                         <select value={filterStatus} onChange={e => { setFilterStatus(e.target.value); resetPage(); }} className={selectCls}>
-                            <option value="ALL">Todos</option>
+                            <option value="ALL">{t('filterLabels.all')}</option>
                             {statusOptions.map(s => <option key={s} value={s}>{s}</option>)}
                         </select>
                     </div>
 
-                    {/* Account */}
                     <div className="flex flex-col gap-1">
-                        <label className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">Conta</label>
+                        <label className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">{t('filterLabels.account')}</label>
                         <select value={filterAccount} onChange={e => { setFilterAccount(e.target.value); resetPage(); }} className={selectCls}>
-                            <option value="ALL">Todas</option>
+                            <option value="ALL">{t('filterLabels.allAccounts')}</option>
                             {accountOptions.map(a => <option key={a} value={a}>{a}</option>)}
                         </select>
                     </div>
 
-                    {/* Date from */}
                     <div className="flex flex-col gap-1">
-                        <label className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">Data de</label>
+                        <label className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">{t('filterLabels.dateFrom')}</label>
                         <input type="date" value={dateFrom} onChange={e => { setDateFrom(e.target.value); resetPage(); }} className={inputCls} />
                     </div>
 
-                    {/* Date to */}
                     <div className="flex flex-col gap-1">
-                        <label className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">Data até</label>
+                        <label className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">{t('filterLabels.dateTo')}</label>
                         <input type="date" value={dateTo} onChange={e => { setDateTo(e.target.value); resetPage(); }} className={inputCls} />
                     </div>
 
-                    {/* Amount min */}
                     <div className="flex flex-col gap-1">
-                        <label className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">Valor mín.</label>
+                        <label className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">{t('filterLabels.amountMin')}</label>
                         <input type="number" min={0} step="0.01" placeholder="0,00" value={amountMin} onChange={e => { setAmountMin(e.target.value); resetPage(); }} className={inputCls} />
                     </div>
 
-                    {/* Amount max */}
                     <div className="flex flex-col gap-1 col-span-2 md:col-span-1">
-                        <label className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">Valor máx.</label>
+                        <label className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">{t('filterLabels.amountMax')}</label>
                         <input type="number" min={0} step="0.01" placeholder="9999,00" value={amountMax} onChange={e => { setAmountMax(e.target.value); resetPage(); }} className={inputCls} />
                     </div>
                 </div>
@@ -334,15 +318,15 @@ const TransactionGrid: React.FC<Props> = ({ transactions, addTransaction }) => {
             {/* ── Summary badges ── */}
             <div className="flex gap-3 flex-wrap">
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-500">Receita</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-500">{t('summary.income')}</span>
                     <span className="text-sm font-semibold text-emerald-400">R$ {formatNumber(String(totalReceita))}</span>
                 </div>
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-rose-500/10 border border-rose-500/20">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-rose-500">Despesa</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-rose-500">{t('summary.expense')}</span>
                     <span className="text-sm font-semibold text-rose-400">R$ {formatNumber(String(totalDespesa))}</span>
                 </div>
                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Saldo</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">{t('summary.balance')}</span>
                     <span className={`text-sm font-semibold ${totalReceita - totalDespesa >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
                         R$ {formatNumber(String(totalReceita - totalDespesa))}
                     </span>
@@ -369,7 +353,7 @@ const TransactionGrid: React.FC<Props> = ({ transactions, addTransaction }) => {
                         {paginated.length === 0 ? (
                             <tr>
                                 <td colSpan={COLUMNS.length} className="px-4 py-12 text-center text-slate-500 text-sm">
-                                    Nenhuma transação encontrada.
+                                    {t('noResults')}
                                 </td>
                             </tr>
                         ) : paginated.map((row, i) => {
@@ -410,24 +394,22 @@ const TransactionGrid: React.FC<Props> = ({ transactions, addTransaction }) => {
 
             {/* ── Pagination bar ── */}
             <div className="flex items-center justify-between flex-wrap gap-3">
-                {/* Left: count info */}
                 <p className="text-xs text-slate-500">
-                    Mostrando{' '}
+                    {t('showing')}{' '}
                     <span className="text-slate-300 font-medium">
                         {sorted.length === 0 ? 0 : (safePage - 1) * pageSize + 1}–{Math.min(safePage * pageSize, sorted.length)}
                     </span>{' '}
-                    de{' '}
+                    {t('of')}{' '}
                     <span className="text-slate-300 font-medium">{sorted.length}</span>{' '}
-                    transações
+                    {t('title').toLowerCase()}
                 </p>
 
-                {/* Center: page buttons */}
                 <div className="flex items-center gap-1">
                     <button
                         onClick={() => goTo(1)}
                         disabled={safePage === 1}
                         className="px-2 py-1 rounded text-xs text-slate-400 hover:text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                        title="Primeira página"
+                        title={t('firstPage')}
                     >
                         ««
                     </button>
@@ -436,10 +418,9 @@ const TransactionGrid: React.FC<Props> = ({ transactions, addTransaction }) => {
                         disabled={safePage === 1}
                         className="px-2 py-1 rounded text-xs text-slate-400 hover:text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                     >
-                        ‹ Anterior
+                        {t('previous')}
                     </button>
 
-                    {/* Page number pills */}
                     {Array.from({ length: totalPages }, (_, i) => i + 1)
                         .filter(p => p === 1 || p === totalPages || Math.abs(p - safePage) <= 1)
                         .reduce<(number | '…')[]>((acc, p, idx, arr) => {
@@ -468,21 +449,20 @@ const TransactionGrid: React.FC<Props> = ({ transactions, addTransaction }) => {
                         disabled={safePage === totalPages}
                         className="px-2 py-1 rounded text-xs text-slate-400 hover:text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                     >
-                        Próximo ›
+                        {t('next')}
                     </button>
                     <button
                         onClick={() => goTo(totalPages)}
                         disabled={safePage === totalPages}
                         className="px-2 py-1 rounded text-xs text-slate-400 hover:text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                        title="Última página"
+                        title={t('lastPage')}
                     >
                         »»
                     </button>
                 </div>
 
-                {/* Right: page size */}
                 <div className="flex items-center gap-2 text-xs text-slate-500">
-                    <span>Linhas por página:</span>
+                    <span>{t('rowsPerPage')}</span>
                     <select
                         value={pageSize}
                         onChange={e => { setPageSize(Number(e.target.value)); setPage(1); }}
@@ -499,7 +479,7 @@ const TransactionGrid: React.FC<Props> = ({ transactions, addTransaction }) => {
                     <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setDrawerOpen(false)} />
                     <div className="relative z-10 w-full max-w-sm h-full bg-[#0f172a] border-l border-white/10 shadow-2xl overflow-y-auto flex flex-col">
                         <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
-                            <h3 className="text-base font-semibold text-slate-100">Nova Transação</h3>
+                            <h3 className="text-base font-semibold text-slate-100">{t('newTransaction')}</h3>
                             <button onClick={() => setDrawerOpen(false)} className="text-slate-400 hover:text-white transition-colors text-xl leading-none">✕</button>
                         </div>
                         <div className="flex-1 p-5">
