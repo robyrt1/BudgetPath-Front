@@ -1,10 +1,10 @@
 "use client";
 
+import { RootState } from "@/Redux/store";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "@/Redux/store";
 const Loading = dynamic(() => import("./loading"), { ssr: false });
 const HomeView = dynamic(() => import("@/Views/home/HomeView"), { ssr: false });
 

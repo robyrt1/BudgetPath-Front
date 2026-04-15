@@ -2,8 +2,8 @@ import { AuthState, logout } from "@/Redux/Slices/AutheticationSlice";
 import { Route } from "@/shared/Interfaces/Router";
 import { Icon } from "@iconify/react";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -162,23 +162,22 @@ export default function NavbarWithSidebar({ isExpanded = true, toggleSidebar }: 
                         {routes.map((route) => {
                             const isActive = isRouteActive(route.path);
                             return (
-                            <li key={route.path}>
-                                <a
-                                    onClick={() => handleClick(route)}
-                                    className={`flex items-center p-3 rounded-xl transition-all group cursor-pointer ${
-                                        isActive ? "bg-[#3B82F6]/15 text-[#3B82F6] font-semibold" : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
-                                    }`}
-                                >
-                                    <Icon
-                                        icon={route.icon}
-                                        className={`w-6 h-6 flex-shrink-0 transition duration-75 ${
-                                            isActive ? "text-[#3B82F6]" : "text-slate-500 group-hover:text-slate-300"
-                                        }`}
-                                    />
-                                    <span className={`transition-all duration-300 overflow-hidden whitespace-nowrap ${isExpanded ? "ml-3 opacity-100 max-w-[200px]" : "ml-0 opacity-0 max-w-0"}`}>{route.label}</span>
-                                </a>
-                            </li>
-                        )})}
+                                <li key={route.path}>
+                                    <a
+                                        onClick={() => handleClick(route)}
+                                        className={`flex items-center p-3 rounded-xl transition-all group cursor-pointer ${isActive ? "bg-[#3B82F6]/15 text-[#3B82F6] font-semibold" : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
+                                            }`}
+                                    >
+                                        <Icon
+                                            icon={route.icon}
+                                            className={`w-6 h-6 flex-shrink-0 transition duration-75 ${isActive ? "text-[#3B82F6]" : "text-slate-500 group-hover:text-slate-300"
+                                                }`}
+                                        />
+                                        <span className={`transition-all duration-300 overflow-hidden whitespace-nowrap ${isExpanded ? "ml-3 opacity-100 max-w-[200px]" : "ml-0 opacity-0 max-w-0"}`}>{route.label}</span>
+                                    </a>
+                                </li>
+                            )
+                        })}
                     </ul>
 
                     {toggleSidebar && (

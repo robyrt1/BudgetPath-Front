@@ -1,7 +1,7 @@
+import { routing } from '@/i18n/routing';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { routing } from '@/i18n/routing';
 import Providers from "../../Redux/Providers";
 import "../../styles/globals.css";
 

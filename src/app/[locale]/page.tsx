@@ -1,8 +1,8 @@
 "use client";
+import { RootState } from '@/Redux/store';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/Redux/store';
 
 export default function Home() {
   const router = useRouter();
