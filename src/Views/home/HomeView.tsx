@@ -7,7 +7,6 @@ import { useSelector } from "react-redux";
 import BankAccount from "../accounts/BankAccountView";
 import CategoryChart from "./Chart/CategoryChart";
 import ExpensesEvolution from "./Chart/ExpensesEvolution";
-import './HomeView.css';
 
 const HomeView = () => {
   const [transactions, setTransactions] = useState<Datum[]>([]);

@@ -34,8 +34,7 @@ export default function SignInPage() {
               </div>
 
               <div className="grid gap-4 text-base leading-relaxed text-slate-300 px-2">
-                <p>Visualize seus dados, conecte seus relatórios e proteja seu acesso com um painel extremamente elegante preparado para telas ultra largas.</p>
-                <p>O design do BudgetPath combina clareza, ritmo e a mais alta confiança em uma experiência suave de navegação.</p>
+                <p>Transforme seus gastos em dados inteligentes. O BudgetPath segmenta suas despesas por cartão, oferecendo uma visão clara do seu fluxo de caixa para você tomar decisões financeiras mais assertivas.</p>
               </div>
             </div>
           </div>

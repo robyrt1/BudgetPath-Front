@@ -7,7 +7,7 @@ import { useFindDebtsViewModel } from "@/ViewModels/Debts/DebtsViewModel";
 import { useEffect, useState } from "react";
 import { FaListOl, FaPen, FaPlus, FaTrash } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import Installments from "./Installments"; // Importando o componente de parcelas
+import Installments from "./Installments";
 import DebtForm from "./modal/debtForm";
 
 const getStatusBadge = (status: string) => {

@@ -1,11 +1,9 @@
 import { ResponseAggregatedExpenses } from "@/Models/Transactions/Responses/ResponseAggregatedExpenses";
-import { Datum, ResponseTransactions } from "@/Models/Transactions/Responses/ResponseTransacrions";
-import { ColDef } from "ag-grid-community";
+import { ResponseTransactions } from "@/Models/Transactions/Responses/ResponseTransacrions";
 
 export interface IFindTransactions {
-    error: any,
-    colDefs: ColDef<Datum>[];
-    find: (input: { top?: number, group?: string, year?: string | number, month?: string | number }) => Promise<ResponseTransactions> | ResponseTransactions
+    error: any;
+    find: (input: { top?: number, group?: string, year?: string | number, month?: string | number }) => Promise<ResponseTransactions> | ResponseTransactions;
 }
 
 export interface IFindTrasactionsProps {

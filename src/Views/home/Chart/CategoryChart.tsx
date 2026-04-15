@@ -2,7 +2,6 @@ import { Datum } from "@/Models/Transactions/Responses/ResponseTransacrions";
 import _ from "lodash";
 import { Dispatch, SetStateAction } from "react";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import {
     Bar,
     BarChart,
@@ -75,13 +74,13 @@ const CategoryChart = ({ transactions, showBalances, setYear, setMonth, year, mo
                         <XAxis
                             type="number"
                             stroke="var(--foreground)"
-                            tick={{ fontSize: 12, fill: "var(--foreground)" }}
+                            tick={{ fontSize: 12, fill: "#FFFFFF" }}
                         />
                         <YAxis
                             type="category"
                             dataKey="category"
                             width={120}
-                            tick={{ fontSize: 12, fill: "var(--foreground)" }}
+                            tick={{ fontSize: 12, fill: "#FFFFFF" }}
                         />
                         <Tooltip
                             contentStyle={{
