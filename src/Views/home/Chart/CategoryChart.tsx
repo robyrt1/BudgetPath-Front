@@ -67,7 +67,7 @@ const CategoryChart = ({ transactions, showBalances, setYear, setMonth, year, mo
             {data.length <= 0 ? (
                 <p className="text-gray-500">Nenhuma despesa encontrada.</p>
             ) : (
-                <ResponsiveContainer width={500} height={300}>
+                <ResponsiveContainer width="100%" height={300}>
                     <BarChart
                         layout="vertical"
                         data={data}

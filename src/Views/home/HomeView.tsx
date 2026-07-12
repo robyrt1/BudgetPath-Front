@@ -73,9 +73,9 @@ const HomeView = () => {
       </section>
 
 
-      <section className="flex mt-3 mb-3 gap-6">
+      <section className="flex flex-col md:flex-row mt-3 mb-3 gap-6">
         <section
-          className="rounded-xl p-4 w-full flex-[0.6] mt-2 shadow-md"
+          className="rounded-xl p-4 w-full md:flex-[0.6] mt-2 shadow-md"
           style={{
             backgroundColor: "var(--background)",
             color: "var(--foreground)",
@@ -123,7 +123,7 @@ const HomeView = () => {
         </section>
 
 
-        <section className="flex-[0.4]">
+        <section className="w-full md:flex-[0.4]">
           <CategoryChart transactions={transactionsForChart} showBalances={showBalances} setYear={setYear} setMonth={setMonth} year={year} month={month} />
         </section>
       </section>

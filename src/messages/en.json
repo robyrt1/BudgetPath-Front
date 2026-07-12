@@ -86,6 +86,8 @@
     "accounts": "My Accounts",
     "showBalance": "Show balance",
     "hideBalance": "Hide balance",
+    "seeMore": "See more",
+    "seeLess": "See less",
     "expensesEvolution": {
       "title": "Expense Evolution",
       "noResults": "No expenses found.",

@@ -47,6 +47,10 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
 
     const handleChangeValor = (e: React.ChangeEvent<HTMLInputElement>) => {
         const raw = e.target.value.replace(/\D/g, ''); // remove tudo que não for número
+        if (raw === '') {
+            setAmount('');
+            return;
+        }
         const valorFormatado = (Number(raw) / 100).toLocaleString('pt-BR', {
             style: 'currency',
             currency: 'BRL',
@@ -155,9 +159,9 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
                     <SelectAccounts account={account} setAccount={setAccount} setCredit={setCredit} creditCardProp={credit} />
                     <SelectCategory selectedCategoryId={categoryId} setSelectedCategoryId={setCategoryId} transactionType={transactionType} />
                     <SelectPaymentMethod selectedPaymentMethod={paymentMethodId} setSelectedPaymentMethod={setPaymentMethodId} isCreditSelected={credit?.Id ? true : false} />
-                    <input type="text" placeholder={t('description')} value={description} onChange={(e) => setDescription(e.target.value)} className="input-field" required />
-                    <input type="text-right" placeholder={t('amount')} value={amount} onChange={handleChangeValor} className="w-full px-3 py-2 border rounded text-left" required />
-                    <input type="date" placeholder={t('date')} value={transactionDate} onChange={(e) => setTransactionDate(e.target.value)} className="input-field" required />
+                    <input type="text" placeholder={t('description')} value={description} onChange={(e) => setDescription(e.target.value)} className="input-field text-gray-900 bg-white border-gray-300" required />
+                    <input type="text" placeholder={t('amount')} value={amount} onChange={handleChangeValor} className="w-full px-3 py-2 border border-gray-300 rounded text-right text-gray-900 bg-white" required />
+                    <input type="date" placeholder={t('date')} value={transactionDate} onChange={(e) => setTransactionDate(e.target.value)} className="input-field text-gray-900 bg-white border-gray-300" required />
                     <button className="submit-btn" onClick={handleSubmit}>{t('submit')}</button>
                     <button className="px-4 py-2 rounded bg-red-500 text-white" onClick={handlerCancel}>{t('cancel')}</button>
 

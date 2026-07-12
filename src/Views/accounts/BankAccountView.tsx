@@ -4,13 +4,29 @@ import AccountViewModel from "@/ViewModels/Accounts/AccountViewModel";
 import { Icon } from "@iconify/react";
 import { first } from "lodash";
 import { useTranslations } from "next-intl";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useSelector } from "react-redux";
 export default function BankAccount({ showBalances, setShowBalances }: { showBalances?: boolean, setShowBalances: Dispatch<SetStateAction<boolean>> }) {
   const t = useTranslations('home');
   const userId = useSelector((state: { auth: AuthState }) => state.auth.userId);
   const { accounts, find, error } = AccountViewModel({ UserId: userId });
+
+  const [isMobile, setIsMobile] = useState(false);
+  const [showAllMobile, setShowAllMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const visibleAccounts = accounts 
+    ? (isMobile && !showAllMobile ? accounts.slice(0, 2) : accounts) 
+    : [];
 
 
   const calcularTotal = (accounts: { Balance: string | number }[]) => {
@@ -41,7 +57,7 @@ export default function BankAccount({ showBalances, setShowBalances }: { showBal
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {accounts ? accounts?.map(account => (
+          {visibleAccounts ? visibleAccounts?.map(account => (
             <div key={account.Id} className="flex flex-col justify-between gap-4 p-4 rounded-xl border border-white/5 bg-[#1A2235] shadow-inner transition-colors hover:bg-white/5 hover:border-white/10">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -71,6 +87,27 @@ export default function BankAccount({ showBalances, setShowBalances }: { showBal
             </div>
           )) : ''}
         </div>
+
+        {accounts && accounts.length > 2 && isMobile && (
+          <div className="flex justify-center mt-4">
+            <button
+              onClick={() => setShowAllMobile(!showAllMobile)}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-xs font-medium text-slate-300 hover:text-slate-100 hover:bg-white/10 transition-colors"
+            >
+              {showAllMobile ? (
+                <>
+                  {t('seeLess')}
+                  <Icon icon="lucide:chevron-up" className="w-3.5 h-3.5" />
+                </>
+              ) : (
+                <>
+                  {t('seeMore')}
+                  <Icon icon="lucide:chevron-down" className="w-3.5 h-3.5" />
+                </>
+              )}
+            </button>
+          </div>
+        )}
         <div className="mt-6 pt-4 border-t border-white/5 flex justify-end items-center">
           <span className="text-sm text-slate-400 mr-3 uppercase tracking-wide">Total Balance:</span>
           <span className="text-2xl font-bold text-[#3B82F6]">

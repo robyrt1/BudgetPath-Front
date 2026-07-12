@@ -86,6 +86,8 @@
     "accounts": "Minhas Contas",
     "showBalance": "Mostrar saldo",
     "hideBalance": "Ocultar saldo",
+    "seeMore": "Ver mais",
+    "seeLess": "Ver menos",
     "expensesEvolution": {
       "title": "Evolução das Despesas",
       "noResults": "Nenhuma despesa encontrada.",
