@@ -12,12 +12,9 @@ export default function LayoutWrapper({ children, className }: { children: React
     const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
 
     return (
-        <div className={`h-screen w-full flex bg-[#0A0F1C] overflow-hidden ${className}`}>
+        <div className={`h-screen w-full flex bg-[#0A0F1C] overflow-hidden overflow-x-hidden ${className}`}>
             {showSidebar && <Sidebar isExpanded={isSidebarExpanded} toggleSidebar={() => setIsSidebarExpanded(!isSidebarExpanded)} />}
-            <div
-                className={`flex flex-col flex-1 transition-all duration-300 ease-in-out h-full overflow-y-auto ${showSidebar ? (isSidebarExpanded ? "pl-64" : "pl-20") : "w-full"
-                    }`}
-            >
+            <div className="flex flex-col flex-1 min-w-0 w-full h-full overflow-y-auto">
                 <div className="w-full flex-grow">{children}</div>
             </div>
         </div>

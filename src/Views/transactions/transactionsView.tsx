@@ -35,7 +35,7 @@ const TransactionsView = () => {
     }, [userId]);
 
     return (
-        <div className="max-w-[1580px] max-h-[calc(50vh-100px)] w-full mx-auto px-4 md:px-8 flex flex-col mt-10 pb-8">
+        <div className="max-w-[1580px] md:max-h-[calc(50vh-100px)] w-full mx-auto px-4 md:px-8 flex flex-col mt-10 pb-8">
             <TransactionGrid
                 transactions={transactions}
                 addTransaction={addTransaction}

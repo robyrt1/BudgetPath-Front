@@ -9,7 +9,6 @@
     "lint": "next lint",
     "start:otel-verbose": "NEXT_OTEL_VERBOSE=1 next start"
   },
-  "proxy": "http://192.168.1.9:5171",
   "dependencies": {
     "@ag-grid-community/client-side-row-model": "^32.3.9",
     "@ag-grid-community/core": "^32.3.9",

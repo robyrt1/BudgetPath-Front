@@ -258,10 +258,10 @@ const TransactionGrid: React.FC<Props> = ({ transactions, addTransaction }) => {
 
                 <button
                     onClick={() => setDrawerOpen(true)}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium transition-colors shadow-lg shadow-indigo-500/20"
+                    className="fixed bottom-6 right-6 z-50 md:static flex items-center justify-center md:justify-start gap-2 w-14 h-14 md:w-auto md:h-auto px-0 md:px-4 py-0 md:py-2 rounded-full md:rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium transition-colors shadow-lg shadow-indigo-500/20"
                 >
-                    <span className="text-lg leading-none">+</span>
-                    {t('newTransaction')}
+                    <span className="text-xl md:text-lg leading-none">+</span>
+                    <span className="hidden md:inline">{t('newTransaction')}</span>
                 </button>
             </div>
 
@@ -316,16 +316,16 @@ const TransactionGrid: React.FC<Props> = ({ transactions, addTransaction }) => {
             )}
 
             {/* ── Summary badges ── */}
-            <div className="flex gap-3 flex-wrap">
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:flex md:flex-wrap md:gap-3">
+                <div className="flex items-center justify-between sm:justify-start gap-2 px-3 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
                     <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-500">{t('summary.income')}</span>
                     <span className="text-sm font-semibold text-emerald-400">R$ {formatNumber(String(totalReceita))}</span>
                 </div>
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-rose-500/10 border border-rose-500/20">
+                <div className="flex items-center justify-between sm:justify-start gap-2 px-3 py-2 rounded-lg bg-rose-500/10 border border-rose-500/20">
                     <span className="text-[10px] font-bold uppercase tracking-wider text-rose-500">{t('summary.expense')}</span>
                     <span className="text-sm font-semibold text-rose-400">R$ {formatNumber(String(totalDespesa))}</span>
                 </div>
-                <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10">
+                <div className="flex items-center justify-between sm:justify-start gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/10">
                     <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">{t('summary.balance')}</span>
                     <span className={`text-sm font-semibold ${totalReceita - totalDespesa >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
                         R$ {formatNumber(String(totalReceita - totalDespesa))}
@@ -334,8 +334,8 @@ const TransactionGrid: React.FC<Props> = ({ transactions, addTransaction }) => {
             </div>
 
             {/* ── Table ── */}
-            <div className="w-full overflow-x-auto rounded-2xl border border-white/5 bg-[#111827] shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
-                <table className="w-full text-sm text-left">
+            <div className="hidden md:block w-full overflow-x-auto rounded-2xl border border-white/5 bg-[#111827] shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
+                <table className="hidden md:table w-full text-sm text-left">
                     <thead>
                         <tr className="border-b border-white/5">
                             {COLUMNS.map(col => (
@@ -390,6 +390,55 @@ const TransactionGrid: React.FC<Props> = ({ transactions, addTransaction }) => {
                         })}
                     </tbody>
                 </table>
+            </div>
+
+            {/* ── Mobile Cards List ── */}
+            <div className="block md:hidden space-y-3">
+                {paginated.length === 0 ? (
+                    <div className="px-4 py-12 text-center text-slate-500 text-sm rounded-2xl border border-white/5 bg-[#111827]">
+                        {t('noResults')}
+                    </div>
+                ) : (
+                    paginated.map((row, i) => {
+                        const group = row.Category?.Group?.Descript ?? '';
+                        const amountColor = group === 'RECEITA' ? 'text-emerald-400' : 'text-rose-400';
+                        const account = getAccount(row) || '—';
+                        const category = row.Category?.Descript ?? '—';
+                        const amount = row.Amount != null ? `R$ ${formatNumber(String(row.Amount))}` : '—';
+                        const description = row.Description ?? '—';
+                        const date = formatDate(row.TransactionDate as any);
+                        const status = row.Status;
+
+                        return (
+                            <div key={row.Id ?? i} className="p-4 rounded-xl border border-white/5 bg-[#131926] flex flex-col gap-3">
+                                {/* Linha Superior: Descrição à esquerda (com line-clamp-1) e o Valor em destaque à direita */}
+                                <div className="flex items-center justify-between gap-2">
+                                    <span className="text-slate-100 font-medium text-sm line-clamp-1 flex-1" title={description}>
+                                        {description}
+                                    </span>
+                                    <span className={`font-semibold text-sm whitespace-nowrap ${amountColor}`}>
+                                        {amount}
+                                    </span>
+                                </div>
+
+                                {/* Linha Intermediária: Categoria e Conta alinhadas horizontalmente com um tom cinza/muted */}
+                                <div className="flex items-center justify-between text-xs text-slate-400">
+                                    <span>{category}</span>
+                                    <span>{account}</span>
+                                </div>
+
+                                {/* Linha Inferior: Data à esquerda e as badges de Grupo (Despesa/Receita) e Status (Confirmado) alinhadas à direita */}
+                                <div className="flex items-center justify-between">
+                                    <span className="text-xs text-slate-500">{date}</span>
+                                    <div className="flex items-center gap-1.5">
+                                        {group ? <GroupBadge group={group} /> : '—'}
+                                        {status ? <StatusBadge status={status} /> : '—'}
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })
+                )}
             </div>
 
             {/* ── Pagination bar ── */}

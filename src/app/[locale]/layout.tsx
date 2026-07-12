@@ -24,7 +24,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         <html lang={locale}>
             <head>
                 <title>BudgetPath</title>
-                <meta name="description" content="width=device-width, initial-scale=1.0" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             </head>
             <body className="h-screen w-full bg-[#0A0F1C]">
                 <Providers>

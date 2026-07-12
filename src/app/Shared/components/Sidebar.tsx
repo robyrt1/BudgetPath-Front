@@ -75,7 +75,7 @@ export default function NavbarWithSidebar({ isExpanded = true, toggleSidebar }: 
                             <button
                                 type="button"
                                 onClick={() => setIsOpen(!isOpen)}
-                                className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                                className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
                             >
                                 <span className="sr-only">Open sidebar</span>
                                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
@@ -152,9 +152,10 @@ export default function NavbarWithSidebar({ isExpanded = true, toggleSidebar }: 
             {/* Sidebar */}
             <aside
                 id="logo-sidebar"
-                className={`fixed top-0 left-0 z-40 h-screen pt-20 transition-all duration-300 ease-in-out bg-[#0A0F1C] border-r border-white/5
-                ${isExpanded ? "w-64" : "w-20"}
-                ${isOpen ? "translate-x-0" : "-translate-x-full"} sm:translate-x-0`}
+                className={`fixed top-0 left-0 z-50 h-screen pt-20 transition-transform duration-300 ease-in-out bg-[#0A0F1C] border-r border-white/5 w-64
+                ${isOpen ? "translate-x-0" : "-translate-x-full"}
+                md:relative md:translate-x-0 md:z-40
+                ${isExpanded ? "md:w-64" : "md:w-20"}`}
                 aria-label="Sidebar"
             >
                 <div className="flex flex-col h-full px-4 pb-4 overflow-y-auto bg-[#0A0F1C] scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
@@ -197,7 +198,7 @@ export default function NavbarWithSidebar({ isExpanded = true, toggleSidebar }: 
             {/* BACKDROP para fechar Sidebar no mobile */}
             {isOpen && (
                 <div
-                    className="fixed inset-0 bg-black bg-opacity-50 z-30 sm:hidden"
+                    className="fixed inset-0 bg-black/50 z-40 md:hidden"
                     onClick={() => setIsOpen(false)}
                 />
             )}
