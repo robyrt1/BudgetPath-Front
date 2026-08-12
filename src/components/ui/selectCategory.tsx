@@ -2,8 +2,10 @@ import { Category, SubCategories } from "@/Models/Categories/Responses/FindCateg
 import { AuthState } from "@/Redux/Slices/AutheticationSlice";
 import { setCategories } from "@/Redux/Slices/CategoriesSlice";
 import UseFindCategoriesViewModel from "@/ViewModels/Categories/FindCategoriesViewModel";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useTranslations } from "next-intl";
+import CustomSelect from "./CustomSelect";
 
 interface SelectCategoryProps {
     selectedCategoryId: string;
@@ -12,12 +14,13 @@ interface SelectCategoryProps {
 }
 
 const SelectCategory = ({ selectedCategoryId, setSelectedCategoryId, transactionType }: SelectCategoryProps) => {
+    const t = useTranslations('addTransaction');
     const dispatch = useDispatch();
     const userId = useSelector((state: { auth: AuthState }) => state.auth.userId);
     const { categories, find } = UseFindCategoriesViewModel({ UserId: userId });
 
     const [seleteSubCategories, setSeleteSubCategories] = useState<SubCategories[]>([])
-    const [selectedCategory, setSelectedCategory] = useState<string>();
+    const [selectedCategory, setSelectedCategory] = useState<string>("");
 
     useEffect(() => {
         find();
@@ -29,51 +32,51 @@ const SelectCategory = ({ selectedCategoryId, setSelectedCategoryId, transaction
         }
     }, [categories, dispatch]);
 
-    const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const category = JSON.parse(event.target.value);
-        setSelectedCategoryId(category.Id);
-        setSelectedCategory(event.target.value);
-        setSeleteSubCategories(category.SubCategories);
+    const handleCategoryChange = (value: string) => {
+        if (value) {
+            const category = JSON.parse(value);
+            setSelectedCategoryId(category.Id);
+            setSelectedCategory(value);
+            setSeleteSubCategories(category.SubCategories);
+        }
     };
-    const handleSubCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedCategoryId(event.target.value);
+    const handleSubCategoryChange = (value: string) => {
+        setSelectedCategoryId(value);
     };
+
+    const categoryOptions = useMemo(() => {
+        return categories
+            .filter(item => [transactionType].includes(item.Group.Descript))
+            .map((category: Category) => ({
+                value: JSON.stringify(category),
+                label: category.Descript,
+            }));
+    }, [categories, transactionType]);
+
+    const subCategoryOptions = useMemo(() => {
+        return (seleteSubCategories || []).map((sub: SubCategories) => ({
+            value: sub.Id,
+            label: sub.Descript,
+        }));
+    }, [seleteSubCategories]);
 
     return (
-        <div>
-            {(
-                <select
-                    value={selectedCategory}
-                    onChange={handleCategoryChange}
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                >
-                    <option value="">Selecione uma categoria</option>
-                    {categories.filter(item => {
-                        return [transactionType].includes(item.Group.Descript)
-                    }).map((category: Category) => (
-                        <option key={category.Id} value={JSON.stringify(category)}>
-                            {category.Descript}
-                        </option>
-                    ))}
-                </select>
-            )}
+        <div className="flex flex-col gap-2 w-full">
+            <CustomSelect
+                value={selectedCategory}
+                onChange={handleCategoryChange}
+                options={categoryOptions}
+                placeholder={t('selectCategory')}
+            />
 
-            {selectedCategoryId && seleteSubCategories ? (
-                <div>
-                    <select
-                        value={selectedCategoryId}
-                        onChange={handleSubCategoryChange}
-                        className="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                    >
-                        <option value="">Selecione uma Sub-Categoria</option>
-                        {seleteSubCategories.map((category: SubCategories) => (
-                            <option key={category.Id} value={category.Id}>
-                                {category.Descript}
-                            </option>
-                        )) ?? []}
-                    </select>
-                </div>
-            ) : ''}
+            {selectedCategoryId && seleteSubCategories && seleteSubCategories.length > 0 && (
+                <CustomSelect
+                    value={selectedCategoryId}
+                    onChange={handleSubCategoryChange}
+                    options={subCategoryOptions}
+                    placeholder={t('selectSubCategory')}
+                />
+            )}
         </div>
     );
 };

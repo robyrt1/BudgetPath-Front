@@ -2,8 +2,10 @@ import { PaymentMethod } from "@/Models/PaymentMethod/Responses/ResponseFindPaym
 import { AuthState } from "@/Redux/Slices/AutheticationSlice";
 import { setPaymentMethods } from "@/Redux/Slices/PaymentMethodSlice";
 import UseFindPaymentMethodViewModel from "@/ViewModels/PaymentMethods/FindPaymentMethodsViewModel";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useTranslations } from "next-intl";
+import CustomSelect from "./CustomSelect";
 
 interface SelectPaymentMethosProps {
     selectedPaymentMethod: PaymentMethod | null;
@@ -12,6 +14,7 @@ interface SelectPaymentMethosProps {
 }
 
 const SelectPaymentMethod = ({ selectedPaymentMethod, setSelectedPaymentMethod, isCreditSelected }: SelectPaymentMethosProps) => {
+    const t = useTranslations('addTransaction');
     const dispatch = useDispatch();
     const userId = useSelector((state: { auth: AuthState }) => state.auth.userId);
     const { paymentMethod, find } = UseFindPaymentMethodViewModel({ UserId: userId });
@@ -34,27 +37,28 @@ const SelectPaymentMethod = ({ selectedPaymentMethod, setSelectedPaymentMethod, 
         }
     }, [paymentMethod, dispatch]);
 
-    const handlePaymentMethodChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const paymentMethod = JSON.parse(event.target.value);
-        setSelectedPaymentMethod(paymentMethod);
+    const handlePaymentMethodChange = (value: string) => {
+        if (value) {
+            const paymentMethod = JSON.parse(value);
+            setSelectedPaymentMethod(paymentMethod);
+        }
     };
 
+    const paymentMethodOptions = useMemo(() => {
+        return paymentMethod.map((pm) => ({
+            value: JSON.stringify(pm),
+            label: pm.description,
+        }));
+    }, [paymentMethod]);
+
     return (
-        <div>
-
-            <select
-                value={JSON.stringify(selectedPaymentMethod)}
+        <div className="w-full">
+            <CustomSelect
+                value={selectedPaymentMethod ? JSON.stringify(selectedPaymentMethod) : ""}
                 onChange={handlePaymentMethodChange}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            >
-                <option value="">Select Payment Method</option>
-                {paymentMethod.map((paymentMethod: PaymentMethod) => (
-                    <option key={paymentMethod.id} value={JSON.stringify(paymentMethod)}>
-                        {paymentMethod.description}
-                    </option>
-                ))}
-            </select>
-
+                options={paymentMethodOptions}
+                placeholder={t('selectPaymentMethod')}
+            />
         </div>
     );
 };

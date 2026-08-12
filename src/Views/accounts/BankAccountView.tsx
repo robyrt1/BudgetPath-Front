@@ -24,8 +24,8 @@ export default function BankAccount({ showBalances, setShowBalances }: { showBal
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const visibleAccounts = accounts 
-    ? (isMobile && !showAllMobile ? accounts.slice(0, 2) : accounts) 
+  const visibleAccounts = accounts
+    ? (isMobile && !showAllMobile ? accounts.slice(0, 2) : accounts)
     : [];
 
 
@@ -42,7 +42,7 @@ export default function BankAccount({ showBalances, setShowBalances }: { showBal
   }, [userId]);
 
   return (
-    <div className="w-full mt-10">
+    <div className="w-full">
       <div className="rounded-2xl border border-white/5 bg-[#111827] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
 
         <div className="flex items-center justify-between mb-6">

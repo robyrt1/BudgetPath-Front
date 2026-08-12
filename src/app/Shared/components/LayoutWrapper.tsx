@@ -14,7 +14,7 @@ export default function LayoutWrapper({ children, className }: { children: React
     return (
         <div className={`h-screen w-full flex bg-[#0A0F1C] overflow-hidden overflow-x-hidden ${className}`}>
             {showSidebar && <Sidebar isExpanded={isSidebarExpanded} toggleSidebar={() => setIsSidebarExpanded(!isSidebarExpanded)} />}
-            <div className="flex flex-col flex-1 min-w-0 w-full h-full overflow-y-auto">
+            <div className="flex flex-col flex-1 min-w-0 w-full h-full overflow-y-auto pt-20">
                 <div className="w-full flex-grow">{children}</div>
             </div>
         </div>

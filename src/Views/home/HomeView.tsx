@@ -63,7 +63,7 @@ const HomeView = () => {
   }, [year, month]);
 
   return (
-    <div className="w-full max-w-[1580px] mx-auto px-4 md:px-8 py-8">
+    <div className="w-full max-w-[1645px] max-w-[1775px] mx-auto px-4 md:px-8 py-4">
       <section>
         <BankAccount showBalances={showBalances} setShowBalances={setShowBalances} />
       </section>

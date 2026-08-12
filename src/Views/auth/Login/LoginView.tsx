@@ -57,7 +57,7 @@ const LoginView = () => {
               id="email"
               type="email"
               className="w-full rounded-3xl border border-[#374151] bg-[#1F2937] py-4 pl-14 pr-4 text-sm text-white placeholder-slate-400 shadow-sm transition focus:border-[#3B82F6] focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/15"
-              placeholder="robertpinto1190@gmail.com"
+              placeholder="digite seu email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />

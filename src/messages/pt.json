@@ -60,12 +60,21 @@
     "title": "Adicionar Transação",
     "income": "Receita",
     "expense": "Despesa",
+    "account": "Conta",
+    "category": "Categoria",
+    "paymentMethod": "Forma de Pagamento",
     "description": "Descrição",
     "amount": "R$ 0,00",
+    "amountLabel": "Valor",
     "date": "Data da Transação",
     "submit": "Adicionar Transação",
     "cancel": "Cancelar",
-    "requiredFields": "Preencha os campos obrigatórios!"
+    "requiredFields": "Preencha os campos obrigatórios!",
+    "selectAccount": "Selecione a Conta",
+    "selectCredit": "Selecione o Cartão de Crédito",
+    "selectCategory": "Selecione a Categoria",
+    "selectSubCategory": "Selecione a Subcategoria",
+    "selectPaymentMethod": "Selecione a Forma de Pagamento"
   },
   "auth": {
     "signIn": "Entrar",

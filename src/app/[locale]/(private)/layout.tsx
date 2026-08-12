@@ -5,5 +5,6 @@ export default function PrivateLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <LayoutWrapper className="w-full flex-1 mt-10">{children}</LayoutWrapper>;
+  return <LayoutWrapper className="w-full flex-grow">{children}</LayoutWrapper>;
 }
+

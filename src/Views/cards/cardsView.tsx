@@ -46,7 +46,7 @@ export default function CardsView() {
     }
 
     return (
-        <div className="w-full min-h-screen max-w-[1645px] mx-auto px-4 py-8">
+        <div className="w-full min-h-screen max-w-[1645px] max-w-[1750px] mx-auto px-4 py-4">
             <div className="flex items-center justify-between mb-8">
                 <h2 className="text-2xl font-bold text-white tracking-tight">My accounts</h2>
                 <button

@@ -158,7 +158,7 @@ export default function NavbarWithSidebar({ isExpanded = true, toggleSidebar }: 
                 ${isExpanded ? "md:w-64" : "md:w-20"}`}
                 aria-label="Sidebar"
             >
-                <div className="flex flex-col h-full px-4 pb-4 overflow-y-auto bg-[#0A0F1C] scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
+                <div className="flex flex-col px-4 pb-4 overflow-hidden bg-[#0A0F1C] min-h-[calc(100vh-5rem)]">
                     <ul className="space-y-3 font-medium flex-1">
                         {routes.map((route) => {
                             const isActive = isRouteActive(route.path);

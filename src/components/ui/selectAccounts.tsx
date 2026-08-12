@@ -2,18 +2,20 @@ import { CreditCard, GetAccountUserResponse } from "@/Models/Accounts/Responses/
 import { AuthState } from "@/Redux/Slices/AutheticationSlice";
 import AccountViewModel from "@/ViewModels/Accounts/AccountViewModel";
 import { isEmpty } from "lodash";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
+import { useTranslations } from "next-intl";
+import CustomSelect from "./CustomSelect";
 
 interface SelectCategoryProps {
     account: GetAccountUserResponse
     setAccount: (accounts: GetAccountUserResponse) => void
     creditCardProp: CreditCard | null | undefined,
     setCredit: (credit: CreditCard) => void
-
 }
 
 const SelectAccounts = ({ account, setAccount, setCredit, creditCardProp }: SelectCategoryProps) => {
+    const t = useTranslations('addTransaction');
     const userId = useSelector((state: { auth: AuthState }) => state.auth.userId);
     const { accounts: selectAccounts, find } = AccountViewModel({ UserId: userId });
 
@@ -21,13 +23,15 @@ const SelectAccounts = ({ account, setAccount, setCredit, creditCardProp }: Sele
         find();
     }, [userId, find]);
 
-    const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setAccount(JSON.parse(event.target.value))
+    const handleSelectChange = (value: string) => {
+        if (value) {
+            setAccount(JSON.parse(value));
+        }
     };
 
-    const handleSelectCreditChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        if (event.target.value) {
-            setCredit(JSON.parse(event.target.value))
+    const handleSelectCreditChange = (value: string) => {
+        if (value) {
+            setCredit(JSON.parse(value))
             return
         }
         setCredit({
@@ -37,45 +41,43 @@ const SelectAccounts = ({ account, setAccount, setCredit, creditCardProp }: Sele
             Id: "",
             InvoiceAmount: 0,
             Limit: 0,
-            Maturity: 0
-            , Name: ""
+            Maturity: 0,
+            Name: ""
         })
     };
 
+    const accountOptions = useMemo(() => {
+        return selectAccounts.map((acc) => ({
+            value: JSON.stringify(acc),
+            label: acc.Name,
+        }));
+    }, [selectAccounts]);
+
+    const creditOptions = useMemo(() => {
+        return (account.CreditCard || []).map((card) => ({
+            value: JSON.stringify(card),
+            label: card.Name,
+        }));
+    }, [account.CreditCard]);
+
     return (
-        <div>
-            <div>
-                <select
-                    value={JSON.stringify(account)}
-                    onChange={handleSelectChange}
-                    className="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                >
-                    <option value="">Select Account</option>
-                    {selectAccounts.map((account: GetAccountUserResponse) => (
-                        <option key={account.Id} value={JSON.stringify(account)}>
-                            {account.Name}
-                        </option>
-                    )) ?? []}
-                </select>
-            </div>
+        <div className="flex flex-col gap-2 w-full">
+            <CustomSelect
+                value={account.Id ? JSON.stringify(account) : ""}
+                onChange={handleSelectChange}
+                options={accountOptions}
+                placeholder={t('selectAccount')}
+            />
 
             {
-                !isEmpty(account.CreditCard) ? (
-                    <div>
-                        <select
-                            value={JSON.stringify(creditCardProp)}
-                            onChange={handleSelectCreditChange}
-                            className="mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                        >
-                            <option value="">Select Credit</option>
-                            {account.CreditCard.map((creditCard: CreditCard) => (
-                                <option key={creditCard.Id} value={JSON.stringify(creditCard)}>
-                                    {creditCard.Name}
-                                </option>
-                            )) ?? []}
-                        </select>
-                    </div>
-                ) : ""
+                !isEmpty(account.CreditCard) && (
+                    <CustomSelect
+                        value={creditCardProp?.Id ? JSON.stringify(creditCardProp) : ""}
+                        onChange={handleSelectCreditChange}
+                        options={creditOptions}
+                        placeholder={t('selectCredit')}
+                    />
+                )
             }
         </div>
     );

@@ -62,8 +62,8 @@ const DebtList = () => {
   }, [userId]);
 
   return (
-    <div className="w-full min-h-screen py-10 mt-10">
-      <div className="max-w-[1580px] w-full mx-auto px-4 md:px-8">
+    <div className="py-8">
+      <div className="w-full max-w-[1645px] max-w-[1800px] mx-auto px-4 md:px-8">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl font-bold text-white tracking-tight">Minhas Dívidas</h1>
           <button

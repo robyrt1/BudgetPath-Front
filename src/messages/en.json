@@ -60,12 +60,21 @@
     "title": "Add Transaction",
     "income": "Income",
     "expense": "Expense",
+    "account": "Account",
+    "category": "Category",
+    "paymentMethod": "Payment Method",
     "description": "Description",
     "amount": "$ 0.00",
+    "amountLabel": "Amount",
     "date": "Transaction Date",
     "submit": "Add Transaction",
     "cancel": "Cancel",
-    "requiredFields": "Please fill in the required fields!"
+    "requiredFields": "Please fill in the required fields!",
+    "selectAccount": "Select Account",
+    "selectCredit": "Select Credit Card",
+    "selectCategory": "Select Category",
+    "selectSubCategory": "Select Sub-category",
+    "selectPaymentMethod": "Select Payment Method"
   },
   "auth": {
     "signIn": "Sign In",

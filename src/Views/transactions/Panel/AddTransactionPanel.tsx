@@ -116,55 +116,130 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
     };
 
     return (
-        <div ref={ref} className="add-transaction-panel">
-            <h4>{t('title')}</h4>
-            <hr className="border-gray-300 w-full" />
-
+        <div ref={ref} className="w-full text-left">
             {transactionType ? '' : (
-                <div className="add-transaction-panel">
+                <div className="flex gap-4 w-full mt-2">
                     <button
-                        className={`px-4 py-2 rounded bg-green-500 text-white`}
+                        type="button"
+                        className="flex-1 flex flex-col items-center justify-center gap-3 p-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/10 hover:border-emerald-500/30 text-emerald-400 font-semibold transition-all group cursor-pointer"
                         onClick={() => setTransactionType("RECEITA")}
                     >
-                        {t('income')}
+                        <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                            ↑
+                        </div>
+                        <span className="text-sm tracking-wider uppercase font-bold">{t('income')}</span>
                     </button>
                     <button
-                        className={`px-4 py-2 rounded bg-red-500 text-white`}
+                        type="button"
+                        className="flex-1 flex flex-col items-center justify-center gap-3 p-6 rounded-2xl border border-rose-500/20 bg-rose-500/5 hover:bg-rose-500/10 hover:border-rose-500/30 text-rose-400 font-semibold transition-all group cursor-pointer"
                         onClick={() => setTransactionType("DESPESA")}
                     >
-                        {t('expense')}
+                        <div className="w-12 h-12 rounded-full bg-rose-500/10 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                            ↓
+                        </div>
+                        <span className="text-sm tracking-wider uppercase font-bold">{t('expense')}</span>
                     </button>
                 </div>
             )}
 
-            {Error && <span className="text-red-600 text-sm">{Error}</span>}
+            {Error && (
+                <div className="mb-4 p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm text-center">
+                    {Error}
+                </div>
+            )}
 
             {transactionType ? (
-                <div className="add-transaction-panel">
-                    <div className="flex w-full">
-                        <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                            <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z" />
-                            </svg>
+                <div className="flex flex-col gap-5 mt-2">
+                    {/* User profile (Read-only) / type badge */}
+                    <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5">
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-300 font-semibold text-sm">
+                                {getUserName ? getUserName.charAt(0).toUpperCase() : 'U'}
+                            </div>
+                            <span className="text-sm text-slate-300 font-medium">{getUserName}</span>
+                        </div>
+                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                            transactionType === 'RECEITA' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'
+                        }`}>
+                            {transactionType === 'RECEITA' ? t('income') : t('expense')}
                         </span>
-                        <input
-                            type="text"
-                            id="website-admin"
-                            className="w-full bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block min-w-0 text-sm border-gray-300 p-2.5"
-                            value={getUserName}
-                            placeholder="elonmusk"
-                            disabled
-                        />
                     </div>
-                    <SelectAccounts account={account} setAccount={setAccount} setCredit={setCredit} creditCardProp={credit} />
-                    <SelectCategory selectedCategoryId={categoryId} setSelectedCategoryId={setCategoryId} transactionType={transactionType} />
-                    <SelectPaymentMethod selectedPaymentMethod={paymentMethodId} setSelectedPaymentMethod={setPaymentMethodId} isCreditSelected={credit?.Id ? true : false} />
-                    <input type="text" placeholder={t('description')} value={description} onChange={(e) => setDescription(e.target.value)} className="input-field text-gray-900 bg-white border-gray-300" required />
-                    <input type="text" placeholder={t('amount')} value={amount} onChange={handleChangeValor} className="w-full px-3 py-2 border border-gray-300 rounded text-right text-gray-900 bg-white" required />
-                    <input type="date" placeholder={t('date')} value={transactionDate} onChange={(e) => setTransactionDate(e.target.value)} className="input-field text-gray-900 bg-white border-gray-300" required />
-                    <button className="submit-btn" onClick={handleSubmit}>{t('submit')}</button>
-                    <button className="px-4 py-2 rounded bg-red-500 text-white" onClick={handlerCancel}>{t('cancel')}</button>
 
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {/* Account Select */}
+                        <div className="flex flex-col gap-1">
+                            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500">{t('account')}</label>
+                            <SelectAccounts account={account} setAccount={setAccount} setCredit={setCredit} creditCardProp={credit} />
+                        </div>
+
+                        {/* Category Select */}
+                        <div className="flex flex-col gap-1">
+                            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500">{t('category')}</label>
+                            <SelectCategory selectedCategoryId={categoryId} setSelectedCategoryId={setCategoryId} transactionType={transactionType} />
+                        </div>
+
+                        {/* Payment Method */}
+                        <div className="flex flex-col gap-1">
+                            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500">{t('paymentMethod')}</label>
+                            <SelectPaymentMethod selectedPaymentMethod={paymentMethodId} setSelectedPaymentMethod={setPaymentMethodId} isCreditSelected={credit?.Id ? true : false} />
+                        </div>
+
+                        {/* Date */}
+                        <div className="flex flex-col gap-1">
+                            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500">{t('date')}</label>
+                            <input 
+                                type="date" 
+                                value={transactionDate} 
+                                onChange={(e) => setTransactionDate(e.target.value)} 
+                                className="w-full px-3 py-2.5 rounded-lg bg-slate-800/50 border border-slate-700 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all cursor-pointer" 
+                                required 
+                            />
+                        </div>
+
+                        {/* Amount */}
+                        <div className="flex flex-col gap-1 sm:col-span-2">
+                            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500">{t('amountLabel')}</label>
+                            <input 
+                                type="text" 
+                                placeholder={t('amount')} 
+                                value={amount} 
+                                onChange={handleChangeValor} 
+                                className="w-full px-4 py-3 border border-slate-700 rounded-lg text-right text-slate-100 bg-slate-800/50 text-lg font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all" 
+                                required 
+                            />
+                        </div>
+
+                        {/* Description */}
+                        <div className="flex flex-col gap-1 sm:col-span-2">
+                            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500">{t('description')}</label>
+                            <input 
+                                type="text" 
+                                placeholder={t('description')} 
+                                value={description} 
+                                onChange={(e) => setDescription(e.target.value)} 
+                                className="w-full px-3 py-2.5 border border-slate-700 rounded-lg text-slate-200 bg-slate-800/50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all" 
+                                required 
+                            />
+                        </div>
+                    </div>
+
+                    {/* Footer Buttons */}
+                    <div className="flex justify-end gap-3 mt-4 pt-4 border-t border-white/5">
+                        <button 
+                            type="button" 
+                            className="px-5 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-white hover:bg-white/5 transition-all cursor-pointer" 
+                            onClick={handlerCancel}
+                        >
+                            {t('cancel')}
+                        </button>
+                        <button 
+                            type="submit" 
+                            className="px-6 py-2.5 rounded-xl font-semibold text-sm bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/20 transition-all cursor-pointer" 
+                            onClick={handleSubmit}
+                        >
+                            {t('submit')}
+                        </button>
+                    </div>
                 </div>
             ) : ""}
         </div>

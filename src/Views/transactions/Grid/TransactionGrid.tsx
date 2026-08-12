@@ -99,8 +99,8 @@ const TransactionGrid: React.FC<Props> = ({ transactions, addTransaction }) => {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(15);
 
-    // Drawer
-    const [drawerOpen, setDrawerOpen] = useState(false);
+    // Modal
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     // ── Derived option lists ─────────────────────────────────────────────────
     const accountOptions = useMemo(() => {
@@ -257,7 +257,7 @@ const TransactionGrid: React.FC<Props> = ({ transactions, addTransaction }) => {
                 </div>
 
                 <button
-                    onClick={() => setDrawerOpen(true)}
+                    onClick={() => setIsModalOpen(true)}
                     className="fixed bottom-6 right-6 z-50 md:static flex items-center justify-center md:justify-start gap-2 w-14 h-14 md:w-auto md:h-auto px-0 md:px-4 py-0 md:py-2 rounded-full md:rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium transition-colors shadow-lg shadow-indigo-500/20"
                 >
                     <span className="text-xl md:text-lg leading-none">+</span>
@@ -522,20 +522,20 @@ const TransactionGrid: React.FC<Props> = ({ transactions, addTransaction }) => {
                 </div>
             </div>
 
-            {/* ── Drawer ── */}
-            {drawerOpen && (
-                <div className="fixed inset-0 z-50 flex justify-end">
-                    <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setDrawerOpen(false)} />
-                    <div className="relative z-10 w-full max-w-sm h-full bg-[#0f172a] border-l border-white/10 shadow-2xl overflow-y-auto flex flex-col">
+            {/* ── Modal ── */}
+            {isModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsModalOpen(false)} />
+                    <div className="relative z-10 w-full max-w-xl bg-[#0f172a] border border-white/10 shadow-2xl rounded-[24px] overflow-y-auto flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200">
                         <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
                             <h3 className="text-base font-semibold text-slate-100">{t('newTransaction')}</h3>
-                            <button onClick={() => setDrawerOpen(false)} className="text-slate-400 hover:text-white transition-colors text-xl leading-none">✕</button>
+                            <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white transition-colors text-xl leading-none">✕</button>
                         </div>
                         <div className="flex-1 p-5">
                             <AddTransactionPanel
                                 addTransaction={async (data) => {
                                     const result = await addTransaction(data);
-                                    setDrawerOpen(false);
+                                    setIsModalOpen(false);
                                     return result;
                                 }}
                             />
