@@ -16,15 +16,25 @@ export function middleware(request: NextRequest) {
 
     // Public paths — just apply intl middleware (no auth check)
     const isPublicPath = publicPaths.some(p => pathWithoutLocale.startsWith(p));
+    const token = request.cookies.get('token')?.value;
+    const locale = routing.locales.find(l => pathname.startsWith(`/${l}`)) || routing.defaultLocale;
 
-    if (isPublicPath || pathWithoutLocale === '/') {
+    if (isPublicPath) {
+        if (token) {
+            return NextResponse.redirect(new URL(`/${locale}/home`, request.url));
+        }
+        return intlMiddleware(request);
+    }
+
+    if (pathWithoutLocale === '/') {
+        if (token) {
+            return NextResponse.redirect(new URL(`/${locale}/home`, request.url));
+        }
         return intlMiddleware(request);
     }
 
     // Private paths — check auth
-    const token = request.cookies.get('token')?.value;
     if (!token) {
-        const locale = routing.locales.find(l => pathname.startsWith(`/${l}`)) || routing.defaultLocale;
         return NextResponse.redirect(new URL(`/${locale}/SignIn`, request.url));
     }
 

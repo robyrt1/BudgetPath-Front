@@ -67,7 +67,7 @@ export default function NavbarWithSidebar({ isExpanded = true, toggleSidebar }: 
     return (
         <>
             {/* Navbar */}
-            <nav className="fixed top-0 left-0 z-50 w-full bg-[#0A0F1C] border-b border-white/5 text-slate-100">
+            <nav className="fixed top-0 left-0 z-[100] w-full bg-[#0A0F1C] border-b border-white/5 text-slate-100">
                 <div className="px-3 py-3 lg:px-5 lg:pl-3">
                     <div className="flex items-center justify-between">
                         {/* Botão abrir Sidebar */}
@@ -119,28 +119,33 @@ export default function NavbarWithSidebar({ isExpanded = true, toggleSidebar }: 
                                                 {email}
                                             </p>
                                         </div>
-                                        <ul className="py-1">
-                                            <li>
-                                                <a href="#" className="block px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5">
-                                                    {t('dashboard')}
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#" className="block px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5">
-                                                    {t('settings')}
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#" className="block px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5">
-                                                    {t('earnings')}
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a onClick={handleLogout} className="block px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-white/5 cursor-pointer">
-                                                    {t('signOut')}
-                                                </a>
-                                            </li>
-                                        </ul>
+                                         <ul className="py-1 space-y-0.5">
+                                             <li>
+                                                 <a href="#" className="block px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5 focus:bg-white/10 focus:text-white focus:outline-none transition-colors rounded-lg mx-1">
+                                                     {t('dashboard')}
+                                                 </a>
+                                             </li>
+                                             <li>
+                                                 <a href="#" className="block px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5 focus:bg-white/10 focus:text-white focus:outline-none transition-colors rounded-lg mx-1">
+                                                     {t('settings')}
+                                                 </a>
+                                             </li>
+                                             <li>
+                                                 <a href="#" className="block px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5 focus:bg-white/10 focus:text-white focus:outline-none transition-colors rounded-lg mx-1">
+                                                     {t('earnings')}
+                                                 </a>
+                                             </li>
+                                             <li>
+                                                 <a 
+                                                     onClick={handleLogout} 
+                                                     tabIndex={0}
+                                                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleLogout(); }}
+                                                     className="block px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 focus:bg-red-500/20 focus:text-red-300 focus:outline-none transition-colors cursor-pointer rounded-lg mx-1"
+                                                 >
+                                                     {t('signOut')}
+                                                 </a>
+                                             </li>
+                                         </ul>
                                     </div>
                                 )}
                             </div>

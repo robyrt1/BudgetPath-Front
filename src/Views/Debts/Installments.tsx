@@ -1,4 +1,5 @@
 import { DebtInstallment } from "@/Models/Debts/Responses/FindByUser";
+import Button from "@/components/ui/Button";
 
 const getStatusStyles = (status: DebtInstallment['Status']) => {
     switch (status) {
@@ -43,11 +44,11 @@ const Installments = ({ debt, onClose }: any) => {
             <div className="relative bg-[#111827] border border-white/10 shadow-2xl rounded-[24px] max-w-4xl w-full p-8 flex flex-col">
                 <div className="flex justify-between items-center mb-8">
                     <h2 className="text-2xl font-bold text-white tracking-tight">Parcelas: <span className="text-slate-400 font-medium">{debt.Description}</span></h2>
-                    <button onClick={onClose} className="p-2.5 text-slate-400 hover:text-white hover:bg-white/10 rounded-xl transition-colors">
+                    <Button onClick={onClose} variant="ghost" size="icon" className="p-2.5 text-slate-400 hover:text-white hover:bg-white/10 rounded-xl transition-colors w-9 h-9">
                         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         </svg>
-                    </button>
+                    </Button>
                 </div>
 
                 <div className="max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">

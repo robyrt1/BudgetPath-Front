@@ -12,7 +12,7 @@ import Input from "@/components/ui/Input/index";
 import './addTransactionPanelCSS.css';
 
 export interface IAddTransactionPanel {
-    addTransaction: (newTransaction: RequestCreateTransaction) => Promise<void>
+    addTransaction: (newTransaction: RequestCreateTransaction) => Promise<unknown>
     style?: React.CSSProperties;
     id?: string
     ref?: any
@@ -20,7 +20,7 @@ export interface IAddTransactionPanel {
 
 const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ addTransaction }, ref) => {
     const t = useTranslations('addTransaction');
-    const [Error, setError] = useState<any>(null);
+    const [error, setError] = useState<string | null>(null);
     const [account, setAccount] = useState<GetAccountUserResponse>({
         Id: '',
         UserId: '',
@@ -29,9 +29,6 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
         CreateAt: '',
         CreditCard: []
     });
-    const [creditCardId, setCreditCardId] = useState("");
-    const [debtId, setDebtId] = useState("");
-    const [installmentId, setInstallmentId] = useState("");
     const [categoryId, setCategoryId] = useState("");
     const [paymentMethodId, setPaymentMethodId] = useState<PaymentMethod | null>(null);
     const [description, setDescription] = useState("");
@@ -40,11 +37,8 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
     const [transactionType, setTransactionType] = useState("");
     const [credit, setCredit] = useState<CreditCard | null>();
 
-
     const getUserId = useSelector((state: { auth: AuthState }) => state.auth.userId);
     const getUserName = useSelector((state: { auth: AuthState }) => state.auth.nameUser);
-
-
 
     const handleChangeValor = (e: React.ChangeEvent<HTMLInputElement>) => {
         const raw = e.target.value.replace(/\D/g, ''); // remove tudo que não for número
@@ -59,9 +53,6 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
         setAmount(valorFormatado);
     };
 
-    const handlerSelectCreditCard = (id: string) => {
-        setCreditCardId(id)
-    }
     const handlerCancel = () => {
         setTransactionType("");
         setAccount({
@@ -74,10 +65,11 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
         });
         setAmount("");
         setCategoryId("");
-        setCreditCardId("");
         setDescription("");
         setPaymentMethodId(null);
-    }
+        setError(null);
+    };
+
     const handleSubmit = async () => {
 
         if (!categoryId || !account.Id || !paymentMethodId || !amount) {
@@ -93,8 +85,8 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
             const result: any = await addTransaction({
                 userId: getUserId,
                 creditCardId: credit?.Id || null,
-                debtId: debtId || null,
-                installmentId: installmentId || null,
+                debtId: null,
+                installmentId: null,
                 categoryId: categoryId,
                 paymentMethod: paymentMethodId.id,
                 description: description,
@@ -107,9 +99,8 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
                 return setError(result.errors.request)
             }
             handlerCancel()
-        } catch (error: any) {
-            const err = String(error)
-            setError(err)
+        } catch (err: any) {
+            setError(String(err))
         } finally {
             setCredit(null)
         }
@@ -118,34 +109,36 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
 
     return (
         <div ref={ref} className="w-full text-left">
-            {transactionType ? '' : (
-                <div className="flex gap-4 w-full mt-2">
-                    <button
-                        type="button"
-                        className="flex-1 flex flex-col items-center justify-center gap-3 p-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/10 hover:border-emerald-500/30 text-emerald-400 font-semibold transition-all group cursor-pointer"
-                        onClick={() => setTransactionType("RECEITA")}
-                    >
-                        <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
-                            ↑
-                        </div>
-                        <span className="text-sm tracking-wider uppercase font-bold">{t('income')}</span>
-                    </button>
-                    <button
-                        type="button"
-                        className="flex-1 flex flex-col items-center justify-center gap-3 p-6 rounded-2xl border border-rose-500/20 bg-rose-500/5 hover:bg-rose-500/10 hover:border-rose-500/30 text-rose-400 font-semibold transition-all group cursor-pointer"
-                        onClick={() => setTransactionType("DESPESA")}
-                    >
-                        <div className="w-12 h-12 rounded-full bg-rose-500/10 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
-                            ↓
-                        </div>
-                        <span className="text-sm tracking-wider uppercase font-bold">{t('expense')}</span>
-                    </button>
-                </div>
-            )}
+            <div className="flex flex-col gap-4">
+                {!transactionType && (
+                    <div className="flex gap-4">
+                        <button
+                            type="button"
+                            className="flex-1 flex flex-col items-center justify-center gap-3 p-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/10 hover:border-emerald-500/30 text-emerald-400 font-semibold transition-all group cursor-pointer"
+                            onClick={() => setTransactionType("RECEITA")}
+                        >
+                            <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                                ↑
+                            </div>
+                            <span className="text-sm tracking-wider uppercase font-bold">{t('income')}</span>
+                        </button>
+                        <button
+                            type="button"
+                            className="flex-1 flex flex-col items-center justify-center gap-3 p-6 rounded-2xl border border-rose-500/20 bg-rose-500/5 hover:bg-rose-500/10 hover:border-rose-500/30 text-rose-400 font-semibold transition-all group cursor-pointer"
+                            onClick={() => setTransactionType("DESPESA")}
+                        >
+                            <div className="w-12 h-12 rounded-full bg-rose-500/10 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+                                ↓
+                            </div>
+                            <span className="text-sm tracking-wider uppercase font-bold">{t('expense')}</span>
+                        </button>
+                    </div>
+                )}
+            </div>
 
-            {Error && (
+            {error && (
                 <div className="mb-4 p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm text-center">
-                    {Error}
+                    {error}
                 </div>
             )}
 

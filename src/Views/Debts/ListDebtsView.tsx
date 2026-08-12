@@ -7,6 +7,8 @@ import { useFindDebtsViewModel } from "@/ViewModels/Debts/DebtsViewModel";
 import { useEffect, useState } from "react";
 import { FaListOl, FaPen, FaPlus, FaTrash } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import Button from "@/components/ui/Button";
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/Table";
 import Installments from "./Installments";
 import DebtForm from "./modal/debtForm";
 
@@ -66,69 +68,70 @@ const DebtList = () => {
       <div className="w-full max-w-[1645px] max-w-[1800px] mx-auto px-4 md:px-8">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl font-bold text-white tracking-tight">Minhas Dívidas</h1>
-          <button
+          <Button
             onClick={openCreateModal}
-            className="flex items-center gap-2 px-4 py-2.5 bg-[#3B82F6]/10 text-[#3B82F6] font-bold uppercase tracking-wider text-xs rounded-xl hover:bg-[#3B82F6]/20 transition-colors"
+            variant="secondary"
+            className="flex items-center gap-2"
           >
             <FaPlus className="h-3 w-3" /> Nova Dívida
-          </button>
+          </Button>
         </div>
 
         {state === 'loading' && <Loading />}
 
         <div className="bg-[#111827] shadow-[0_8px_40px_rgba(0,0,0,0.12)] rounded-[24px] border border-white/5 overflow-hidden">
-          <table className="w-full text-left border-collapse">
-            <thead className="bg-white/[0.02]">
-              <tr>
-                <th className="px-6 py-5 text-[11px] font-semibold text-slate-400 uppercase tracking-widest border-b border-white/5">Descrição</th>
-                <th className="px-6 py-5 text-[11px] font-semibold text-slate-400 uppercase tracking-widest border-b border-white/5">Conta</th>
-                <th className="px-6 py-5 text-[11px] font-semibold text-slate-400 uppercase tracking-widest border-b border-white/5 text-right">Total</th>
-                <th className="px-6 py-5 text-[11px] font-semibold text-slate-400 uppercase tracking-widest border-b border-white/5 text-center">Parcelas</th>
-                <th className="px-6 py-5 text-[11px] font-semibold text-slate-400 uppercase tracking-widest border-b border-white/5">Vencimento</th>
-                <th className="px-6 py-5 text-[11px] font-semibold text-slate-400 uppercase tracking-widest border-b border-white/5 text-center">Status</th>
-                <th className="px-6 py-5 text-[11px] font-semibold text-slate-400 uppercase tracking-widest border-b border-white/5 text-right">Ações</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5">
+          <Table className="w-full text-left border-collapse">
+            <TableHeader className="bg-white/[0.02]">
+              <TableRow>
+                <TableHead className="px-6 py-5 text-[11px] font-semibold text-slate-400 uppercase tracking-widest border-b border-white/5">Descrição</TableHead>
+                <TableHead className="px-6 py-5 text-[11px] font-semibold text-slate-400 uppercase tracking-widest border-b border-white/5">Conta</TableHead>
+                <TableHead className="px-6 py-5 text-[11px] font-semibold text-slate-400 uppercase tracking-widest border-b border-white/5 text-right">Total</TableHead>
+                <TableHead className="px-6 py-5 text-[11px] font-semibold text-slate-400 uppercase tracking-widest border-b border-white/5 text-center">Parcelas</TableHead>
+                <TableHead className="px-6 py-5 text-[11px] font-semibold text-slate-400 uppercase tracking-widest border-b border-white/5">Vencimento</TableHead>
+                <TableHead className="px-6 py-5 text-[11px] font-semibold text-slate-400 uppercase tracking-widest border-b border-white/5 text-center">Status</TableHead>
+                <TableHead className="px-6 py-5 text-[11px] font-semibold text-slate-400 uppercase tracking-widest border-b border-white/5 text-right">Ações</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="divide-y divide-white/5">
               {debts.map(debt => {
                 const badge = getStatusBadge(debt.Status || '');
                 return (
-                  <tr key={debt.Id} className="group transition-colors hover:bg-white/[0.02] relative">
-                    <td className={`px-6 py-5 text-sm font-semibold text-slate-100 border-l-[3px] ${badge.stripe}`}>
+                  <TableRow key={debt.Id} className="group transition-colors hover:bg-white/[0.02] relative">
+                    <TableCell className={`px-6 py-5 text-sm font-semibold text-slate-100 border-l-[3px] ${badge.stripe}`}>
                       {debt.Description}
-                    </td>
-                    <td className="px-6 py-5 text-sm font-medium text-slate-400">{debt.Account?.Name ?? '—'}</td>
-                    <td className="px-6 py-5 text-right whitespace-nowrap">
+                    </TableCell>
+                    <TableCell className="px-6 py-5 text-sm font-medium text-slate-400">{debt.Account?.Name ?? '—'}</TableCell>
+                    <TableCell className="px-6 py-5 text-right whitespace-nowrap">
                       <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-widest mr-2">Total</span>
                       <span className="text-lg font-bold text-white tracking-tight">R$ {Number(debt.TotalAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                    </td>
-                    <td className="px-6 py-5 text-center">
+                    </TableCell>
+                    <TableCell className="px-6 py-5 text-center">
                       <span className="text-[11px] font-bold text-slate-300 bg-white/5 px-3 py-1.5 rounded-full">{debt.Installments}</span>
-                    </td>
-                    <td className="px-6 py-5 text-[13px] font-medium text-slate-400 whitespace-nowrap">{new Date(debt.DueDate).toLocaleDateString()}</td>
-                    <td className="px-6 py-5 text-center">
+                    </TableCell>
+                    <TableCell className="px-6 py-5 text-[13px] font-medium text-slate-400 whitespace-nowrap">{new Date(debt.DueDate).toLocaleDateString()}</TableCell>
+                    <TableCell className="px-6 py-5 text-center">
                       <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${badge.bg}`}>
                         {badge.text}
                       </span>
-                    </td>
-                    <td className="px-6 py-5">
+                    </TableCell>
+                    <TableCell className="px-6 py-5">
                       <div className="flex items-center justify-end gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onClick={() => setSelectedDebt(debt)} className="p-2.5 text-slate-400 hover:text-white hover:bg-white/10 rounded-xl transition-colors" title="Ver Parcelas">
+                        <Button onClick={() => setSelectedDebt(debt)} variant="ghost" size="icon" className="p-2.5 text-slate-400 hover:text-white hover:bg-white/10 rounded-xl transition-colors w-9 h-9" title="Ver Parcelas">
                           <FaListOl size={14} />
-                        </button>
-                        <button onClick={() => openEditModal(debt)} className="p-2.5 text-slate-400 hover:text-[#3B82F6] hover:bg-[#3B82F6]/10 rounded-xl transition-colors" title="Editar Dívida">
+                        </Button>
+                        <Button onClick={() => openEditModal(debt)} variant="ghost" size="icon" className="p-2.5 text-slate-400 hover:text-[#3B82F6] hover:bg-[#3B82F6]/10 rounded-xl transition-colors w-9 h-9" title="Editar Dívida">
                           <FaPen size={14} />
-                        </button>
-                        <button onClick={() => confirmDelete(debt, userId)} className="p-2.5 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl transition-colors" title="Excluir Dívida">
+                        </Button>
+                        <Button onClick={() => confirmDelete(debt, userId)} variant="ghost" size="icon" className="p-2.5 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl transition-colors w-9 h-9" title="Excluir Dívida">
                           <FaTrash size={14} />
-                        </button>
+                        </Button>
                       </div>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 );
               })}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
 
         {isModalOpen && (
@@ -148,8 +151,8 @@ const DebtList = () => {
               <h4 className="text-xl font-bold text-white mb-2">Confirmar exclusão</h4>
               <p className="text-sm text-slate-400 mb-8">Deseja realmente excluir a dívida <strong className="text-white font-semibold">{debtToDelete?.description}</strong>?</p>
               <div className="flex justify-end gap-3">
-                <button onClick={() => setIsDeleteConfirmOpen(false)} className="px-5 py-2.5 rounded-xl font-semibold text-slate-400 hover:text-white hover:bg-white/5 transition-colors">Cancelar</button>
-                <button onClick={doDelete} className="px-5 py-2.5 rounded-xl font-bold bg-rose-500/10 text-rose-500 hover:bg-rose-500/20 transition-colors">Excluir</button>
+                <Button onClick={() => setIsDeleteConfirmOpen(false)} variant="ghost">Cancelar</Button>
+                <Button onClick={doDelete} variant="danger">Excluir</Button>
               </div>
             </div>
           </div>

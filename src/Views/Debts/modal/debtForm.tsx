@@ -1,4 +1,7 @@
 import { useState } from "react";
+import Input from "@/components/ui/Input";
+import Select from "@/components/ui/Select";
+import Button from "@/components/ui/Button";
 
 export interface DebtFormProps {
     debt: any;
@@ -57,58 +60,103 @@ function DebtForm({ debt, onSave, onCancel, accounts, categories }: DebtFormProp
 
     return (
         <form onSubmit={submit} className="space-y-5">
-            <div>
-                <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-2">Descrição</label>
-                <input name="description" value={form.description || ''} onChange={handleChange} className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-[#3B82F6] transition-colors" />
-            </div>
+            <Input.Root>
+                <Input.Label>Descrição</Input.Label>
+                <Input.Field
+                    name="description"
+                    value={form.description || ''}
+                    onChange={handleChange}
+                />
+            </Input.Root>
 
             <div className="grid grid-cols-2 gap-5">
-                <div>
+                <div className="flex flex-col gap-1 w-full justify-end">
                     <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-2">Conta</label>
-                    <select name="accountId" value={form.accountId || ''} onChange={handleChange} className="w-full px-4 py-3 bg-[#111827] border border-white/10 rounded-xl text-white focus:outline-none focus:border-[#3B82F6] transition-colors appearance-none">
-                        <option value="" disabled className="text-slate-400">Selecione uma conta</option>
-                        {(accounts || []).map(acc => <option key={acc.Id} value={acc.Id}>{acc.Name}</option>)}
-                    </select>
+                    <Select.Root
+                        value={form.accountId || ''}
+                        onChange={(val) => {
+                            setForm(prev => {
+                                return { ...prev, accountId: val };
+                            });
+                        }}
+                    >
+                        <Select.Trigger displayValue={accounts.find(acc => acc.Id === form.accountId)?.Name || "Selecione uma conta"} />
+                        <Select.Content>
+                            {(accounts || []).map(acc => (
+                                <Select.Option key={acc.Id} value={acc.Id}>{acc.Name}</Select.Option>
+                            ))}
+                        </Select.Content>
+                    </Select.Root>
                 </div>
-                <div>
+                <div className="flex flex-col gap-1 w-full justify-end">
                     <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-2">Categoria</label>
-                    <select name="categoryId" value={form.categoryId || ''} onChange={handleChange} className="w-full px-4 py-3 bg-[#111827] border border-white/10 rounded-xl text-white focus:outline-none focus:border-[#3B82F6] transition-colors appearance-none">
-                        <option value="" disabled className="text-slate-400">Selecione uma categoria</option>
-                        {(categories || []).map(cat => <option key={cat.Id} value={cat.Id}>{cat.Descript}</option>)}
-                    </select>
+                    <Select.Root
+                        value={form.categoryId || ''}
+                        onChange={(val) => {
+                            setForm(prev => {
+                                return { ...prev, categoryId: val };
+                            });
+                        }}
+                    >
+                        <Select.Trigger displayValue={categories.find(cat => cat.Id === form.categoryId)?.Descript || "Selecione uma categoria"} />
+                        <Select.Content>
+                            {(categories || []).map(cat => (
+                                <Select.Option key={cat.Id} value={cat.Id}>{cat.Descript}</Select.Option>
+                            ))}
+                        </Select.Content>
+                    </Select.Root>
                 </div>
             </div>
 
             <div className="grid grid-cols-3 gap-5">
-                <div>
-                    <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-2">Valor Parcela</label>
-                    <input name="amount" type="number" step="0.01" value={form.amount || ''} onChange={handleChange} className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-[#3B82F6] transition-colors" placeholder="0,00" />
-                </div>
-                <div>
-                    <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-2">Parcelas</label>
-                    <input name="installments" type="number" value={form.installments || ''} onChange={handleChange} className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-[#3B82F6] transition-colors" placeholder="1" />
-                </div>
-                <div>
-                    <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-2">Total</label>
-                    <input
+                <Input.Root>
+                    <Input.Label>Valor Parcela</Input.Label>
+                    <Input.Field
+                        name="amount"
+                        type="number"
+                        step="0.01"
+                        value={form.amount || ''}
+                        onChange={handleChange}
+                        placeholder="0,00"
+                    />
+                </Input.Root>
+                <Input.Root>
+                    <Input.Label>Parcelas</Input.Label>
+                    <Input.Field
+                        name="installments"
+                        type="number"
+                        value={form.installments || ''}
+                        onChange={handleChange}
+                        placeholder="1"
+                    />
+                </Input.Root>
+                <Input.Root>
+                    <Input.Label>Total</Input.Label>
+                    <Input.Field
                         name="totalAmount"
                         type="number"
                         step="0.01"
                         value={form.totalAmount || ''}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 bg-white/10 border border-[#3B82F6]/30 rounded-xl text-[#3B82F6] font-bold focus:outline-none focus:border-[#3B82F6] transition-colors"
+                        className="bg-white/10 border border-[#3B82F6]/30 text-[#3B82F6] font-bold"
                     />
-                </div>
+                </Input.Root>
             </div>
 
-            <div>
-                <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-2">Vencimento</label>
-                <input name="dueDate" type="date" value={form.dueDate?.slice?.(0, 10) ?? ''} onChange={handleChange} className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-[#3B82F6] transition-colors [color-scheme:dark]" />
-            </div>
+            <Input.Root>
+                <Input.Label>Vencimento</Input.Label>
+                <Input.Field
+                    name="dueDate"
+                    type="date"
+                    value={form.dueDate?.slice?.(0, 10) ?? ''}
+                    onChange={handleChange}
+                    className="[color-scheme:dark]"
+                />
+            </Input.Root>
 
             <div className="flex justify-end gap-3 pt-4">
-                <button type="button" onClick={onCancel} className="px-5 py-2.5 rounded-xl font-semibold text-slate-400 hover:text-white hover:bg-white/5 transition-colors">Cancelar</button>
-                <button type="submit" className="px-6 py-2.5 rounded-xl font-bold bg-[#3B82F6] text-white hover:bg-[#2563EB] shadow-lg shadow-blue-500/20 transition-all">Salvar</button>
+                <Button type="button" variant="ghost" onClick={onCancel}>Cancelar</Button>
+                <Button type="submit" variant="primary">Salvar</Button>
             </div>
         </form>
     );
