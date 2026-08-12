@@ -2,10 +2,10 @@ import { Category, SubCategories } from "@/Models/Categories/Responses/FindCateg
 import { AuthState } from "@/Redux/Slices/AutheticationSlice";
 import { setCategories } from "@/Redux/Slices/CategoriesSlice";
 import UseFindCategoriesViewModel from "@/ViewModels/Categories/FindCategoriesViewModel";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslations } from "next-intl";
-import CustomSelect from "./CustomSelect";
+import Select from "./Select";
 
 interface SelectCategoryProps {
     selectedCategoryId: string;
@@ -44,38 +44,43 @@ const SelectCategory = ({ selectedCategoryId, setSelectedCategoryId, transaction
         setSelectedCategoryId(value);
     };
 
-    const categoryOptions = useMemo(() => {
-        return categories
-            .filter(item => [transactionType].includes(item.Group.Descript))
-            .map((category: Category) => ({
-                value: JSON.stringify(category),
-                label: category.Descript,
-            }));
-    }, [categories, transactionType]);
-
-    const subCategoryOptions = useMemo(() => {
-        return (seleteSubCategories || []).map((sub: SubCategories) => ({
-            value: sub.Id,
-            label: sub.Descript,
-        }));
-    }, [seleteSubCategories]);
+    const displayCategory = selectedCategory ? JSON.parse(selectedCategory).Descript : "";
+    const displaySubCategory = selectedCategoryId ? (seleteSubCategories || []).find(sub => sub.Id === selectedCategoryId)?.Descript : "";
 
     return (
         <div className="flex flex-col gap-2 w-full">
-            <CustomSelect
+            <Select.Root
                 value={selectedCategory}
                 onChange={handleCategoryChange}
-                options={categoryOptions}
                 placeholder={t('selectCategory')}
-            />
+            >
+                <Select.Trigger displayValue={displayCategory} />
+                <Select.Content>
+                    {categories
+                        .filter(item => [transactionType].includes(item.Group.Descript))
+                        .map((category: Category) => (
+                            <Select.Option key={category.Id} value={JSON.stringify(category)}>
+                                {category.Descript}
+                            </Select.Option>
+                        ))}
+                </Select.Content>
+            </Select.Root>
 
             {selectedCategoryId && seleteSubCategories && seleteSubCategories.length > 0 && (
-                <CustomSelect
+                <Select.Root
                     value={selectedCategoryId}
                     onChange={handleSubCategoryChange}
-                    options={subCategoryOptions}
                     placeholder={t('selectSubCategory')}
-                />
+                >
+                    <Select.Trigger displayValue={displaySubCategory} />
+                    <Select.Content>
+                        {seleteSubCategories.map((sub: SubCategories) => (
+                            <Select.Option key={sub.Id} value={sub.Id}>
+                                {sub.Descript}
+                            </Select.Option>
+                        ))}
+                    </Select.Content>
+                </Select.Root>
             )}
         </div>
     );

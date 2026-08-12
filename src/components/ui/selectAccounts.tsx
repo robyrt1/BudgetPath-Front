@@ -2,10 +2,10 @@ import { CreditCard, GetAccountUserResponse } from "@/Models/Accounts/Responses/
 import { AuthState } from "@/Redux/Slices/AutheticationSlice";
 import AccountViewModel from "@/ViewModels/Accounts/AccountViewModel";
 import { isEmpty } from "lodash";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useTranslations } from "next-intl";
-import CustomSelect from "./CustomSelect";
+import Select from "./Select";
 
 interface SelectCategoryProps {
     account: GetAccountUserResponse
@@ -46,37 +46,42 @@ const SelectAccounts = ({ account, setAccount, setCredit, creditCardProp }: Sele
         })
     };
 
-    const accountOptions = useMemo(() => {
-        return selectAccounts.map((acc) => ({
-            value: JSON.stringify(acc),
-            label: acc.Name,
-        }));
-    }, [selectAccounts]);
-
-    const creditOptions = useMemo(() => {
-        return (account.CreditCard || []).map((card) => ({
-            value: JSON.stringify(card),
-            label: card.Name,
-        }));
-    }, [account.CreditCard]);
+    const displayAccount = account.Id ? account.Name : "";
+    const displayCredit = creditCardProp?.Id ? creditCardProp.Name : "";
 
     return (
         <div className="flex flex-col gap-2 w-full">
-            <CustomSelect
+            <Select.Root
                 value={account.Id ? JSON.stringify(account) : ""}
                 onChange={handleSelectChange}
-                options={accountOptions}
                 placeholder={t('selectAccount')}
-            />
+            >
+                <Select.Trigger displayValue={displayAccount} />
+                <Select.Content>
+                    {selectAccounts.map((acc) => (
+                        <Select.Option key={acc.Id} value={JSON.stringify(acc)}>
+                            {acc.Name}
+                        </Select.Option>
+                    ))}
+                </Select.Content>
+            </Select.Root>
 
             {
                 !isEmpty(account.CreditCard) && (
-                    <CustomSelect
+                    <Select.Root
                         value={creditCardProp?.Id ? JSON.stringify(creditCardProp) : ""}
                         onChange={handleSelectCreditChange}
-                        options={creditOptions}
                         placeholder={t('selectCredit')}
-                    />
+                    >
+                        <Select.Trigger displayValue={displayCredit} />
+                        <Select.Content>
+                            {(account.CreditCard || []).map((card) => (
+                                <Select.Option key={card.Id} value={JSON.stringify(card)}>
+                                    {card.Name}
+                                </Select.Option>
+                            ))}
+                        </Select.Content>
+                    </Select.Root>
                 )
             }
         </div>

@@ -2,10 +2,10 @@ import { PaymentMethod } from "@/Models/PaymentMethod/Responses/ResponseFindPaym
 import { AuthState } from "@/Redux/Slices/AutheticationSlice";
 import { setPaymentMethods } from "@/Redux/Slices/PaymentMethodSlice";
 import UseFindPaymentMethodViewModel from "@/ViewModels/PaymentMethods/FindPaymentMethodsViewModel";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslations } from "next-intl";
-import CustomSelect from "./CustomSelect";
+import Select from "./Select";
 
 interface SelectPaymentMethosProps {
     selectedPaymentMethod: PaymentMethod | null;
@@ -44,21 +44,24 @@ const SelectPaymentMethod = ({ selectedPaymentMethod, setSelectedPaymentMethod, 
         }
     };
 
-    const paymentMethodOptions = useMemo(() => {
-        return paymentMethod.map((pm) => ({
-            value: JSON.stringify(pm),
-            label: pm.description,
-        }));
-    }, [paymentMethod]);
+    const displayLabel = selectedPaymentMethod ? selectedPaymentMethod.description : "";
 
     return (
         <div className="w-full">
-            <CustomSelect
+            <Select.Root
                 value={selectedPaymentMethod ? JSON.stringify(selectedPaymentMethod) : ""}
                 onChange={handlePaymentMethodChange}
-                options={paymentMethodOptions}
                 placeholder={t('selectPaymentMethod')}
-            />
+            >
+                <Select.Trigger displayValue={displayLabel} />
+                <Select.Content>
+                    {paymentMethod.map((pm) => (
+                        <Select.Option key={pm.id} value={JSON.stringify(pm)}>
+                            {pm.description}
+                        </Select.Option>
+                    ))}
+                </Select.Content>
+            </Select.Root>
         </div>
     );
 };

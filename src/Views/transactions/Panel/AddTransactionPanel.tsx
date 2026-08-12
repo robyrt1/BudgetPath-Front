@@ -8,6 +8,7 @@ import { AuthState } from "@/Redux/Slices/AutheticationSlice";
 import React, { forwardRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useSelector } from "react-redux";
+import Input from "@/components/ui/Input/index";
 import './addTransactionPanelCSS.css';
 
 export interface IAddTransactionPanel {
@@ -158,9 +159,8 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
                             </div>
                             <span className="text-sm text-slate-300 font-medium">{getUserName}</span>
                         </div>
-                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                            transactionType === 'RECEITA' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'
-                        }`}>
+                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${transactionType === 'RECEITA' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'
+                            }`}>
                             {transactionType === 'RECEITA' ? t('income') : t('expense')}
                         </span>
                     </div>
@@ -185,56 +185,55 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
                         </div>
 
                         {/* Date */}
-                        <div className="flex flex-col gap-1">
-                            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500">{t('date')}</label>
-                            <input 
-                                type="date" 
-                                value={transactionDate} 
-                                onChange={(e) => setTransactionDate(e.target.value)} 
-                                className="w-full px-3 py-2.5 rounded-lg bg-slate-800/50 border border-slate-700 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all cursor-pointer" 
-                                required 
+                        <Input.Root>
+                            <Input.Label>{t('date')}</Input.Label>
+                            <Input.Field
+                                type="date"
+                                value={transactionDate}
+                                onChange={(e) => setTransactionDate(e.target.value)}
+                                className="cursor-pointer"
+                                required
                             />
-                        </div>
+                        </Input.Root>
 
                         {/* Amount */}
-                        <div className="flex flex-col gap-1 sm:col-span-2">
-                            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500">{t('amountLabel')}</label>
-                            <input 
-                                type="text" 
-                                placeholder={t('amount')} 
-                                value={amount} 
-                                onChange={handleChangeValor} 
-                                className="w-full px-4 py-3 border border-slate-700 rounded-lg text-right text-slate-100 bg-slate-800/50 text-lg font-bold focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all" 
-                                required 
+                        <Input.Root className="sm:col-span-2">
+                            <Input.Label>{t('amountLabel')}</Input.Label>
+                            <Input.Field
+                                type="text"
+                                placeholder={t('amount')}
+                                value={amount}
+                                onChange={handleChangeValor}
+                                className="text-right text-slate-100 text-lg font-bold px-4 py-3"
+                                required
                             />
-                        </div>
+                        </Input.Root>
 
                         {/* Description */}
-                        <div className="flex flex-col gap-1 sm:col-span-2">
-                            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500">{t('description')}</label>
-                            <input 
-                                type="text" 
-                                placeholder={t('description')} 
-                                value={description} 
-                                onChange={(e) => setDescription(e.target.value)} 
-                                className="w-full px-3 py-2.5 border border-slate-700 rounded-lg text-slate-200 bg-slate-800/50 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all" 
-                                required 
+                        <Input.Root className="sm:col-span-2">
+                            <Input.Label>{t('description')}</Input.Label>
+                            <Input.Field
+                                type="text"
+                                placeholder={t('description')}
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                required
                             />
-                        </div>
+                        </Input.Root>
                     </div>
 
                     {/* Footer Buttons */}
                     <div className="flex justify-end gap-3 mt-4 pt-4 border-t border-white/5">
-                        <button 
-                            type="button" 
-                            className="px-5 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-white hover:bg-white/5 transition-all cursor-pointer" 
+                        <button
+                            type="button"
+                            className="px-5 py-2.5 rounded-xl font-medium text-sm text-slate-400 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
                             onClick={handlerCancel}
                         >
                             {t('cancel')}
                         </button>
-                        <button 
-                            type="submit" 
-                            className="px-6 py-2.5 rounded-xl font-semibold text-sm bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/20 transition-all cursor-pointer" 
+                        <button
+                            type="submit"
+                            className="px-6 py-2.5 rounded-xl font-semibold text-sm bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/20 transition-all cursor-pointer"
                             onClick={handleSubmit}
                         >
                             {t('submit')}
