@@ -21,7 +21,8 @@ const SelectAccounts = ({ account, setAccount, setCredit, creditCardProp }: Sele
 
     useEffect(() => {
         find();
-    }, [userId, find]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [userId]);
 
     const handleSelectChange = (value: string) => {
         if (value) {

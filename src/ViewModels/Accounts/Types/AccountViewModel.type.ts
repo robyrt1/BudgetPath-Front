@@ -11,5 +11,8 @@ export interface IUseAccountViewModel {
     SetAccount: any
     credit: CreditCard
     setCredit: Dispatch<CreditCard>
-    find: () => void
+    find: () => Promise<void>;
+    create: (name: string, balance?: number) => Promise<unknown>;
+    update: (id: string, name?: string, balance?: number) => Promise<unknown>;
+    delete: (id: string) => Promise<unknown>;
 }

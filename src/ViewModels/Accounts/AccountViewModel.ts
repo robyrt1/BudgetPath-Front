@@ -27,6 +27,41 @@ const AccountViewModel = (props: IAccountViewModelProps): IUseAccountViewModel =
         find: async () => {
             const accounts = await accountModel.findByUser({ userId: props.UserId })
             SetAccount(accounts);
+        },
+        create: async (name: string, balance?: number) => {
+            try {
+                const res = await accountModel.create({
+                    userId: props.UserId,
+                    name,
+                    balance
+                });
+                return res;
+            } catch (err: any) {
+                SetError(err);
+                throw err;
+            }
+        },
+        update: async (id: string, name?: string, balance?: number) => {
+            try {
+                const res = await accountModel.update({
+                    id,
+                    name,
+                    balance
+                });
+                return res;
+            } catch (err: any) {
+                SetError(err);
+                throw err;
+            }
+        },
+        delete: async (id: string) => {
+            try {
+                const res = await accountModel.delete({ id });
+                return res;
+            } catch (err: any) {
+                SetError(err);
+                throw err;
+            }
         }
     }
 }

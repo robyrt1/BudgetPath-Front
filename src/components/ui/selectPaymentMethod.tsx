@@ -21,7 +21,8 @@ const SelectPaymentMethod = ({ selectedPaymentMethod, setSelectedPaymentMethod, 
 
     useEffect(() => {
         find();
-    }, [find]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [userId]);
 
     useEffect(() => {
         if (isCreditSelected) {

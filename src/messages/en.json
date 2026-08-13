@@ -8,6 +8,7 @@
     "settings": "Settings",
     "earnings": "Earnings",
     "signOut": "Sign out",
+    "ai": "AI Insights",
     "collapseMenu": "Collapse Menu",
     "expandMenu": "Expand Menu"
   },
@@ -121,5 +122,31 @@
     "retry": "Try again",
     "save": "Save",
     "close": "Close"
+  },
+  "accounts": {
+    "errorSave": "An error occurred while saving the account.",
+    "errorDelete": "Could not delete the account.",
+    "errorSaveCard": "An error occurred while saving the card.",
+    "errorDeleteCard": "Could not delete the card.",
+    "errorPayInvoice": "An error occurred while processing the payment.",
+    "errorMaturity": "Maturity must be a valid day (1 to 31).",
+    "errorClosing": "Closing must be a valid day (1 to 31).",
+    "errorAmount": "Payment amount must be greater than zero.",
+    "errorNoAccount": "Please select a source account.",
+    "errorInsufficientFunds": "Insufficient funds in the selected account.",
+    "errorLoadingParams": "Loading system parameters. Please try again in a few moments."
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your transaction and integration preferences.",
+    "cardPreferences": "Credit Card Preferences",
+    "successSave": "Settings saved successfully!",
+    "errorSelect": "Please select a category.",
+    "errorSave": "An error occurred while saving settings.",
+    "categoryLabel": "Category for Invoice Payment",
+    "categoryDesc": "Define which default EXPENSE category or subcategory will be automatically assigned to debit transactions generated in your statement when you confirm the payment of a credit card invoice.",
+    "placeholder": "-- Select a Category --",
+    "loading": "Loading categories...",
+    "saveButton": "Save Settings"
   }
 }

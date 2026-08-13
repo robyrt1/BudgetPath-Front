@@ -1,16 +1,31 @@
 import AccountViewModel from "@/ViewModels/Accounts/AccountViewModel";
+import CreditCardsViewModel from "@/ViewModels/CreditCards/CreditCardsViewModel";
 import { AuthState } from "@/Redux/Slices/AutheticationSlice";
 import { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash, FaPen, FaPlus } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { Icon } from "@iconify/react";
+import AccountModal from "./modal/AccountModal";
+import CreditCardModal from "./modal/CreditCardModal";
+import PayInvoiceModal from "./modal/PayInvoiceModal";
+import { UrlsService } from "@/shared/Constants/URLS";
 
 export default function CardsView() {
 
     const userId = useSelector((state: { auth: AuthState }) => state.auth.userId);
-    const { accounts, find, error } = AccountViewModel({ UserId: userId });
+    const { accounts, find, create, update, delete: deleteAccount, error } = AccountViewModel({ UserId: userId });
+    const { createCard, updateCard, deleteCard } = CreditCardsViewModel();
 
     const [showBalances, setShowBalances] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingAccount, setEditingAccount] = useState<{ Id: string; Name: string; Balance: number } | null>(null);
+
+    const [isCardModalOpen, setIsCardModalOpen] = useState(false);
+    const [editingCard, setEditingCard] = useState<{ Id: string; Name: string; Limit: number; Maturity: number; Closing: number } | null>(null);
+    const [selectedAccountId, setSelectedAccountId] = useState("");
+
+    const [isPayModalOpen, setIsPayModalOpen] = useState(false);
+    const [selectedCardToPay, setSelectedCardToPay] = useState<any>(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -19,17 +34,97 @@ export default function CardsView() {
         fetchData();
     }, [userId]);
 
-    const handleEditAccount = (accountId: string) => {
-        console.log('Edit account', accountId);
-    }
+    const handleOpenAddModal = () => {
+        setEditingAccount(null);
+        setIsModalOpen(true);
+    };
+
+    const handleOpenEditModal = (account: any) => {
+        setEditingAccount(account);
+        setIsModalOpen(true);
+    };
+
+    const handleSave = async (name: string, balance: number) => {
+        if (editingAccount) {
+            await update(editingAccount.Id, name, balance);
+        } else {
+            await create(name, balance);
+        }
+        await find();
+    };
+
+    const handleDelete = async () => {
+        if (editingAccount) {
+            await deleteAccount(editingAccount.Id);
+            await find();
+        }
+    };
 
     const handleAddCard = (accountId: string) => {
-        console.log('Add card to account', accountId);
-    }
+        setSelectedAccountId(accountId);
+        setEditingCard(null);
+        setIsCardModalOpen(true);
+    };
 
-    const handleEditCard = (cardId: string) => {
-        console.log('Edit card', cardId);
-    }
+    const handleEditCard = (card: any) => {
+        setEditingCard(card);
+        setIsCardModalOpen(true);
+    };
+
+    const handleSaveCard = async (name: string, limit: number, maturity: number, closing: number) => {
+        if (editingCard) {
+            await updateCard(editingCard.Id, name, undefined, limit, maturity, closing);
+        } else {
+            await createCard(name, selectedAccountId, limit, maturity, closing);
+        }
+        await find();
+    };
+
+    const handleDeleteCard = async () => {
+        if (editingCard) {
+            await deleteCard(editingCard.Id);
+            await find();
+        }
+    };
+
+    const handleOpenPayModal = (card: any) => {
+        setSelectedCardToPay(card);
+        setIsPayModalOpen(true);
+    };
+
+    const handleConfirmPay = async (
+        accountId: string,
+        amount: number,
+        newAccountBalance: number,
+        newAvailableBalance: number,
+        newInvoiceAmount: number,
+        transactionPayload: any
+    ) => {
+        // 1. Update Account balance
+        await update(accountId, undefined, newAccountBalance);
+
+        // 2. Update Credit Card details
+        await updateCard(
+            transactionPayload.creditCardId,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            newAvailableBalance,
+            newInvoiceAmount
+        );
+
+        // 3. Create the payment transaction record
+        await fetch(UrlsService.URL_FINANCE_API + 'Transactions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(transactionPayload)
+        });
+
+        // 4. Refresh grid
+        await find();
+    };
 
     const getBankColor = (name: string) => {
         const lower = name.toLowerCase();
@@ -46,15 +141,24 @@ export default function CardsView() {
     }
 
     return (
-        <div className="w-full min-h-screen max-w-[1645px] max-w-[1750px] mx-auto px-4 py-4">
+        <div className="w-full min-h-screen max-w-[1750px] mx-auto px-4 py-4">
             <div className="flex items-center justify-between mb-8">
-                <h2 className="text-2xl font-bold text-white tracking-tight">My accounts</h2>
+                <div className="flex items-center gap-4">
+                    <h2 className="text-2xl font-bold text-white tracking-tight">Minhas Contas</h2>
+                    <button
+                        onClick={handleOpenAddModal}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 text-white text-[11px] font-bold uppercase tracking-wider rounded-lg hover:bg-indigo-500 transition-colors cursor-pointer"
+                    >
+                        <FaPlus className="h-3 w-3" />
+                        Nova Conta
+                    </button>
+                </div>
                 <button
                     onClick={() => setShowBalances(!showBalances)}
-                    className="flex items-center text-sm bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
+                    className="flex items-center text-sm bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
                 >
                     {showBalances ? <FaEyeSlash className="mr-2" /> : <FaEye className="mr-2" />}
-                    {showBalances ? "Hide balance" : "Show balance"}
+                    {showBalances ? "Ocultar saldos" : "Mostrar saldos"}
                 </button>
             </div>
 
@@ -72,8 +176,8 @@ export default function CardsView() {
                                 <h3 className="text-xl font-bold text-white tracking-tight">{account.Name}</h3>
                             </div>
                             <button
-                                onClick={() => handleEditAccount(account.Id)}
-                                className="h-8 w-8 flex items-center justify-center rounded-lg text-slate-500 hover:text-white hover:bg-white/10 transition-colors"
+                                onClick={() => handleOpenEditModal(account)}
+                                className="h-8 w-8 flex items-center justify-center rounded-lg text-slate-500 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
                                 title="Editar conta"
                             >
                                 <FaPen className="h-3.5 w-3.5" />
@@ -93,7 +197,7 @@ export default function CardsView() {
                                 <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Cartões de crédito</h4>
                                 <button
                                     onClick={() => handleAddCard(account.Id)}
-                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#3B82F6]/10 text-[#3B82F6] text-[11px] font-bold uppercase tracking-wider rounded-lg hover:bg-[#3B82F6]/20 transition-colors"
+                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#3B82F6]/10 text-[#3B82F6] text-[11px] font-bold uppercase tracking-wider rounded-lg hover:bg-[#3B82F6]/20 transition-colors cursor-pointer"
                                 >
                                     <FaPlus className="h-3 w-3" />
                                     Cartão
@@ -106,13 +210,22 @@ export default function CardsView() {
                                         <li key={card.Id} className="group border border-white/5 rounded-[16px] p-5 bg-white/5 flex flex-col gap-4 transition-colors hover:bg-white/10">
                                             <div className="flex justify-between items-start">
                                                 <div className="font-semibold text-slate-100 text-[15px]">{card.Name}</div>
-                                                <button
-                                                    onClick={() => handleEditCard(card.Id)}
-                                                    className="opacity-0 group-hover:opacity-100 p-1.5 rounded-md text-slate-400 hover:text-white hover:bg-white/10 transition-all"
-                                                    title="Editar cartão"
-                                                >
-                                                    <FaPen className="h-3 w-3" />
-                                                </button>
+                                                <div className="flex items-center gap-1">
+                                                    <button
+                                                        onClick={() => handleOpenPayModal(card)}
+                                                        className="h-6 px-2 bg-emerald-500/15 hover:bg-emerald-500/30 text-emerald-400 text-[10px] font-bold uppercase tracking-wider rounded transition-colors cursor-pointer"
+                                                        title="Pagar Fatura"
+                                                    >
+                                                        Pagar
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleEditCard(card)}
+                                                        className="opacity-0 group-hover:opacity-100 p-1.5 rounded-md text-slate-400 hover:text-white hover:bg-white/10 transition-all cursor-pointer"
+                                                        title="Editar cartão"
+                                                    >
+                                                        <FaPen className="h-3 w-3" />
+                                                    </button>
+                                                </div>
                                             </div>
 
                                             <div className="grid grid-cols-2 gap-3 text-sm">
@@ -151,6 +264,31 @@ export default function CardsView() {
                     </div>
                 ))}
             </div>
+
+            <AccountModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                editingAccount={editingAccount}
+                onSave={handleSave}
+                onDelete={handleDelete}
+            />
+
+            <CreditCardModal
+                isOpen={isCardModalOpen}
+                onClose={() => setIsCardModalOpen(false)}
+                accountId={selectedAccountId}
+                editingCard={editingCard}
+                onSave={handleSaveCard}
+                onDelete={handleDeleteCard}
+            />
+
+            <PayInvoiceModal
+                isOpen={isPayModalOpen}
+                onClose={() => setIsPayModalOpen(false)}
+                creditCard={selectedCardToPay}
+                accounts={accounts}
+                onConfirm={handleConfirmPay}
+            />
         </div>
-    )
+    );
 }

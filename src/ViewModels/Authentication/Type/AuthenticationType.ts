@@ -10,7 +10,8 @@ export interface IAuthenticationState {
     setPassword: (password: string) => void;
 
     signIn(): Promise<ResponseAuthentication | ErrorAuthentication>
-    errorSign: string | null
+    signInWithGoogle(): Promise<any>
+    errorSign: string | null;
 
     loading: boolean;
     setLoading: (loading: boolean) => void;

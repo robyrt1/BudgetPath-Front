@@ -24,6 +24,23 @@ const RegisterUserModel: RegisterUserModelPort = {
         } catch (error) {
             return { status: false, detail: String(get(error, 'cause')) }
         }
+    },
+    CreateFirebase: async (request: { name: string; email: string; idToken: string }): Promise<any> => {
+        try {
+            const response = await fetch(URL_FINANCE_API + 'User/registerFirebase', {
+                mode: 'cors',
+                method: 'Post',
+                headers: { 'Content-Type': 'application/json', accept: '*/*' },
+                body: JSON.stringify(request)
+            });
+            if (!response.ok) {
+                const errorBody = await response.json();
+                throw new Error(get(errorBody, 'details') || 'Falha ao registrar com Firebase');
+            }
+            return await response.json();
+        } catch (error: any) {
+            return { status: false, detail: error.message };
+        }
     }
 }
 

@@ -25,6 +25,7 @@ export default function NavbarWithSidebar({ isExpanded = true, toggleSidebar }: 
         { path: "/transactions", label: t('transactions'), icon: "lucide-lab:coins-stack" },
         { path: "/accounts", label: t('accounts'), icon: "hugeicons:credit-card" },
         { path: "/Debts", label: t('debts'), icon: "bitcoin-icons:buoy-outline" },
+        { path: "/ai", label: t('ai'), icon: "lucide:cpu" },
     ];
 
     const [isOpen, setIsOpen] = useState(false);
@@ -126,9 +127,9 @@ export default function NavbarWithSidebar({ isExpanded = true, toggleSidebar }: 
                                                  </a>
                                              </li>
                                              <li>
-                                                 <a href="#" className="block px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5 focus:bg-white/10 focus:text-white focus:outline-none transition-colors rounded-lg mx-1">
+                                                 <Link href="/settings" className="block px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5 focus:bg-white/10 focus:text-white focus:outline-none transition-colors rounded-lg mx-1">
                                                      {t('settings')}
-                                                 </a>
+                                                 </Link>
                                              </li>
                                              <li>
                                                  <a href="#" className="block px-4 py-2 text-sm text-slate-300 hover:text-white hover:bg-white/5 focus:bg-white/10 focus:text-white focus:outline-none transition-colors rounded-lg mx-1">

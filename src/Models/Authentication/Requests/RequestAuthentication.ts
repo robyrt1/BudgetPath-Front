@@ -1,4 +1,5 @@
 export type RequestAuthentication = {
     email: string,
-    password : string
+    password : string,
+    firebaseUid?: string
 };

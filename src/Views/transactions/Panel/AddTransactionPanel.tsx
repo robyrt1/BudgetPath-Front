@@ -10,6 +10,7 @@ import { useTranslations } from "next-intl";
 import { useSelector } from "react-redux";
 import Input from "@/components/ui/Input/index";
 import './addTransactionPanelCSS.css';
+import { useCategoryPredictor } from "@/shared/hooks/useCategoryPredictor";
 
 export interface IAddTransactionPanel {
     addTransaction: (newTransaction: RequestCreateTransaction) => Promise<unknown>
@@ -39,6 +40,8 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
 
     const getUserId = useSelector((state: { auth: AuthState }) => state.auth.userId);
     const getUserName = useSelector((state: { auth: AuthState }) => state.auth.nameUser);
+    
+    const { predictCategory } = useCategoryPredictor();
 
     const handleChangeValor = (e: React.ChangeEvent<HTMLInputElement>) => {
         const raw = e.target.value.replace(/\D/g, ''); // remove tudo que não for número
@@ -51,6 +54,19 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
             currency: 'BRL',
         });
         setAmount(valorFormatado);
+    };
+
+    const handleDescriptionBlur = () => {
+        if (!description || description.trim().length < 3) return;
+
+        try {
+            const prediction = predictCategory(description);
+            if (prediction && prediction.categoryId && prediction.confidence > 0.3) {
+                setCategoryId(prediction.categoryId);
+            }
+        } catch (err) {
+            console.error("AI categorization error:", err);
+        }
     };
 
     const handlerCancel = () => {
@@ -210,6 +226,7 @@ const AddTransactionPanel = forwardRef<HTMLDivElement, IAddTransactionPanel>(({ 
                                 placeholder={t('description')}
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
+                                onBlur={handleDescriptionBlur}
                                 required
                             />
                         </Input.Root>

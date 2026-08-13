@@ -8,6 +8,7 @@
     "settings": "Configurações",
     "earnings": "Ganhos",
     "signOut": "Sair",
+    "ai": "Insights de IA",
     "collapseMenu": "Recolher Menu",
     "expandMenu": "Expandir Menu"
   },
@@ -121,5 +122,38 @@
       "save": "Salvar",
       "close": "Fechar"
     }
+  },
+  "common": {
+    "loading": "Carregando...",
+    "error": "Ocorreu um erro",
+    "retry": "Tentar novamente",
+    "save": "Salvar",
+    "close": "Fechar"
+  },
+  "accounts": {
+    "errorSave": "Ocorreu um erro ao salvar a conta.",
+    "errorDelete": "Não foi possível excluir a conta.",
+    "errorSaveCard": "Ocorreu um erro ao salvar o cartão.",
+    "errorDeleteCard": "Não foi possível excluir o cartão.",
+    "errorPayInvoice": "Ocorreu um erro ao processar o pagamento.",
+    "errorMaturity": "O vencimento deve ser um dia válido (1 a 31).",
+    "errorClosing": "O fechamento deve ser um dia válido (1 a 31).",
+    "errorAmount": "O valor do pagamento deve ser maior que zero.",
+    "errorNoAccount": "Selecione uma conta de origem.",
+    "errorInsufficientFunds": "Saldo insuficiente na conta selecionada.",
+    "errorLoadingParams": "Carregando parâmetros do sistema. Tente novamente em instantes."
+  },
+  "settings": {
+    "title": "Configurações",
+    "subtitle": "Gerencie suas preferências de movimentações e integrações.",
+    "cardPreferences": "Preferências do Cartão de Crédito",
+    "successSave": "Configurações salvas com sucesso!",
+    "errorSelect": "Por favor, selecione uma categoria.",
+    "errorSave": "Ocorreu um erro ao salvar as configurações.",
+    "categoryLabel": "Categoria para Pagamento de Fatura",
+    "categoryDesc": "Defina qual categoria ou subcategoria padrão do tipo DESPESA será atribuída automaticamente às transações de débito geradas no seu extrato quando você confirmar o pagamento de uma fatura de cartão de crédito.",
+    "placeholder": "-- Selecione uma Categoria --",
+    "loading": "Carregando categorias...",
+    "saveButton": "Salvar Configurações"
   }
 }
